@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     private ParticleSystem particle;
 
     private Animator anim;
+    private Rigidbody rb;
     private float RotaSpd = 10;
     private float hitParticleDelay = 0;
 
@@ -46,13 +47,13 @@ public class Player : MonoBehaviour
     void Start ()
     {
         anim = gameObject.GetComponent<Animator>();
-        //particle = gameObject.GetComponent<ParticleSystem>();
+        rb = gameObject.GetComponent<Rigidbody>();
         
         if (!anim)
             Debug.Log("Animator Controller not Loaded!");
 
-        //if (!particle)
-        //    Debug.Log("Particle System not Loaded!");
+        if (!rb)
+            Debug.Log("Rigidbody component not Loaded!");
     }
 	
 	// Update is called once per frame
@@ -83,5 +84,18 @@ public class Player : MonoBehaviour
             Instantiate(particle, transform.position + offset, Quaternion.identity);
             hitParticleDelay = 0.5f;
         }
+
+        // Ground Character
+        //transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+
     }
 }

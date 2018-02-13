@@ -13,6 +13,7 @@ public class EnemyScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        // Ground Object
+        //transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
 	}
 }
