@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float Health = 10, Stamina = 5, Damage = 1, AtkSpd = 1, MoveSpd = 10, HealthRegenSpd = 0.5f, StaminaRegenSpd = 0.1f;
+    private float Level = 1, Health = 10, Stamina = 5, Damage = 1, AtkSpd = 1, MoveSpd = 10, HealthRegenSpd = 0.5f, StaminaRegenSpd = 0.1f;
 
     [SerializeField]
     private bool RegenSkill = false, IronWillSkill = false, EvasionSkill = false;
