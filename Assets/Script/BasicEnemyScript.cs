@@ -28,7 +28,8 @@ public class BasicEnemyScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        if (!(Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()))
+            Debug.Log("BasicEnemyScript.cs : Player not loaded");
         animator = GetComponent<Animator>();
         //transform.position = Player.transform.position - Vector3.forward * MoveSpeed;
         starting_done = false;
