@@ -33,15 +33,15 @@ public class CameraScript : MonoBehaviour
     {
         float offsetX = 0, offsetZ = 0;
 
-        if (player.position.x > 13 && player.position.x < 25)
-        {
+        //if (player.position.x > 13 && player.position.x < 25)
+        //{
             offsetX = player.position.x - transform.position.x;
-        }
+        //}
 
-        if (player.position.z > 6 && player.position.z < 29)
-        {
+        //if (player.position.z > 6 && player.position.z < 29)
+        //{
             offsetZ = player.position.z - transform.position.z + defaultZ;
-        }
+        //}
 
         transform.position += new Vector3(offsetX, 0, offsetZ) * 5 * Time.deltaTime;
     }

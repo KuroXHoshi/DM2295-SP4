@@ -59,11 +59,11 @@ public class BasicEnemyScript : MonoBehaviour
         }
         else
         {
+            player_pos = Player.Get_Player_Pos();
             Distance = Vector3.Distance(enemy_pos, player_pos);
-            player_pos = Player.transform.position;
-            new_enemy_pos = transform.position + Player.transform.position * MoveSpeed * Time.deltaTime;
+            new_enemy_pos = transform.position + player_pos * MoveSpeed * Time.deltaTime;
             enemy_pos = transform.position;
-            target_player_DIR = Player.transform.position - enemy_pos;
+            target_player_DIR = player_pos - enemy_pos;
 
 
             if (Distance <= MinDist)//distance reachable,attack
@@ -78,10 +78,10 @@ public class BasicEnemyScript : MonoBehaviour
             }
             else if (Distance <= MaxDist)//Saw player and go to player
             {
+                transform.position += transform.forward * MoveSpeed * Time.deltaTime;
                 float step = rotSpd * Time.deltaTime;
                 Vector3 newDir = Vector3.RotateTowards(transform.forward, target_player_DIR, step, 0.0f);
                 transform.rotation = Quaternion.LookRotation(newDir);
-                transform.position += transform.forward * MoveSpeed * Time.deltaTime;
 
                 animator.SetBool("walk", true);
 
