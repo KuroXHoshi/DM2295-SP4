@@ -51,7 +51,7 @@ public class BossScript : MonoBehaviour {
         {
             //attack melee animation activate pls
             //NEAR_ATTACK = true;
-<<<<<<< HEAD
+
             bool which_attack = (Random.value > 0.5f);
 
             transform.rotation = Quaternion.LookRotation(newDir);
@@ -66,9 +66,6 @@ public class BossScript : MonoBehaviour {
                 animator.SetBool("attack 2", true);
             }
             
-=======
-            //animator.SetBool("attack", true);
->>>>>>> ae218af88c63615d9e3402bbbbf7b7f5b1c176cd
 
             animator.SetBool("walk", false);
             //animator.SetBool("idle", false);
@@ -98,14 +95,9 @@ public class BossScript : MonoBehaviour {
                 animator.SetBool("Run", false);
             }
             
-
-<<<<<<< HEAD
+        
             animator.SetBool("idle", false);
             animator.SetBool("attack 1", false);
-=======
-            //animator.SetBool("idle", false);
-            //animator.SetBool("attack", false);
->>>>>>> ae218af88c63615d9e3402bbbbf7b7f5b1c176cd
             //Here Call any function U want Like Shoot at here or something
             animator.SetBool("attack 2", false);
             animator.SetBool("getting hit", false);
@@ -118,7 +110,6 @@ public class BossScript : MonoBehaviour {
             //animator.SetBool("idle", true);
 
             animator.SetBool("walk", false);
-<<<<<<< HEAD
             animator.SetBool("attack 1", false);
 
             animator.SetBool("attack 2", false);
@@ -126,9 +117,6 @@ public class BossScript : MonoBehaviour {
             animator.SetBool("Victory", false);
             animator.SetBool("Dies", false);
             animator.SetBool("Run", false);
-=======
-            //animator.SetBool("attack", false);
->>>>>>> ae218af88c63615d9e3402bbbbf7b7f5b1c176cd
         }
 
         //float progress = Mathf.Clamp01(operation.progress / 0.9f);
