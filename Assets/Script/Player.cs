@@ -69,7 +69,7 @@ public class Player : PlayerSkills
         }
 
         if (Input.GetMouseButtonDown(1))
-            Dash(translation, ref Stamina);
+            Dash(ref translation, ref Stamina);
 
         Vector3 newPos = transform.position + translation * MoveSpd * Time.deltaTime;
         Vector3 targetDir = newPos - transform.position;
