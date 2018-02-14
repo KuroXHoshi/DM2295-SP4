@@ -1,10 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BossScript : MonoBehaviour {
 
-    public int HP = 1000;
+    public Slider slider;
+    public Text progresstext;
+
+    public float HP = 1000;
+    float critical_HP = 100;
     public GameObject Player; //: Transform;
                               // public Transform playerTransform;
     public int MoveSpeed = 2;
@@ -38,39 +43,98 @@ public class BossScript : MonoBehaviour {
         enemy_pos = transform.position;
         target_player_DIR = Player.transform.position - enemy_pos;
 
+        HP -= Time.deltaTime * 20;
+        float step = rotSpd * Time.deltaTime;
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, target_player_DIR, step, 0.0f);
 
-        if (Distance <= MinDist)//distance reachable,attack
+        if (Distance <= MinDist)//distance reachable, attack!!
         {
             //attack melee animation activate pls
             //NEAR_ATTACK = true;
+<<<<<<< HEAD
+            bool which_attack = (Random.value > 0.5f);
+
+            transform.rotation = Quaternion.LookRotation(newDir);
+            if (which_attack)
+            {
+                animator.SetBool("attack 1", true);
+                animator.SetBool("attack 2", false);
+            }
+            else
+            {
+                animator.SetBool("attack 1", false);
+                animator.SetBool("attack 2", true);
+            }
+            
+=======
             //animator.SetBool("attack", true);
+>>>>>>> ae218af88c63615d9e3402bbbbf7b7f5b1c176cd
 
             animator.SetBool("walk", false);
             //animator.SetBool("idle", false);
 
+           
+            animator.SetBool("getting hit", false);
+            animator.SetBool("Victory", false);
+            animator.SetBool("Dies", false);
+            animator.SetBool("Run", false);
+
         }
         else if (Distance <= MaxDist)//Saw player and go to player
         {
-            float step = rotSpd * Time.deltaTime;
-            Vector3 newDir = Vector3.RotateTowards(transform.forward, target_player_DIR, step, 0.0f);
             transform.rotation = Quaternion.LookRotation(newDir);
-            transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+          
+            if(HP<critical_HP)
+            {
+                transform.position += transform.forward * MoveSpeed*2 * Time.deltaTime;
 
-            animator.SetBool("walk", true);
+                animator.SetBool("walk", false);
+                animator.SetBool("Run", true);
+            }
+            else
+            {
+                transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+                animator.SetBool("walk", true);
+                animator.SetBool("Run", false);
+            }
+            
 
+<<<<<<< HEAD
+            animator.SetBool("idle", false);
+            animator.SetBool("attack 1", false);
+=======
             //animator.SetBool("idle", false);
             //animator.SetBool("attack", false);
+>>>>>>> ae218af88c63615d9e3402bbbbf7b7f5b1c176cd
             //Here Call any function U want Like Shoot at here or something
+            animator.SetBool("attack 2", false);
+            animator.SetBool("getting hit", false);
+            animator.SetBool("Victory", false);
+            animator.SetBool("Dies", false);
+           
         }
         else//player unseen
         {
             //animator.SetBool("idle", true);
 
             animator.SetBool("walk", false);
+<<<<<<< HEAD
+            animator.SetBool("attack 1", false);
+
+            animator.SetBool("attack 2", false);
+            animator.SetBool("getting hit", false);
+            animator.SetBool("Victory", false);
+            animator.SetBool("Dies", false);
+            animator.SetBool("Run", false);
+=======
             //animator.SetBool("attack", false);
+>>>>>>> ae218af88c63615d9e3402bbbbf7b7f5b1c176cd
         }
 
+        //float progress = Mathf.Clamp01(operation.progress / 0.9f);
 
+        slider.value = HP;
+        progresstext.text = HP * 100f + "%";
     }
 }
 
