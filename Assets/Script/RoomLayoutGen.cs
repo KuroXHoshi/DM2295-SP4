@@ -12,15 +12,17 @@ public class RoomLayoutGen : MonoBehaviour
 
 
     public int columns = 100;                                 // The number of columns on the board (how wide it will be).
-    public int rows = 100;                                    // The number of rows on the board (how tall it will be).
+    public int rows = 70;                                    // The number of rows on the board (how tall it will be).
     public IntRange numRooms = new IntRange(7, 10);         // The range of the number of rooms there can be.
-    public int roomWidth = 10;         // The range of widths rooms can have.
-    public int roomHeight = 10;        // The range of heights rooms can have.
-    public int corridorLength = 5;    // The range of lengths corridors between rooms can have.
+    public int roomWidth = 30;         // The range of widths rooms can have.
+    public int roomHeight = 20;        // The range of heights rooms can have.
+    public int corridorLength = 6;    // The range of lengths corridors between rooms can have.
     public GameObject[] floorTiles;                           // An array of floor tile prefabs.
     public GameObject[] wallTiles;                            // An array of wall tile prefabs.
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
     public GameObject player;
+    public GameObject spawner_block;
+    public GameObject door_blocks;
 
     private int[][] room_layout;
    // private int[] room_layout_total;
@@ -36,6 +38,7 @@ public class RoomLayoutGen : MonoBehaviour
     {
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
+        player = GameObject.FindGameObjectWithTag("Player");
 
         SetupTilesArray();
 
@@ -46,6 +49,8 @@ public class RoomLayoutGen : MonoBehaviour
 
         InstantiateTiles();
         InstantiateOuterWalls();
+
+        Random.InitState(System.DateTime.Now.Millisecond);
     }
 
 
@@ -92,8 +97,7 @@ public class RoomLayoutGen : MonoBehaviour
         Vector2 temp_vec;
 
         for (int i = 0; i < rooms.Length;)
-        {
-            Random.InitState(System.DateTime.Now.Millisecond);
+        {      
             int temp = UnityEngine.Random.Range(0, 4);
 
             //0 - UP, 1 - DOWN, 2 - LEFT, 3 - RIGHT
@@ -219,15 +223,9 @@ public class RoomLayoutGen : MonoBehaviour
             ++i;
             ++temp_room_layout_adder;
         }
-
-        // Create the first room and corridor.
-        rooms[0] = new Room();
-
-        // Setup the first room, there is no previous corridor so we do not use one.
-        rooms[0].SetupRoom(roomWidth, roomHeight, columns, rows);
-        // Setup the first corridor using the first room.
-
+     
         int temp_no_of_room = 0;
+        bool set_player_spawn = false;
 
         for (int i = 0; i < 3; ++i)
         {
@@ -237,7 +235,18 @@ public class RoomLayoutGen : MonoBehaviour
                 {
                     rooms[temp_no_of_room] = new Room();
                     rooms[temp_no_of_room].SetupRoom(roomWidth, roomHeight, columns, rows, j, i);
-                 
+
+                    if (!set_player_spawn)
+                    {
+                        player.transform.position = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.3f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.3f);
+                        set_player_spawn = true;
+                    }
+                    else
+                    {
+                        // Creating the spawner blocks
+                        Vector3 temp_spawner_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.3f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.3f);
+                        GameObject tileInstance = Instantiate(spawner_block, temp_spawner_vec, Quaternion.identity) as GameObject;
+                    }
                     if (i - 1 >= 0)
                     {
                         if (room_layout[i - 1][j] != 5)
@@ -296,37 +305,72 @@ public class RoomLayoutGen : MonoBehaviour
     void SetTilesValuesForCorridors()
     {
         // Go through every corridor...
-        for (int i = 0; i < total_corridor.Count; i++)
+        for (int loop = 0; loop < 3; ++loop)
         {
-            Corridor currentCorridor = total_corridor[i];
-
-            // and go through it's length.
-            for (int j = 0; j < corridorLength; j++)
+            for (int i = 0; i < total_corridor.Count; i++)
             {
-                // Start the coordinates at the start of the corridor.
-                int xCoord = currentCorridor.startXPos;
-                int yCoord = currentCorridor.startYPos;
+                Corridor currentCorridor = total_corridor[i];
 
-                // Depending on the direction, add or subtract from the appropriate
-                // coordinate based on how far through the length the loop is.
-                switch (currentCorridor.direction)
+                // and go through it's length.
+                for (int j = 0; j < corridorLength; j++)
                 {
-                    case Direction.Up:
-                        yCoord += j;
-                        break;
-                    case Direction.Left:
-                        xCoord -= j;
-                        break;
-                    case Direction.Down:
-                        yCoord -= j;
-                        break;
-                    case Direction.Right:
-                        xCoord += j;
-                        break;
-                }
+                    // Start the coordinates at the start of the corridor.
+                    int xCoord = currentCorridor.startXPos;
+                    int yCoord = currentCorridor.startYPos;
 
-                // Set the tile at these coordinates to Floor.
-                tiles[xCoord][yCoord] = TileType.Floor;
+                    // Depending on the direction, add or subtract from the appropriate
+                    // coordinate based on how far through the length the loop is.
+                    switch (currentCorridor.direction)
+                    {
+                        case Direction.Up:
+                            yCoord += j;
+                            xCoord += loop;
+
+                            if (j == 0 || j == corridorLength - 2)
+                            {
+                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * 1.96f);
+
+                                GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
+                            }
+                            break;
+                        case Direction.Left:
+                            xCoord -= j;
+                            yCoord += loop;
+
+                            if (j == 0 || j == corridorLength - 2)
+                            {
+                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * 2);
+
+                                GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
+                            }
+                            break;
+                        case Direction.Down:
+                            yCoord -= j;
+                            xCoord += loop;
+
+                            if (j == 0 || j == corridorLength - 2)
+                            {
+                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * ((yCoord < 45) ? 1.9f : 1.96f));
+
+                                GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
+                            }
+                            break;
+                        case Direction.Right:
+                            xCoord += j;
+                            yCoord += loop;
+
+                            if (j == 0 || j == corridorLength - 2)
+                            {
+                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * 2);
+
+                                GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
+                            }
+                            break;
+                    }
+
+                    // Set the tile at these coordinates to Floor.
+                    tiles[xCoord][yCoord] = TileType.Floor;
+                }
             }
         }
     }

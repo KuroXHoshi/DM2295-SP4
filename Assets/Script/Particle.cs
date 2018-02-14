@@ -11,6 +11,9 @@ public class Particle : MonoBehaviour
     void Start ()
     {
         particle = gameObject.GetComponent<ParticleSystem>();
+
+        if (!particle)
+            Debug.Log("Particle.cs : Unable to load ParticleSystem!");
 	}
 	
 	// Update is called once per frame

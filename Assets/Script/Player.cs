@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : PlayerSkills
 {
     [SerializeField]
     private float Level = 1, Health = 10, Stamina = 5, Damage = 1, AtkSpd = 1, MoveSpd = 10, HealthRegenSpd = 0.5f, StaminaRegenSpd = 0.1f;
@@ -21,6 +21,11 @@ public class Player : MonoBehaviour
     private Player()
     {
 
+    }
+
+    public Vector3 Get_Player_Pos()
+    {
+        return transform.position;
     }
 
     public float GetHealth()
@@ -46,25 +51,25 @@ public class Player : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        anim = gameObject.GetComponent<Animator>();
-        rb = gameObject.GetComponent<Rigidbody>();
-        
-        if (!anim)
-            Debug.Log("Animator Controller not Loaded!");
+        if (!(anim = gameObject.GetComponent<Animator>()))
+            Debug.Log("Player.cs : Animator Controller not Loaded!");
 
-        if (!rb)
-            Debug.Log("Rigidbody component not Loaded!");
+        if (!(rb = gameObject.GetComponent<Rigidbody>()))
+            Debug.Log("Player.cs : Rigidbody component not Loaded!");
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        Vector3 translation = new Vector3();
+        Vector3 translation = new Vector3(0f, 0f, 0f);
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             translation.Set(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             anim.SetBool("moving", (translation.x == 0 && translation.z == 0) ? false : true);
         }
+
+        if (Input.GetMouseButtonDown(1))
+            Dash(ref translation, ref Stamina);
 
         Vector3 newPos = transform.position + translation * MoveSpd * Time.deltaTime;
         Vector3 targetDir = newPos - transform.position;
