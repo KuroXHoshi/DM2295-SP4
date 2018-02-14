@@ -30,7 +30,7 @@ public class Room
         roomWidth = _roomWidth;
         roomHeight = _roomHeight;
 
-        yPos = ycoord * (roomWidth + 5);
-        xPos = xcoord * (roomHeight + 5);
+        yPos = ycoord * (roomHeight + 5);
+        xPos = xcoord * (roomWidth + 5);
     }
 }
