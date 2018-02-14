@@ -43,10 +43,10 @@ public class BossScript : MonoBehaviour {
         {
             //attack melee animation activate pls
             //NEAR_ATTACK = true;
-            animator.SetBool("attack", true);
+            //animator.SetBool("attack", true);
 
             animator.SetBool("walk", false);
-            animator.SetBool("idle", false);
+            //animator.SetBool("idle", false);
 
         }
         else if (Distance <= MaxDist)//Saw player and go to player
@@ -58,16 +58,16 @@ public class BossScript : MonoBehaviour {
 
             animator.SetBool("walk", true);
 
-            animator.SetBool("idle", false);
-            animator.SetBool("attack", false);
+            //animator.SetBool("idle", false);
+            //animator.SetBool("attack", false);
             //Here Call any function U want Like Shoot at here or something
         }
         else//player unseen
         {
-            animator.SetBool("idle", true);
+            //animator.SetBool("idle", true);
 
             animator.SetBool("walk", false);
-            animator.SetBool("attack", false);
+            //animator.SetBool("attack", false);
         }
 
 
