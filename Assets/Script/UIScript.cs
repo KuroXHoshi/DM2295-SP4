@@ -28,11 +28,11 @@ public class UIScript : MonoBehaviour {
 
             if (pause_menu.activeSelf == true)
             {
-                Time.timeScale = 0;
+                //Time.timeScale = 0;
             }
             else
             {
-                Time.timeScale = 1;
+                //Time.timeScale = 1;
             }
         }
 
@@ -41,12 +41,12 @@ public class UIScript : MonoBehaviour {
             if (equip_menu.activeSelf == false)
             {
                 equip_menu.SetActive(true);
-                Time.timeScale = 0;
+                //Time.timeScale = 0;
             }
             else
             {
                 equip_menu.SetActive(false);
-                Time.timeScale = 1;
+                //Time.timeScale = 1;
             }
         }
     }
@@ -57,7 +57,7 @@ public class UIScript : MonoBehaviour {
         if (equip_menu.activeSelf == false)
         {
             equip_menu.SetActive(true);
-            Time.timeScale = 0;
+            //Time.timeScale = 0;
         }
     }
     public void EQscreenclose()
@@ -65,7 +65,7 @@ public class UIScript : MonoBehaviour {
         if (equip_menu.activeSelf == true)
         {
             equip_menu.SetActive(false);
-            Time.timeScale = 1;
+            //Time.timeScale = 1;
         }
     }
 
@@ -76,7 +76,7 @@ public class UIScript : MonoBehaviour {
         if (pause_menu.activeSelf == false)
         {
             pause_menu.SetActive(true);
-            Time.timeScale = 0;
+            //Time.timeScale = 0;
         }
 
 
@@ -87,7 +87,7 @@ public class UIScript : MonoBehaviour {
         if (pause_menu.activeSelf == true)
         {
             pause_menu.SetActive(false);
-            Time.timeScale = 1;
+            //Time.timeScale = 1;
         }
     }
 
