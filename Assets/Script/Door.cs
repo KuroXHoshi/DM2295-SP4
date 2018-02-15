@@ -28,16 +28,12 @@ public class Door : MonoBehaviour {
                     float temp_rand = UnityEngine.Random.Range(.001f, .2f);
                     Vector3 temp = new Vector3(transform.position.x, transform.position.y - temp_rand, transform.position.z);
 
-                    transform.position = temp;
-                    //if(rigid_entity_body.detectCollisions)
-                    // rigid_entity_body.detectCollisions = false;
+                    transform.position = temp;                   
                 }
                 else
-                {
+                {                   
                     done = true;
-
-                    //if (!rigid_entity_body.detectCollisions)
-                    //    rigid_entity_body.detectCollisions = true;
+                    gameObject.SetActive(false);
                 }
             }
             else
@@ -48,11 +44,9 @@ public class Door : MonoBehaviour {
                     Vector3 temp = new Vector3(transform.position.x, transform.position.y + temp_rand, transform.position.z);
 
                     transform.position = temp;
-                    //if (rigid_entity_body.detectCollisions)
-                    //    rigid_entity_body.detectCollisions = false;
                 }
                 else
-                {
+                {                   
                     done = true;
 
                     //if (!rigid_entity_body.detectCollisions)
