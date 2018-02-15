@@ -5,7 +5,9 @@ using UnityEngine;
 public class Player : PlayerSkills
 {
     [SerializeField]
-    private float Level = 1, Health = 10, Stamina = 5, Damage = 1, AtkSpd = 1, MoveSpd = 10, HealthRegenSpd = 0.5f, StaminaRegenSpd = 0.1f;
+    private float Level = 1, Health = 10, Stamina = 5, AtkSpd = 1, MoveSpd = 10, HealthRegenSpd = 0.5f, StaminaRegenSpd = 0.1f, AtkDist = 1.5f;
+    [SerializeField]
+    private int Damage = 1;
 
     [SerializeField]
     private bool RegenSkill = false, IronWillSkill = false, EvasionSkill = false;
@@ -36,6 +38,11 @@ public class Player : PlayerSkills
     public float GetStamina()
     {
         return Stamina;
+    }
+
+    public int GetPlayerDamageOutput()
+    {
+        return Damage;
     }
 
     public void TakeDamage(float _dmg)
@@ -78,14 +85,18 @@ public class Player : PlayerSkills
         transform.rotation = Quaternion.LookRotation(newDir);
         transform.position = newPos;
 
-        anim.SetBool("attacking", Input.GetMouseButtonDown(0));
+        // Attack using Left Click
+        //anim.SetBool("attacking", Input.GetMouseButtonDown(0));
+        if (Input.GetMouseButtonDown(0))
+            anim.SetTrigger("attacking");
 
         if (hitParticleDelay > 0)
             hitParticleDelay -= Time.deltaTime;
 
+        // Checks if state transits to attack
         if (!anim.IsInTransition(0) && anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && hitParticleDelay <= 0)
         {
-            Vector3 offset = new Vector3(transform.forward.x * 2, transform.forward.y + 1, transform.forward.z * 2);
+            Vector3 offset = new Vector3(transform.forward.x * AtkDist, transform.forward.y + 1, transform.forward.z * AtkDist);
             Instantiate(particle, transform.position + offset, Quaternion.identity);
             hitParticleDelay = 0.5f;
         }
