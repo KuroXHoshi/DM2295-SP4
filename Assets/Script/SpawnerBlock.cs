@@ -13,14 +13,17 @@ public class SpawnerBlock : MonoBehaviour {
     private List<Door> all_door_script = new List<Door>();
 
     private bool spawned;
+    public bool spawn_boss;
 
     private List<GameObject> entity_pool_list = new List<GameObject>();
+    private List<GameObject> boss_pool_list = new List<GameObject>();
     public int pool_amount = 10;
 
     // Use this for initialization
     void Start () {
         isDone = false;
         spawned = false;
+
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
         all_doors_obj = GameObject.FindGameObjectsWithTag("Door");
@@ -40,6 +43,16 @@ public class SpawnerBlock : MonoBehaviour {
                 GameObject obj = Instantiate(entity_list[entity_list_count]);
                 obj.SetActive(false);
                 entity_pool_list.Add(obj);
+            }
+        }
+
+        for (int entity_list_count = 0; entity_list_count < boss_entity_list.Length; ++entity_list_count)
+        {
+            for (int i = 0; i < pool_amount; ++i)
+            {
+                GameObject obj = Instantiate(boss_entity_list[entity_list_count]);
+                obj.SetActive(false);
+                boss_pool_list.Add(obj);
             }
         }
 
@@ -66,12 +79,24 @@ public class SpawnerBlock : MonoBehaviour {
 
                     GameObject temp_obj = GetObjectFromPool(type);
                     temp_obj.transform.position = new Vector3(rand_x, -5, rand_z); 
-
                 }
+
+                if (spawn_boss)
+                {
+                    int type = UnityEngine.Random.Range(0, boss_entity_list.Length);
+
+                    float rand_x = transform.position.x;
+                    float rand_z = transform.position.z;
+
+                    GameObject temp_obj = GetBossObjectFromPool(type);
+                    temp_obj.transform.position = new Vector3(rand_x, 0.05f, rand_z);
+                }
+
                 spawned = true;
 
                 foreach (Door d in all_door_script)
                 {
+                    d.gameObject.SetActive(true);
                     d.TriggerDoor();
                 }
             }
@@ -104,6 +129,11 @@ public class SpawnerBlock : MonoBehaviour {
         }
 	}
 
+    public void SpawnBoss()
+    {
+        spawn_boss = true;
+    }
+
     public GameObject GetObjectFromPool(int type)
     {
 
@@ -123,6 +153,29 @@ public class SpawnerBlock : MonoBehaviour {
         GameObject obj = Instantiate(entity_list[type]);
         obj.SetActive(false);
         entity_pool_list.Add(obj);
+
+        return GetObjectFromPool(type);
+    }
+
+    public GameObject GetBossObjectFromPool(int type)
+    {
+
+        int i = type * pool_amount;
+
+        int end = (type * pool_amount) + pool_amount;
+
+        for (; i < end; ++i)
+        {
+            if (!boss_pool_list[i].activeSelf)
+            {
+                boss_pool_list[i].SetActive(true);
+                return boss_pool_list[i];
+            }
+        }
+
+        GameObject obj = Instantiate(boss_entity_list[type]);
+        obj.SetActive(false);
+        boss_pool_list.Add(obj);
 
         return GetObjectFromPool(type);
     }

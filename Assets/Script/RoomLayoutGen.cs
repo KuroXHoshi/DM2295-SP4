@@ -51,6 +51,8 @@ public class RoomLayoutGen : MonoBehaviour
         InstantiateOuterWalls();
 
         Random.InitState(System.DateTime.Now.Millisecond);
+
+        QualitySettings.masterTextureLimit = 1;
     }
 
 
@@ -224,8 +226,9 @@ public class RoomLayoutGen : MonoBehaviour
             ++temp_room_layout_adder;
         }
      
-        int temp_no_of_room = 0;
+        int temp_no_of_room = 0, player_spawn_point_y = 0;
         bool set_player_spawn = false;
+        bool set_boss_spawn = false;
 
         for (int i = 0; i < 3; ++i)
         {
@@ -238,14 +241,29 @@ public class RoomLayoutGen : MonoBehaviour
 
                     if (!set_player_spawn)
                     {
-                        player.transform.position = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.3f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.3f);
+                        player_spawn_point_y = i;
+                        player.transform.position = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         set_player_spawn = true;
                     }
                     else
                     {
                         // Creating the spawner blocks
-                        Vector3 temp_spawner_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.3f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.3f);
+                        Vector3 temp_spawner_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         GameObject tileInstance = Instantiate(spawner_block, temp_spawner_vec, Quaternion.identity) as GameObject;
+
+                        if (!set_boss_spawn)
+                        {
+                            if (player_spawn_point_y > 0 && i == 0)
+                            {
+                                tileInstance.GetComponent<SpawnerBlock>().SpawnBoss();
+                                set_boss_spawn = true;
+                            }
+                            else if (player_spawn_point_y <= 0 && i == 2)
+                            {
+                                tileInstance.GetComponent<SpawnerBlock>().SpawnBoss();
+                                set_boss_spawn = true;
+                            }
+                        }
                     }
                     if (i - 1 >= 0)
                     {
@@ -350,7 +368,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                             if (j == 0 || j == corridorLength - 2)
                             {
-                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * ((yCoord < 45) ? 1.9f : 1.96f));
+                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * ((yCoord < 20) ? 1.865f : 1.93f));
 
                                 GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
                             }
@@ -378,14 +396,21 @@ public class RoomLayoutGen : MonoBehaviour
 
     void InstantiateTiles()
     {
+        // ... and instantiate a floor tile for it.
+        // Create an instance of the prefab from the random index of the array.
+        Vector3 position = new Vector3(roomWidth * 3.45f, 0, roomHeight * 3.9f);
+        GameObject tileInstance = Instantiate(floorTiles[0], position, Quaternion.identity) as GameObject;
+
+        // Set the tile's parent to the board holder.
+        tileInstance.transform.parent = boardHolder.transform;
+        tileInstance.transform.localScale = new Vector3(columns * 2, tileInstance.transform.localScale.y, rows * 2);
+
+
         // Go through all the tiles in the jagged array...
         for (int i = 0; i < tiles.Length; i++)
         {
             for (int j = 0; j < tiles[i].Length; j++)
             {
-                // ... and instantiate a floor tile for it.
-                InstantiateFromArray(floorTiles, i, j);
-
                 // If the tile type is Wall...
                 if (tiles[i][j] == TileType.Wall)
                 {
