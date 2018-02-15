@@ -10,9 +10,7 @@ public class Particle : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        particle = gameObject.GetComponent<ParticleSystem>();
-
-        if (!particle)
+        if (!(particle = gameObject.GetComponent<ParticleSystem>()))
             Debug.Log("Particle.cs : Unable to load ParticleSystem!");
 	}
 	

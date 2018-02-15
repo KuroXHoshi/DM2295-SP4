@@ -1,16 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class UIScript : MonoBehaviour {
-    
+
+    private Player player;
     public GameObject pause_menu;
     public GameObject equip_menu;
-
+    public Slider healthslider;
+    public Slider staminaslider;
     // Use this for initialization
     void Start () {
-		
+		if(!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()))
+            Debug.Log("UIScript.cs : Player not loaded");
+
+        player.GetHealth();
+        player.GetStamina();
 	}
 	
 	// Update is called once per frame
@@ -87,5 +94,15 @@ public class UIScript : MonoBehaviour {
     public void Quit(int SceneIndex)
     {
         SceneManager.LoadSceneAsync(SceneIndex);
+    }
+
+    public void healthbar()
+    {
+        healthslider.value = player.GetHealth();
+    }
+
+    public void staminabar()
+    {
+        staminaslider.value = player.GetStamina();
     }
 }
