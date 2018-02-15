@@ -100,4 +100,12 @@ public class BasicEnemyScript : MonoBehaviour
         }
 
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player Hitting")
+        {
+            Debug.Log("BasicEnemyScript.cs : Enemy got hit! <" + transform.GetHashCode() + ">");
+        }
+    }
 }
