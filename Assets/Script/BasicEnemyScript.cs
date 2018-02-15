@@ -99,7 +99,15 @@ public class BasicEnemyScript : MonoBehaviour
             }
 
         }
+    }
 
+    private void LateUpdate()
+    {
+        // If enemy HP reaches 0 set to gameObject to false
+        if (HP <= 0)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
