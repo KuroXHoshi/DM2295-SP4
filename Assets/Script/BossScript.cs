@@ -10,7 +10,7 @@ public class BossScript : MonoBehaviour {
 
     public float HP = 1000;
     float critical_HP = 100;
-    public GameObject Player; //: Transform;
+    public GameObject player; //: Transform;
                               // public Transform playerTransform;
     public int MoveSpeed = 2;
     public int MaxDist = 15;
@@ -31,6 +31,7 @@ public class BossScript : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
         //transform.position = Player.transform.position - Vector3.forward * MoveSpeed;
     }
@@ -38,10 +39,10 @@ public class BossScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         Distance = Vector3.Distance(enemy_pos, player_pos);
-        player_pos = Player.transform.position;
-        new_enemy_pos = transform.position + Player.transform.position * MoveSpeed * Time.deltaTime;
+        player_pos = player.transform.position;
+        new_enemy_pos = transform.position + player_pos * MoveSpeed * Time.deltaTime;
         enemy_pos = transform.position;
-        target_player_DIR = Player.transform.position - enemy_pos;
+        target_player_DIR = player_pos - enemy_pos;
 
         HP -= Time.deltaTime * 20;
         float step = rotSpd * Time.deltaTime;
@@ -121,8 +122,8 @@ public class BossScript : MonoBehaviour {
 
         //float progress = Mathf.Clamp01(operation.progress / 0.9f);
 
-        slider.value = HP;
-        progresstext.text = HP * 100f + "%";
+        //slider.value = HP;
+        //progresstext.text = HP * 100f + "%";
     }
 }
 
