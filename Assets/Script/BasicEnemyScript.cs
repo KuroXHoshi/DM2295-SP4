@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BasicEnemyScript : MonoBehaviour
 {
-    private Player Player; //: Transform;
+    private Player player; //: Transform;
    // public Transform playerTransform;
     public int MoveSpeed = 2;
     public int MaxDist = 15;
@@ -28,8 +28,9 @@ public class BasicEnemyScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if (!(Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()))
+        if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()))
             Debug.Log("BasicEnemyScript.cs : Player not loaded");
+
         animator = GetComponent<Animator>();
         //transform.position = Player.transform.position - Vector3.forward * MoveSpeed;
         starting_done = false;
@@ -59,7 +60,7 @@ public class BasicEnemyScript : MonoBehaviour
         }
         else
         {
-            player_pos = Player.Get_Player_Pos();
+            player_pos = player.Get_Player_Pos();
             Distance = Vector3.Distance(enemy_pos, player_pos);
             new_enemy_pos = transform.position + player_pos * MoveSpeed * Time.deltaTime;
             enemy_pos = transform.position;
@@ -103,9 +104,17 @@ public class BasicEnemyScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player Hitting")
+        //Debug.Log("BasicEnemyScript.cs : Enemy got hit! <" + gameObject.GetHashCode() + ">");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //Debug.Log("BasicEnemyScript.cs : Hash<" + gameObject.GetHashCode() + "> Enemy HP is " + HP);
+        if (other.tag == "Player Hitting")
         {
-            Debug.Log("BasicEnemyScript.cs : Enemy got hit! <" + transform.GetHashCode() + ">");
+            HP -= player.GetPlayerDamageOutput();
+            Debug.Log("BasicEnemyScript.cs : Enemy HashCode<" + gameObject.GetHashCode() + "> HP is " + HP);
+            //Debug.Log("BasicEnemyScript.cs : Enemy got hit! <" + gameObject.GetHashCode() + ">");
         }
     }
 }
