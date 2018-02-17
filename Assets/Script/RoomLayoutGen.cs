@@ -10,7 +10,7 @@ public class RoomLayoutGen : MonoBehaviour
         Wall, Floor,
     }
 
-
+    public int TextureQuality = 1;
     public int columns = 100;                                 // The number of columns on the board (how wide it will be).
     public int rows = 70;                                    // The number of rows on the board (how tall it will be).
     public IntRange numRooms = new IntRange(7, 10);         // The range of the number of rooms there can be.
@@ -20,9 +20,12 @@ public class RoomLayoutGen : MonoBehaviour
     public GameObject[] floorTiles;                           // An array of floor tile prefabs.
     public GameObject[] wallTiles;                            // An array of wall tile prefabs.
     public GameObject[] outerWallTiles;                       // An array of outer wall tile prefabs.
-    public GameObject player;
+
+    public GameObject player_obj;
     public GameObject spawner_block;
     public GameObject door_blocks;
+
+    private Player player_obj_script;
 
     private int[][] room_layout;
    // private int[] room_layout_total;
@@ -30,34 +33,74 @@ public class RoomLayoutGen : MonoBehaviour
     private Room[] rooms;                                     // All the rooms that are created for this board.
     private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
 
-    public Stack<Vector2> prev_steps = new Stack<Vector2>();
-    public List<Corridor> total_corridor = new List<Corridor>();
+    private Stack<Vector2> prev_steps = new Stack<Vector2>();
+    private List<Corridor> total_corridor = new List<Corridor>();
 
+    private GameObject[] total_spawners;
+    private List<GameObject> total_blocks = new List<GameObject>();
 
     private void Start()
     {
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
-        player = GameObject.FindGameObjectWithTag("Player");
+        player_obj = GameObject.FindGameObjectWithTag("Player");
 
-        SetupTilesArray();
-
-        CreateRoomsAndCorridors();
-
-        SetTilesValuesForRooms();
-        SetTilesValuesForCorridors();
-
-        InstantiateTiles();
-        InstantiateOuterWalls();
+        player_obj_script = player_obj.GetComponent<Player>();
 
         Random.InitState(System.DateTime.Now.Millisecond);
 
-        QualitySettings.masterTextureLimit = 1;
+        QualitySettings.masterTextureLimit = TextureQuality;
+
+        total_spawners = new GameObject[numRooms.m_Max - 1];
+
+        for(int i = 0; i < total_spawners.Length; ++i)
+        {
+            Vector3 temp_spawner_vec = new Vector3(0, 0, 0);
+            GameObject tileInstance = Instantiate(spawner_block, temp_spawner_vec, Quaternion.identity) as GameObject;
+            tileInstance.SetActive(false);
+
+            total_spawners[i] = tileInstance;
+        }
+
+        SetUpMap();
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown("space"))
+            SetUpMap();
+
+        bool is_all_spawner_dead = false;
+        for (int i = 0; i < total_spawners.Length; ++i)
+        {
+            if (total_spawners[i].activeSelf)
+            {
+                is_all_spawner_dead = false;
+                break;
+            }
+
+            if (!is_all_spawner_dead)
+                is_all_spawner_dead = true;
+        }
+
+        if(is_all_spawner_dead)
+        {
+            ///TODO SPAWN STAIRS FOR NEXT LEVEL
+        }
+    }
 
     void SetupTilesArray()
     {
+        foreach(GameObject i in total_blocks)
+        {
+            Destroy(i);
+        }
+
+        total_blocks.Clear();
+
+        total_corridor.Clear();
+        prev_steps.Clear();
+
         rooms = new Room[numRooms.Random];
         Debug.Log("Room No: " + rooms.Length);
 
@@ -71,7 +114,7 @@ public class RoomLayoutGen : MonoBehaviour
             tiles[i] = new TileType[rows];
         }
 
-      //  room_layout_total = new int[rooms.Length];
+        //  room_layout_total = new int[rooms.Length];
 
         room_layout = new int[3][];
 
@@ -82,9 +125,9 @@ public class RoomLayoutGen : MonoBehaviour
             room_layout[i] = new int[3];
         }
 
-        for(int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3; ++i)
         {
-            for(int j = 0; j < 3; ++j)
+            for (int j = 0; j < 3; ++j)
             {
                 room_layout[j][i] = 5;
             }
@@ -99,7 +142,7 @@ public class RoomLayoutGen : MonoBehaviour
         Vector2 temp_vec;
 
         for (int i = 0; i < rooms.Length;)
-        {      
+        {
             int temp = UnityEngine.Random.Range(0, 4);
 
             //0 - UP, 1 - DOWN, 2 - LEFT, 3 - RIGHT
@@ -225,7 +268,7 @@ public class RoomLayoutGen : MonoBehaviour
             ++i;
             ++temp_room_layout_adder;
         }
-     
+
         int temp_no_of_room = 0, player_spawn_point_y = 0;
         bool set_player_spawn = false;
         bool set_boss_spawn = false;
@@ -242,26 +285,34 @@ public class RoomLayoutGen : MonoBehaviour
                     if (!set_player_spawn)
                     {
                         player_spawn_point_y = i;
-                        player.transform.position = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
+                        player_obj_script.transform.position = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         set_player_spawn = true;
+
+                        Vector3 temp_spawner_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
+                        total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().transform.position = temp_spawner_vec;
+                        total_spawners[temp_no_of_room].SetActive(false);
                     }
                     else
                     {
                         // Creating the spawner blocks
                         Vector3 temp_spawner_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
-                        GameObject tileInstance = Instantiate(spawner_block, temp_spawner_vec, Quaternion.identity) as GameObject;
+                        total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().transform.position = temp_spawner_vec;
+                        total_spawners[temp_no_of_room].SetActive(true);
 
-                        if (!set_boss_spawn)
+                        if (player_obj_script.GetLevel() % 5 == 0)
                         {
-                            if (player_spawn_point_y > 0 && i == 0)
+                            if (!set_boss_spawn)
                             {
-                                tileInstance.GetComponent<SpawnerBlock>().SpawnBoss();
-                                set_boss_spawn = true;
-                            }
-                            else if (player_spawn_point_y <= 0 && i == 2)
-                            {
-                                tileInstance.GetComponent<SpawnerBlock>().SpawnBoss();
-                                set_boss_spawn = true;
+                                if (player_spawn_point_y > 0 && i == 0)
+                                {
+                                    total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().SpawnBoss(true);
+                                    set_boss_spawn = true;
+                                }
+                                else if (player_spawn_point_y <= 0 && i == 2)
+                                {
+                                    total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().SpawnBoss(true);
+                                    set_boss_spawn = true;
+                                }
                             }
                         }
                     }
@@ -325,10 +376,8 @@ public class RoomLayoutGen : MonoBehaviour
         // Go through every corridor...
         for (int loop = 0; loop < 3; ++loop)
         {
-            for (int i = 0; i < total_corridor.Count; i++)
+           foreach(Corridor currentCorridor in total_corridor)
             {
-                Corridor currentCorridor = total_corridor[i];
-
                 // and go through it's length.
                 for (int j = 0; j < corridorLength; j++)
                 {
@@ -346,9 +395,10 @@ public class RoomLayoutGen : MonoBehaviour
 
                             if (j == 0 || j == corridorLength - 2)
                             {
-                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * 1.96f);
+                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * ((yCoord < 20) ? 1.865f : 1.93f));
 
                                 GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
+                                total_blocks.Add(tileInstance);
                             }
                             break;
                         case Direction.Left:
@@ -360,34 +410,48 @@ public class RoomLayoutGen : MonoBehaviour
                                 Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * 2);
 
                                 GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
+                                total_blocks.Add(tileInstance);
                             }
                             break;
                         case Direction.Down:
                             yCoord -= j;
-                            xCoord += loop;
+                            xCoord -= loop;
 
                             if (j == 0 || j == corridorLength - 2)
                             {
                                 Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * ((yCoord < 20) ? 1.865f : 1.93f));
 
                                 GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
+                                total_blocks.Add(tileInstance);
                             }
                             break;
                         case Direction.Right:
                             xCoord += j;
-                            yCoord += loop;
+                            yCoord -= loop;
 
                             if (j == 0 || j == corridorLength - 2)
                             {
                                 Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * 2);
 
                                 GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
+                                total_blocks.Add(tileInstance);
                             }
                             break;
                     }
 
                     // Set the tile at these coordinates to Floor.
                     tiles[xCoord][yCoord] = TileType.Floor;
+                }
+            }
+        }
+
+        foreach (GameObject obj in total_blocks)
+        {
+            if (obj.CompareTag("Door"))
+            {
+                for (int i = 0; i < total_spawners.Length; ++i)
+                {
+                    total_spawners[i].GetComponent<SpawnerBlock>().AddDoors(obj);
                 }
             }
         }
@@ -400,7 +464,7 @@ public class RoomLayoutGen : MonoBehaviour
         // Create an instance of the prefab from the random index of the array.
         Vector3 position = new Vector3(roomWidth * 3.45f, 0, roomHeight * 3.9f);
         GameObject tileInstance = Instantiate(floorTiles[0], position, Quaternion.identity) as GameObject;
-
+        
         // Set the tile's parent to the board holder.
         tileInstance.transform.parent = boardHolder.transform;
         tileInstance.transform.localScale = new Vector3(columns * 2, tileInstance.transform.localScale.y, rows * 2);
@@ -482,8 +546,27 @@ public class RoomLayoutGen : MonoBehaviour
 
         // Create an instance of the prefab from the random index of the array.
         GameObject tileInstance = Instantiate(prefabs[randomIndex], position, Quaternion.identity) as GameObject;
+        total_blocks.Add(tileInstance);
 
         // Set the tile's parent to the board holder.
         tileInstance.transform.parent = boardHolder.transform;
+    }
+
+    void SetUpMap()
+    {
+        for (int i = 0; i < total_spawners.Length; ++i)
+        {
+            total_spawners[i].GetComponent<SpawnerBlock>().Reset();
+        }
+
+        SetupTilesArray();
+
+        CreateRoomsAndCorridors();
+
+        SetTilesValuesForRooms();
+        SetTilesValuesForCorridors();
+
+        InstantiateTiles();
+        InstantiateOuterWalls();
     }
 }

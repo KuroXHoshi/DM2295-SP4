@@ -35,6 +35,11 @@ public class Player : PlayerSkills
         return Health;
     }
 
+    public float GetLevel()
+    {
+        return Level;
+    }
+
     public float GetStamina()
     {
         return Stamina;
@@ -48,6 +53,11 @@ public class Player : PlayerSkills
     public void TakeDamage(float _dmg)
     {
         Health -= _dmg;
+    }
+
+    public void SetLevel(float level_input)
+    {
+        Level = level_input;
     }
 
     void Regeneration()

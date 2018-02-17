@@ -9,6 +9,7 @@ public class BossScript : MonoBehaviour {
     public Text progresstext;
 
     public float HP = 1000;
+    public float MAX_HP = 1000;
     float critical_HP = 100;
     public GameObject player; //: Transform;
                               // public Transform playerTransform;
@@ -124,6 +125,12 @@ public class BossScript : MonoBehaviour {
 
         //slider.value = HP;
         //progresstext.text = HP * 100f + "%";
+    }
+
+    public void Reset()
+    {
+        HP = MAX_HP;
+        gameObject.SetActive(false);
     }
 }
 

@@ -10,6 +10,7 @@ public class BasicEnemyScript : MonoBehaviour
     public int MaxDist = 15;
     public int MinDist = 1;
     public int HP = 10;
+    public int MAX_HP = 10;
     public int DMG = 1;
     //public float movementSpd = 10;
     public bool NEAR_ATTACK = false;
@@ -44,7 +45,6 @@ public class BasicEnemyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (!starting_done)
         {
             if (transform.position.y >= 0)
@@ -106,6 +106,11 @@ public class BasicEnemyScript : MonoBehaviour
         // If enemy HP reaches 0 set to gameObject to false
         if (HP <= 0)
         {
+            starting_done = false;
+            transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
+            rigid_entity_body.detectCollisions = false;
+            rigid_entity_body.useGravity = false;
+            HP = MAX_HP;
             gameObject.SetActive(false);
         }
     }
@@ -124,5 +129,14 @@ public class BasicEnemyScript : MonoBehaviour
             Debug.Log("BasicEnemyScript.cs : Enemy HashCode<" + gameObject.GetHashCode() + "> HP is " + HP);
             //Debug.Log("BasicEnemyScript.cs : Enemy got hit! <" + gameObject.GetHashCode() + ">");
         }
+    }
+
+    public void Reset()
+    {
+        starting_done = false;
+        rigid_entity_body.detectCollisions = false;
+        rigid_entity_body.useGravity = false;
+        HP = MAX_HP;
+        gameObject.SetActive(false);
     }
 }
