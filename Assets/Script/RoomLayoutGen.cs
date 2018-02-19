@@ -14,6 +14,7 @@ public class RoomLayoutGen : MonoBehaviour
     public int columns = 100;                                 // The number of columns on the board (how wide it will be).
     public int rows = 70;                                    // The number of rows on the board (how tall it will be).
     public IntRange numRooms = new IntRange(7, 10);         // The range of the number of rooms there can be.
+    public IntRange numRooms_simple = new IntRange(5, 8);         // The range of the number of rooms there can be.
     public int roomWidth = 30;         // The range of widths rooms can have.
     public int roomHeight = 20;        // The range of heights rooms can have.
     public int corridorLength = 6;    // The range of lengths corridors between rooms can have.
@@ -101,7 +102,11 @@ public class RoomLayoutGen : MonoBehaviour
         total_corridor.Clear();
         prev_steps.Clear();
 
-        rooms = new Room[numRooms.Random];
+        if(player_obj_script.GetLevel() % 5 == 0)
+            rooms = new Room[numRooms.Random];
+        else
+            rooms = new Room[numRooms_simple.Random];
+
         Debug.Log("Room No: " + rooms.Length);
 
         // Set the tiles jagged array to the correct width.
