@@ -29,7 +29,6 @@ public class RoomLayoutGen : MonoBehaviour
     private Player player_obj_script;
 
     private int[][] room_layout;
-   // private int[] room_layout_total;
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
     private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
