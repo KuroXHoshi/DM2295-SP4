@@ -10,6 +10,7 @@ public class RoomLayoutGen : MonoBehaviour
         Wall, Floor,
     }
 
+    public float height_of_blocks = 1;
     public int TextureQuality = 1;
     public int columns = 100;                                 // The number of columns on the board (how wide it will be).
     public int rows = 70;                                    // The number of rows on the board (how tall it will be).
@@ -353,6 +354,11 @@ public class RoomLayoutGen : MonoBehaviour
 
     void SetTilesValuesForRooms()
     {
+        int[][] temp_array;
+
+        int half_room_height = ((int)((roomHeight * 0.5) * 0.5));
+        int half_room_width = ((int)((roomWidth * 0.5) * 0.5));
+       
         // Go through all the rooms...
         for (int i = 0; i < rooms.Length; i++)
         {
@@ -371,6 +377,123 @@ public class RoomLayoutGen : MonoBehaviour
                     tiles[xCoord][yCoord] = TileType.Floor;
                 }
             }
+        }
+
+        for (int room_no = 1; room_no < rooms.Length; room_no++)
+        {
+            Room currentRoom = rooms[room_no];
+
+            temp_array = new int[half_room_height][];
+
+            for (int i = 0; i < half_room_height; ++i)
+            {
+                temp_array[i] = new int[half_room_width];
+            }
+
+            for (int i = 0; i < half_room_height; ++i)
+            {
+                for (int j = 0; j < half_room_width; ++j)
+                {
+                    int rand = UnityEngine.Random.Range(0, 100);
+
+                    if (rand < 50)
+                    {
+                        temp_array[i][j] = 1;
+                    }
+                    else
+                    {
+                        temp_array[i][j] = 0;
+                    }
+                }
+            }
+
+            //BOTTOM LEFT
+            for (int i = 0; i < half_room_height; ++i)
+            {
+                for (int j = 0; j < half_room_width; ++j)
+                {
+                    if (temp_array[i][j] == 1)
+                    {
+                        Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 2, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 1);
+                      //  tiles[((currentRoom.xPos + j) + half_room_width) - 2][((currentRoom.yPos + i) + half_room_height) - 1] = TileType.Wall;
+
+                        GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                        total_blocks.Add(tileInstance);
+
+                    }
+                }
+            }
+
+            //BOTTOM RIGHT
+            for (int i = 0; i < half_room_height; ++i)
+            {
+                int x = half_room_width - 1;
+                for (int j = 0; j < half_room_width; ++j)
+                {
+                    if (temp_array[i][x] == 1)
+                    {
+                        Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) + 2, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 1);
+                       
+                        GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                        total_blocks.Add(tileInstance);
+                        //tiles[((currentRoom.xPos + j) + (half_room_width * 2)) + 2][((currentRoom.yPos + i) + half_room_height) - 1] = TileType.Wall;
+                    }
+
+                    --x;
+                }
+            }
+
+            //TOP RIGHT
+            int y = half_room_height - 1;
+            for (int i = 0; i < half_room_height; ++i)
+            {
+                int x = half_room_width - 1;
+                for (int j = 0; j < half_room_width; ++j)
+                {
+                    if (temp_array[y][x] == 1)
+                    {
+                        Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) + 2, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) + 2);
+
+                        GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                        total_blocks.Add(tileInstance);
+
+                       // tiles[((currentRoom.xPos + j) + (half_room_width * 2)) + 2][((currentRoom.yPos + i) + (half_room_height * 2)) + 2] = TileType.Wall;
+                    }
+
+                    --x;
+                }
+                --y;
+            }
+
+            //TOP LEFT
+            y = half_room_height - 1;
+            for (int i = 0; i < half_room_height; ++i)
+            {
+                for (int j = 0; j < half_room_width; ++j)
+                {
+                    if (temp_array[y][j] == 1)
+                    {
+                        Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 2, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) + 2);
+
+                        GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                        total_blocks.Add(tileInstance);
+
+                       // tiles[((currentRoom.xPos + j) + half_room_width) - 2][((currentRoom.yPos + i) + (half_room_height * 2)) + 2] = TileType.Wall;
+                    }
+                }
+                --y;
+            }
+
+            //for (int i = 0; i < half_room_height; ++i)
+            //{
+            //    string temp_string = "";
+            //    for (int j = 0; j < half_room_width; ++j)
+            //    {
+            //        temp_string += temp_array[i][j];
+            //    }
+
+            //    Debug.Log(temp_string);
+            //}
         }
     }
 
@@ -399,7 +522,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                             if (j == 0 || j == corridorLength - 2)
                             {
-                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * ((yCoord < 20) ? 1.865f : 1.93f));
+                                Vector3 temp_vec = new Vector3(xCoord * 2, height_of_blocks, yCoord * ((yCoord < 20) ? 1.865f : 1.93f));
 
                                 GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
                                 total_blocks.Add(tileInstance);
@@ -411,7 +534,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                             if (j == 0 || j == corridorLength - 2)
                             {
-                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * 2);
+                                Vector3 temp_vec = new Vector3(xCoord * 2, height_of_blocks, yCoord * 2);
 
                                 GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
                                 total_blocks.Add(tileInstance);
@@ -423,7 +546,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                             if (j == 0 || j == corridorLength - 2)
                             {
-                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * ((yCoord < 20) ? 1.865f : 1.93f));
+                                Vector3 temp_vec = new Vector3(xCoord * 2, height_of_blocks, yCoord * ((yCoord < 20) ? 1.865f : 1.93f));
 
                                 GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
                                 total_blocks.Add(tileInstance);
@@ -435,7 +558,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                             if (j == 0 || j == corridorLength - 2)
                             {
-                                Vector3 temp_vec = new Vector3(xCoord * 2, 0, yCoord * 2);
+                                Vector3 temp_vec = new Vector3(xCoord * 2, height_of_blocks, yCoord * 2);
 
                                 GameObject tileInstance = Instantiate(door_blocks, temp_vec, Quaternion.identity) as GameObject;
                                 total_blocks.Add(tileInstance);
@@ -546,7 +669,7 @@ public class RoomLayoutGen : MonoBehaviour
         int randomIndex = Random.Range(0, prefabs.Length);
 
         // The position to be instantiated at is based on the coordinates.
-        Vector3 position = new Vector3(xCoord * 2, 0.0f, yCoord * 2);
+        Vector3 position = new Vector3(xCoord * 2, height_of_blocks, yCoord * 2);
 
         // Create an instance of the prefab from the random index of the array.
         GameObject tileInstance = Instantiate(prefabs[randomIndex], position, Quaternion.identity) as GameObject;
