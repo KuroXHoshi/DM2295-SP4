@@ -557,6 +557,7 @@ public class RoomLayoutGen : MonoBehaviour
         for (int i = 0; i < total_spawners.Length; ++i)
         {
             total_spawners[i].GetComponent<SpawnerBlock>().Reset();
+            total_spawners[i].SetActive(false);
         }
 
         SetupTilesArray();

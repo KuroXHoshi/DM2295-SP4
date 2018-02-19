@@ -61,9 +61,9 @@ public class BasicEnemyScript : MonoBehaviour
         else
         {
             player_pos = player.Get_Player_Pos();
+            enemy_pos = transform.position;
             Distance = Vector3.Distance(enemy_pos, player_pos);
             new_enemy_pos = transform.position + player_pos * MoveSpeed * Time.deltaTime;
-            enemy_pos = transform.position;
             target_player_DIR = player_pos - enemy_pos;
 
 
