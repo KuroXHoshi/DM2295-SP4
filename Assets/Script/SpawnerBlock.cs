@@ -83,11 +83,11 @@ public class SpawnerBlock : MonoBehaviour {
 
                 spawned = true;
 
-                //foreach (Door d in all_door_script)
-                //{
-                //    d.gameObject.SetActive(true);
-                //    d.TriggerDoor();
-                //}
+                foreach (Door d in all_door_script)
+                {
+                    d.gameObject.SetActive(true);
+                    d.TriggerDoor();
+                }
             }
         }
 
