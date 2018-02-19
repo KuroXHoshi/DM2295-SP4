@@ -9,8 +9,12 @@ public class AudioScript : MonoBehaviour {
     public AudioSource MusicSource;
     public AudioSource Attack;
     public AudioSource Defend;
-	// Use this for initialization
-	void Start () {
+    public AudioSource PlayerMovement;
+    public AudioSource EnemyMovement;
+    public AudioSource EnemySpell;
+    public AudioSource PlayerSpell;
+    // Use this for initialization
+    void Start () {
         MusicSource.clip = MusicClip;
         MusicSource = GetComponent<AudioSource>();
         //main menu only
@@ -29,5 +33,21 @@ public class AudioScript : MonoBehaviour {
     public void defend()
     {
         Defend.Play();
+    }
+    public void playermove()
+    {
+        PlayerMovement.Play();
+    }
+    public void enemymove()
+    {
+        EnemyMovement.Play();
+    }
+    public void enemyspell()
+    {
+       EnemySpell.Play();
+    }
+    public void playerspell()
+    {
+        PlayerSpell.Play();
     }
 }
