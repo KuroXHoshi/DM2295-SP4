@@ -1,16 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BasicEnemyScript : MonoBehaviour
 {
+    
     private Player player; //: Transform;
    // public Transform playerTransform;
     public int MoveSpeed = 2;
     public int MaxDist = 15;
     public int MinDist = 1;
-    public int HP = 10;
-    public int MAX_HP = 10;
+    public float HP = 10;
+    public float MAX_HP = 10;
     public int DMG = 1;
     //public float movementSpd = 10;
     public bool NEAR_ATTACK = false;
@@ -26,6 +28,13 @@ public class BasicEnemyScript : MonoBehaviour
     Vector3 new_enemy_pos;
     Vector3 target_player_DIR;
     float Distance;
+
+    //[Header("Unity Stuff")]
+    public Image health;
+    //health = starthealth;
+    //when take damage (take damage function)
+    //healthBar.fillAmount = health / starthealth ;
+
     // Use this for initialization
     void Start()
     {
@@ -40,11 +49,14 @@ public class BasicEnemyScript : MonoBehaviour
 
         rigid_entity_body.detectCollisions = false;
         rigid_entity_body.useGravity = false;
+
+       // HP = MAX_HP;
     }
     
     // Update is called once per frame
     void Update()
     {
+        
         if (!starting_done)
         {
             if (transform.position.y >= 0)
@@ -66,9 +78,11 @@ public class BasicEnemyScript : MonoBehaviour
             new_enemy_pos = transform.position + player_pos * MoveSpeed * Time.deltaTime;
             target_player_DIR = player_pos - enemy_pos;
 
+            //health.fillAmount = HP / MAX_HP;
 
             if (Distance <= MinDist)//distance reachable,attack
             {
+
                 //attack melee animation activate pls
                 //NEAR_ATTACK = true;
                 animator.SetBool("attack", true);
@@ -126,10 +140,15 @@ public class BasicEnemyScript : MonoBehaviour
         if (other.tag == "Player Hitting")
         {
             HP -= player.GetPlayerDamageOutput();
+            health.fillAmount = HP / MAX_HP;
             Debug.Log("BasicEnemyScript.cs : Enemy HashCode<" + gameObject.GetHashCode() + "> HP is " + HP);
             //Debug.Log("BasicEnemyScript.cs : Enemy got hit! <" + gameObject.GetHashCode() + ">");
+          
         }
     }
+
+
+
 
     public void Reset()
     {
