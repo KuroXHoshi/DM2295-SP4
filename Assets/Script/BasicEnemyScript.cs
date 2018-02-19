@@ -35,11 +35,17 @@ public class BasicEnemyScript : MonoBehaviour
     //when take damage (take damage function)
     //healthBar.fillAmount = health / starthealth ;
 
+    public Canvas healthbar;
+    private Transform camera;
+
     // Use this for initialization
     void Start()
     {
         if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()))
             Debug.Log("BasicEnemyScript.cs : Player not loaded");
+
+        if (!(camera = GameObject.FindGameObjectWithTag("MainCamera").transform))
+            Debug.Log("BasicEnemyScript.cs : Camera not loaded");
 
         animator = GetComponent<Animator>();
         //transform.position = Player.transform.position - Vector3.forward * MoveSpeed;
@@ -56,6 +62,8 @@ public class BasicEnemyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gameObject.tag == "Skele_Medium")
+            return;
         
         if (!starting_done)
         {
@@ -117,7 +125,11 @@ public class BasicEnemyScript : MonoBehaviour
 
     private void LateUpdate()
     {
-        // If enemy HP reaches 0 set to gameObject to false
+        //health.transform.LookAt(camera);
+        healthbar.transform.rotation = new Quaternion(70, -180, 0, healthbar.transform.rotation.w);
+        //healthbar.transform.LookAt(camera);
+
+        // If enemy HP reaches 0 set gameObject to false
         if (HP <= 0)
         {
             starting_done = false;
