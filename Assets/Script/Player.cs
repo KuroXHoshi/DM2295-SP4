@@ -88,11 +88,6 @@ public class Player : PlayerSkills
         Level = level_input;
     }
 
-    void Regeneration()
-    {
-
-    }
-
     private void Awake()
     {
         MaxHealth = Health;
