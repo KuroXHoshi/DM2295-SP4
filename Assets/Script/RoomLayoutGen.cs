@@ -616,6 +616,7 @@ public class RoomLayoutGen : MonoBehaviour
         tileInstance.transform.parent = boardHolder.transform;
         tileInstance.transform.localScale = new Vector3(columns * 2, tileInstance.transform.localScale.y, rows * 2);
 
+        total_blocks.Add(tileInstance);
 
         // Go through all the tiles in the jagged array...
         for (int i = 0; i < tiles.Length; i++)
@@ -705,6 +706,13 @@ public class RoomLayoutGen : MonoBehaviour
         {
             total_spawners[i].GetComponent<SpawnerBlock>().Reset();
             total_spawners[i].SetActive(false);
+        }
+
+        GameObject []gold_piles = GameObject.FindGameObjectsWithTag("Coin");
+
+        for(int i = 0; i < gold_piles.Length; ++i)
+        {
+            Destroy(gold_piles[i]);        
         }
 
         SetupTilesArray();

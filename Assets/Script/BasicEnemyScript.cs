@@ -17,7 +17,12 @@ public class BasicEnemyScript : MonoBehaviour
     //public float movementSpd = 10;
     public bool NEAR_ATTACK = false;
     public float rotSpd = 10;
+    public IntRange coin_range = new IntRange(1, 100);
+
     private bool starting_done;
+    private int gold = 0;
+
+    public GameObject gold_pile;
 
     private Rigidbody rigid_entity_body;
 
@@ -171,6 +176,7 @@ public class BasicEnemyScript : MonoBehaviour
         rigid_entity_body.useGravity = false;
         HP = MAX_HP;
         health.fillAmount = HP / MAX_HP;
+        GameObject tileInstance = Instantiate(gold_pile, transform.position, Quaternion.identity) as GameObject;
         gameObject.SetActive(false);
     }
 }
