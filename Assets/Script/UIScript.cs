@@ -11,17 +11,27 @@ public class UIScript : MonoBehaviour {
     public GameObject equip_menu;
     public Slider healthslider;
     public Slider staminaslider;
+
+    [SerializeField]
+    private Text healthpercent, staminapercent;
+
     // Use this for initialization
     void Start () {
 		if(!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()))
             Debug.Log("UIScript.cs : Player not loaded");
 
-        player.GetHealth();
-        player.GetStamina();
+        healthslider.maxValue = player.MaxHealth;
+        staminaslider.maxValue = player.MaxStamina;
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void FixedUpdate()
+    {
+        healthbar();
+        staminabar();
+    }
+
+    // Update is called once per frame
+    void Update () {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             pause_menu.SetActive(!pause_menu.activeSelf);
@@ -99,10 +109,12 @@ public class UIScript : MonoBehaviour {
     public void healthbar()
     {
         healthslider.value = player.GetHealth();
+        healthpercent.text = player.GetHealth().ToString();
     }
 
     public void staminabar()
     {
         staminaslider.value = player.GetStamina();
+        staminapercent.text = player.GetStamina().ToString();
     }
 }

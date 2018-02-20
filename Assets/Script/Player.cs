@@ -25,7 +25,7 @@ public class Player : PlayerSkills
         public float staminaregenspd;
         public float atkdist;
     }
-    
+
     [SerializeField]
     private float Level = 1f, Health = 10f, Stamina = 5f, AtkSpd = 1f, MoveSpd = 10f, HealthRegenSpd = 0.5f, StaminaRegenSpd = 0.1f, AtkDist = 1.5f, DashDistance = 5f, DashSpd = 4f;
     [SerializeField]
@@ -45,10 +45,12 @@ public class Player : PlayerSkills
 
     //public PlayerStatistic playerStat { get; set; }
     public PlayerState playerState { get; set; }
+    public float MaxHealth { get; protected set; }
+    public float MaxStamina { get; protected set; }
 
     private Player()
     {
-        
+
     }
 
     public Vector3 Get_Player_Pos()
@@ -93,11 +95,12 @@ public class Player : PlayerSkills
 
     private void Awake()
     {
-        
+        MaxHealth = Health;
+        MaxStamina = Stamina;
     }
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         if (!(anim = gameObject.GetComponent<Animator>()))
             Debug.Log("Player.cs : Animator Controller not Loaded!");
@@ -112,7 +115,7 @@ public class Player : PlayerSkills
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
     }
 
@@ -208,11 +211,24 @@ public class Player : PlayerSkills
 
         if (Vector3.Distance(prevPos, transform.position) > DashDistance)
         {
-            playerState = (anim.GetBool("attacking")) ? PlayerState.NormalAttack : PlayerState.Idle;
-
-            //playerState = PlayerState.Idle;
             anim.SetBool("dash", false);
+            playerState = (anim.GetBool("attacking")) ? PlayerState.NormalAttack : PlayerState.Idle;
         }
+    }
+
+    void PassiveRegen()
+    {
+
+    }
+
+    void PassiveIronSkin()
+    {
+
+    }
+
+    void PassiveEvasion()
+    {
+
     }
 
     private void OnCollisionEnter(Collision collision)
