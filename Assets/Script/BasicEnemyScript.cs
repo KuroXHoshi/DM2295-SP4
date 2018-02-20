@@ -168,6 +168,7 @@ public class BasicEnemyScript : MonoBehaviour
         rigid_entity_body.detectCollisions = false;
         rigid_entity_body.useGravity = false;
         HP = MAX_HP;
+        health.fillAmount = HP / MAX_HP;
         gameObject.SetActive(false);
     }
 }
