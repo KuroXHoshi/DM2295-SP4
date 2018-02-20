@@ -26,6 +26,7 @@ public class RoomLayoutGen : MonoBehaviour
     public GameObject player_obj;
     public GameObject spawner_block;
     public GameObject door_blocks;
+    public GameObject[] statue;
 
     private Player player_obj_script;
 
@@ -277,6 +278,7 @@ public class RoomLayoutGen : MonoBehaviour
         int temp_no_of_room = 0, player_spawn_point_y = 0;
         bool set_player_spawn = false;
         bool set_boss_spawn = false;
+        bool set_statue_spawn = false;
 
         for (int i = 0; i < 3; ++i)
         {
@@ -318,6 +320,21 @@ public class RoomLayoutGen : MonoBehaviour
                                     total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().SpawnBoss(true);
                                     set_boss_spawn = true;
                                 }
+                            }
+                        }
+
+                        if(!set_statue_spawn)
+                        {
+                            if(Random.Range(0, 100) < 20)
+                            {
+                                Vector3 temp_statue_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, -20, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
+                                GameObject tileInstance = Instantiate(statue[Random.Range(0, statue.Length)], temp_statue_vec, Quaternion.identity) as GameObject;
+                                tileInstance.SetActive(false);
+
+                                total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().SetStatue(tileInstance);
+                                total_blocks.Add(tileInstance);
+
+                                set_statue_spawn = true;
                             }
                         }
                     }
@@ -381,119 +398,122 @@ public class RoomLayoutGen : MonoBehaviour
 
         for (int room_no = 1; room_no < rooms.Length; room_no++)
         {
-            Room currentRoom = rooms[room_no];
-
-            temp_array = new int[half_room_height][];
-
-            for (int i = 0; i < half_room_height; ++i)
+            if (!total_spawners[room_no].GetComponent<SpawnerBlock>().IsSpawningBoss())
             {
-                temp_array[i] = new int[half_room_width];
-            }
+                Room currentRoom = rooms[room_no];
 
-            for (int i = 0; i < half_room_height; ++i)
-            {
-                for (int j = 0; j < half_room_width; ++j)
+                temp_array = new int[half_room_height][];
+
+                for (int i = 0; i < half_room_height; ++i)
                 {
-                    int rand = UnityEngine.Random.Range(0, 100);
+                    temp_array[i] = new int[half_room_width];
+                }
 
-                    if (rand < 50)
+                for (int i = 0; i < half_room_height; ++i)
+                {
+                    for (int j = 0; j < half_room_width; ++j)
                     {
-                        temp_array[i][j] = 1;
-                    }
-                    else
-                    {
-                        temp_array[i][j] = 0;
+                        int rand = UnityEngine.Random.Range(0, 100);
+
+                        if (rand < 50)
+                        {
+                            temp_array[i][j] = 1;
+                        }
+                        else
+                        {
+                            temp_array[i][j] = 0;
+                        }
                     }
                 }
-            }
 
-            //BOTTOM LEFT
-            for (int i = 0; i < half_room_height; ++i)
-            {
-                for (int j = 0; j < half_room_width; ++j)
+                //BOTTOM LEFT
+                for (int i = 0; i < half_room_height; ++i)
                 {
-                    if (temp_array[i][j] == 1)
+                    for (int j = 0; j < half_room_width; ++j)
                     {
-                        Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 2, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 1);
-                      //  tiles[((currentRoom.xPos + j) + half_room_width) - 2][((currentRoom.yPos + i) + half_room_height) - 1] = TileType.Wall;
+                        if (temp_array[i][j] == 1)
+                        {
+                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 2, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 1);
+                            //  tiles[((currentRoom.xPos + j) + half_room_width) - 2][((currentRoom.yPos + i) + half_room_height) - 1] = TileType.Wall;
 
-                        GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
-                        total_blocks.Add(tileInstance);
+                            GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                            total_blocks.Add(tileInstance);
 
+                        }
                     }
                 }
-            }
 
-            //BOTTOM RIGHT
-            for (int i = 0; i < half_room_height; ++i)
-            {
-                int x = half_room_width - 1;
-                for (int j = 0; j < half_room_width; ++j)
+                //BOTTOM RIGHT
+                for (int i = 0; i < half_room_height; ++i)
                 {
-                    if (temp_array[i][x] == 1)
+                    int x = half_room_width - 1;
+                    for (int j = 0; j < half_room_width; ++j)
                     {
-                        Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) + 2, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 1);
-                       
-                        GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
-                        total_blocks.Add(tileInstance);
-                        //tiles[((currentRoom.xPos + j) + (half_room_width * 2)) + 2][((currentRoom.yPos + i) + half_room_height) - 1] = TileType.Wall;
-                    }
+                        if (temp_array[i][x] == 1)
+                        {
+                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) + 2, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 1);
 
-                    --x;
-                }
-            }
+                            GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                            total_blocks.Add(tileInstance);
+                            //tiles[((currentRoom.xPos + j) + (half_room_width * 2)) + 2][((currentRoom.yPos + i) + half_room_height) - 1] = TileType.Wall;
+                        }
 
-            //TOP RIGHT
-            int y = half_room_height - 1;
-            for (int i = 0; i < half_room_height; ++i)
-            {
-                int x = half_room_width - 1;
-                for (int j = 0; j < half_room_width; ++j)
-                {
-                    if (temp_array[y][x] == 1)
-                    {
-                        Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) + 2, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) + 2);
-
-                        GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
-                        total_blocks.Add(tileInstance);
-
-                       // tiles[((currentRoom.xPos + j) + (half_room_width * 2)) + 2][((currentRoom.yPos + i) + (half_room_height * 2)) + 2] = TileType.Wall;
-                    }
-
-                    --x;
-                }
-                --y;
-            }
-
-            //TOP LEFT
-            y = half_room_height - 1;
-            for (int i = 0; i < half_room_height; ++i)
-            {
-                for (int j = 0; j < half_room_width; ++j)
-                {
-                    if (temp_array[y][j] == 1)
-                    {
-                        Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 2, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) + 2);
-
-                        GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
-                        total_blocks.Add(tileInstance);
-
-                       // tiles[((currentRoom.xPos + j) + half_room_width) - 2][((currentRoom.yPos + i) + (half_room_height * 2)) + 2] = TileType.Wall;
+                        --x;
                     }
                 }
-                --y;
+
+                //TOP RIGHT
+                int y = half_room_height - 1;
+                for (int i = 0; i < half_room_height; ++i)
+                {
+                    int x = half_room_width - 1;
+                    for (int j = 0; j < half_room_width; ++j)
+                    {
+                        if (temp_array[y][x] == 1)
+                        {
+                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) + 2, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) + 2);
+
+                            GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                            total_blocks.Add(tileInstance);
+
+                            // tiles[((currentRoom.xPos + j) + (half_room_width * 2)) + 2][((currentRoom.yPos + i) + (half_room_height * 2)) + 2] = TileType.Wall;
+                        }
+
+                        --x;
+                    }
+                    --y;
+                }
+
+                //TOP LEFT
+                y = half_room_height - 1;
+                for (int i = 0; i < half_room_height; ++i)
+                {
+                    for (int j = 0; j < half_room_width; ++j)
+                    {
+                        if (temp_array[y][j] == 1)
+                        {
+                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 2, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) + 2);
+
+                            GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                            total_blocks.Add(tileInstance);
+
+                            // tiles[((currentRoom.xPos + j) + half_room_width) - 2][((currentRoom.yPos + i) + (half_room_height * 2)) + 2] = TileType.Wall;
+                        }
+                    }
+                    --y;
+                }
+
+                //for (int i = 0; i < half_room_height; ++i)
+                //{
+                //    string temp_string = "";
+                //    for (int j = 0; j < half_room_width; ++j)
+                //    {
+                //        temp_string += temp_array[i][j];
+                //    }
+
+                //    Debug.Log(temp_string);
+                //}
             }
-
-            //for (int i = 0; i < half_room_height; ++i)
-            //{
-            //    string temp_string = "";
-            //    for (int j = 0; j < half_room_width; ++j)
-            //    {
-            //        temp_string += temp_array[i][j];
-            //    }
-
-            //    Debug.Log(temp_string);
-            //}
         }
     }
 

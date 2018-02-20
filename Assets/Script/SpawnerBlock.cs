@@ -13,9 +13,11 @@ public class SpawnerBlock : MonoBehaviour {
 
     private bool spawned;
     private bool spawn_boss = false;
+    private bool contain_statue = false;
 
     private List<GameObject> entity_pool_list = new List<GameObject>();
-    private List<GameObject> boss_pool_list = new List<GameObject>();
+    private List<GameObject> boss_pool_list = new List<GameObject>(); 
+    private GameObject statue_script;
     public int pool_amount = 10;
 
     // Use this for initialization
@@ -58,13 +60,39 @@ public class SpawnerBlock : MonoBehaviour {
 
                 for (int i = 0; i < 10; ++i)
                 {
-                    int type = UnityEngine.Random.Range(0, entity_list.Length);
+                    bool is_not_in_block = false;
 
-                    float rand_x = UnityEngine.Random.Range(transform.position.x - distance_detect.x, transform.position.x + distance_detect.x);
-                    float rand_z = UnityEngine.Random.Range(transform.position.z - distance_detect.y, transform.position.z + distance_detect.y);
+                    while (!is_not_in_block)
+                    {
+                        int type = UnityEngine.Random.Range(0, entity_list.Length);
 
-                    GameObject temp_obj = GetObjectFromPool(type);
-                    temp_obj.transform.position = new Vector3(rand_x, -5, rand_z); 
+                        float rand_x = UnityEngine.Random.Range(transform.position.x - distance_detect.x, transform.position.x + distance_detect.x);
+                        float rand_z = UnityEngine.Random.Range(transform.position.z - distance_detect.y, transform.position.z + distance_detect.y);
+
+                        Vector3 temp_vec = new Vector3(rand_x, -5, rand_z);
+
+                        foreach(Door d in all_door_script)
+                        {
+                            float dist = (d.transform.position - temp_vec).sqrMagnitude;
+                          
+                            if(dist > 2)
+                            {
+                                is_not_in_block = true;
+                            }
+                            else
+                            {
+                                is_not_in_block = false;
+                                break;
+                            }
+                        }
+
+                        if(is_not_in_block)
+                        {
+                            GameObject temp_obj = GetObjectFromPool(type);
+                            temp_obj.transform.position = temp_vec;
+                        }
+                    }
+                    
                 }
 
                 if (spawn_boss)
@@ -129,7 +157,11 @@ public class SpawnerBlock : MonoBehaviour {
                 d.TriggerDoor();
             }
 
-            SpawnBoss(false);
+            if(contain_statue)
+            {
+                statue_script.SetActive(true);
+            }
+
             gameObject.SetActive(false);
         }
 	}
@@ -199,6 +231,8 @@ public class SpawnerBlock : MonoBehaviour {
     {
         isDone = false;
         spawned = false;
+        contain_statue = false;
+        SpawnBoss(false);
 
         all_door_script.Clear();
 
@@ -226,5 +260,16 @@ public class SpawnerBlock : MonoBehaviour {
             }
         }
 
+    }
+
+    public void SetStatue(GameObject _input)
+    {
+        statue_script = _input;
+        contain_statue = true;
+    }
+
+    public bool IsSpawningBoss()
+    {
+        return spawn_boss;
     }
 }
