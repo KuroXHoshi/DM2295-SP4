@@ -62,9 +62,6 @@ public class BasicEnemyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameObject.tag == "Skele_Medium")
-            return;
-        
         if (!starting_done)
         {
             if (transform.position.y >= 1)
@@ -81,6 +78,9 @@ public class BasicEnemyScript : MonoBehaviour
         }
         else
         {
+            if (gameObject.tag == "Skele_Medium")
+                return;
+
             player_pos = player.Get_Player_Pos();
             enemy_pos = transform.position;
             Distance = Vector3.Distance(enemy_pos, player_pos);
