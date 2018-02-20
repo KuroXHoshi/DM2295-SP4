@@ -139,6 +139,7 @@ public class BasicEnemyScript : MonoBehaviour
         // If enemy HP reaches 0 set gameObject to false
         if (HP <= 0)
         {
+            Instantiate(gold_pile, transform.position, Quaternion.identity);
             starting_done = false;
             transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
             rigid_entity_body.detectCollisions = false;
@@ -176,7 +177,6 @@ public class BasicEnemyScript : MonoBehaviour
         rigid_entity_body.useGravity = false;
         HP = MAX_HP;
         health.fillAmount = HP / MAX_HP;
-        GameObject tileInstance = Instantiate(gold_pile, transform.position, Quaternion.identity) as GameObject;
         gameObject.SetActive(false);
     }
 }
