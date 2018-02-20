@@ -33,7 +33,6 @@ public class Statue : MonoBehaviour {
         is_risen = false;
         cost = new IntRange(1000, 3000);
 
-        ///TEMP RAND OF CHOOSING BLESSING TYPE, TO BE CHANGE TO GET FROM TYPE ITSELF IN THE FUTURE
         IntRange temp = new IntRange(0, (int)TYPE.TOTAL_TYPE);
         type = (TYPE)temp.Random;
 
@@ -51,7 +50,7 @@ public class Statue : MonoBehaviour {
             if (player_obj_script.transform.position.x < transform.position.x + distance_push.x && player_obj_script.transform.position.x > transform.position.x - distance_push.x &&
                 player_obj_script.transform.position.z < transform.position.z + distance_push.y && player_obj_script.transform.position.z > transform.position.z - distance_push.y)
             {
-                Vector3 normalized_vec = (player_obj_script.transform.position - transform.position).normalized * 0.1f;
+                Vector3 normalized_vec = (player_obj_script.transform.position - transform.position).normalized * 0.2f;
                 player_obj_script.transform.position += new Vector3(normalized_vec.x, 0, normalized_vec.z);            
             }
 

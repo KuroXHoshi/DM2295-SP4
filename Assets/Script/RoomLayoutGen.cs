@@ -327,7 +327,7 @@ public class RoomLayoutGen : MonoBehaviour
                         {
                             if(Random.Range(0, 100) < 20)
                             {
-                                Vector3 temp_statue_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, -20, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
+                                Vector3 temp_statue_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, -10, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                                 GameObject tileInstance = Instantiate(statue[Random.Range(0, statue.Length)], temp_statue_vec, Quaternion.identity) as GameObject;
                                 tileInstance.SetActive(false);
 
