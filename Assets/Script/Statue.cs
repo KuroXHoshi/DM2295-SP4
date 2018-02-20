@@ -15,13 +15,16 @@ public class Statue : MonoBehaviour {
     public GameObject player_obj;
     private Player player_obj_script;
 
-    public IntRange cost;
+    public IntRange cost_range;
     public Vector2 distance_push;
 
     private bool is_risen;
     private TYPE type;
-
+    private int cost;
     private Vector2 starting_pos;
+
+    [SerializeField]
+    private GameObject text_mesh;
 
     // Use this for initialization
     void Start ()
@@ -31,7 +34,8 @@ public class Statue : MonoBehaviour {
         player_obj_script = player_obj.GetComponent<Player>();
 
         is_risen = false;
-        cost = new IntRange(1000, 3000);
+        cost_range = new IntRange(1000, 3000);
+        cost = cost_range.Random;
 
         IntRange temp = new IntRange(0, (int)TYPE.TOTAL_TYPE);
         type = (TYPE)temp.Random;
@@ -40,6 +44,8 @@ public class Statue : MonoBehaviour {
 
         transform.Rotate(0, -90, 0);
 
+        text_mesh.GetComponent<TextMesh>().text = "Cost: " + cost;
+        text_mesh.SetActive(false);
     }
 	
 	// Update is called once per frame
@@ -47,6 +53,7 @@ public class Statue : MonoBehaviour {
     {
         if (!is_risen)
         {
+           
             if (player_obj_script.transform.position.x < transform.position.x + distance_push.x && player_obj_script.transform.position.x > transform.position.x - distance_push.x &&
                 player_obj_script.transform.position.z < transform.position.z + distance_push.y && player_obj_script.transform.position.z > transform.position.z - distance_push.y)
             {
@@ -72,7 +79,17 @@ public class Statue : MonoBehaviour {
         }
         else
         {
-
+            if (player_obj_script.transform.position.x < transform.position.x + distance_push.x && player_obj_script.transform.position.x > transform.position.x - distance_push.x &&
+               player_obj_script.transform.position.z < transform.position.z + distance_push.y && player_obj_script.transform.position.z > transform.position.z - distance_push.y)
+            {
+                if(!text_mesh.activeSelf)
+                    text_mesh.SetActive(true);
+            }
+            else
+            {
+                if (text_mesh.activeSelf)   
+                    text_mesh.SetActive(false);
+            }
         }
 	}
 

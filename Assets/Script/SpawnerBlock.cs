@@ -66,8 +66,8 @@ public class SpawnerBlock : MonoBehaviour {
                     {
                         int type = UnityEngine.Random.Range(0, entity_list.Length);
 
-                        float rand_x = UnityEngine.Random.Range(transform.position.x - distance_detect.x, transform.position.x + distance_detect.x);
-                        float rand_z = UnityEngine.Random.Range(transform.position.z - distance_detect.y, transform.position.z + distance_detect.y);
+                        float rand_x = UnityEngine.Random.Range(transform.position.x - (distance_detect.x - 1), transform.position.x + (distance_detect.x - 1));
+                        float rand_z = UnityEngine.Random.Range(transform.position.z - (distance_detect.y - 1), transform.position.z + (distance_detect.y - 1));
 
                         Vector3 temp_vec = new Vector3(rand_x, -5, rand_z);
 
