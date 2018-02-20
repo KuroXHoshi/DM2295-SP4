@@ -27,7 +27,7 @@ public class Player : PlayerSkills
     }
     
     [SerializeField]
-    private float Level = 1, Health = 10, Stamina = 5, AtkSpd = 1, MoveSpd = 10, HealthRegenSpd = 0.5f, StaminaRegenSpd = 0.1f, AtkDist = 1.5f;
+    private float Level = 1f, Health = 10f, Stamina = 5f, AtkSpd = 1f, MoveSpd = 10f, HealthRegenSpd = 0.5f, StaminaRegenSpd = 0.1f, AtkDist = 1.5f, DashDistance = 5f, DashSpd = 4f;
     [SerializeField]
     private int Damage = 1;
 
@@ -39,8 +39,9 @@ public class Player : PlayerSkills
 
     private Animator anim;
     private Rigidbody rb;
-    private float RotaSpd = 10;
-    private float hitParticleDelay = 0;
+    private float RotaSpd = 10f;
+    private float hitParticleDelay = 0f;
+    private Vector3 prevPos = new Vector3();
 
     //public PlayerStatistic playerStat { get; set; }
     public PlayerState playerState { get; set; }
@@ -104,47 +105,32 @@ public class Player : PlayerSkills
         if (!(rb = gameObject.GetComponent<Rigidbody>()))
             Debug.Log("Player.cs : Rigidbody component not Loaded!");
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    private void FixedUpdate()
     {
         ProcessStates();
+    }
 
-        //Vector3 translation = new Vector3(0f, 0f, 0f);
-        //if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
-        //{
-        //    translation.Set(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        //    anim.SetBool("moving", (translation.x == 0 && translation.z == 0) ? false : true);
-        //}
-
-        //if (Input.GetMouseButtonDown(1))
-        //    Dash(ref translation, ref Stamina);
-
-        //Vector3 prevPos = transform.position;
-        //transform.position += translation * MoveSpd * Time.deltaTime;
-        //float step = RotaSpd * Time.deltaTime;
-        //Vector3 newDir = Vector3.RotateTowards(transform.forward, transform.position - prevPos, step, 0.0f);
-        //transform.rotation = Quaternion.LookRotation(newDir);
-
-        // Attack using Left Click
-        //anim.SetTrigger("attacking");
-
-        // Checks if state transits to attack
-        //if (!anim.IsInTransition(0) && anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && hitParticleDelay <= 0)
-        //{
-        //    Vector3 offset = new Vector3(transform.forward.x * AtkDist, transform.forward.y + 1, transform.forward.z * AtkDist);
-        //    Instantiate(particle, transform.position + offset, Quaternion.identity);
-        //    hitParticleDelay = 0.3f;
-        //}
+    // Update is called once per frame
+    void Update ()
+    {
     }
 
     private void LateUpdate()
     {
-        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && playerState != PlayerState.NormalAttack)
+        //if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && playerState != PlayerState.NormalAttack && playerState != PlayerState.Dash)
+        if (playerState == PlayerState.Idle || playerState == PlayerState.Movement)
+        {
             playerState = (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) ? PlayerState.Idle : PlayerState.Movement;
 
-        if (Input.GetMouseButtonDown(0))
-            playerState = PlayerState.NormalAttack;
+            if (Input.GetMouseButtonDown(0))
+                playerState = PlayerState.NormalAttack;
+            else if (Input.GetMouseButtonDown(1) && playerState != PlayerState.Dash)
+            {
+                playerState = PlayerState.Dash;
+                prevPos = transform.position;
+            }
+        }
 
         if (hitParticleDelay > 0)
             hitParticleDelay -= Time.deltaTime;
@@ -167,6 +153,7 @@ public class Player : PlayerSkills
                 break;
 
             case PlayerState.Dash:
+                Dash();
                 break;
 
             default:
@@ -210,9 +197,32 @@ public class Player : PlayerSkills
         }
     }
 
+    private void Dash()
+    {
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
+        {
+            anim.SetBool("dash", true);
+        }
+
+        transform.position += transform.forward * DashSpd * MoveSpd * Time.deltaTime;
+
+        if (Vector3.Distance(prevPos, transform.position) > DashDistance)
+        {
+            playerState = (anim.GetBool("attacking")) ? PlayerState.NormalAttack : PlayerState.Idle;
+
+            //playerState = PlayerState.Idle;
+            anim.SetBool("dash", false);
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        
+        if ((collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Door") && playerState == PlayerState.Dash)
+        {
+
+            playerState = PlayerState.Idle;
+            Debug.Log("Colliding Wall");
+        }
     }
 
     private void OnCollisionStay(Collision collision)
