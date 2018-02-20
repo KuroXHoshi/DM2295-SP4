@@ -21,14 +21,11 @@ public class Statue : MonoBehaviour {
     private bool is_risen;
     private TYPE type;
 
-    private Rigidbody rigid_entity_body;
-
     private Vector2 starting_pos;
 
     // Use this for initialization
     void Start ()
     {
-        rigid_entity_body = GetComponent<Rigidbody>();
         player_obj = GameObject.FindGameObjectWithTag("Player");
 
         player_obj_script = player_obj.GetComponent<Player>();
@@ -41,8 +38,9 @@ public class Statue : MonoBehaviour {
         type = (TYPE)temp.Random;
 
         starting_pos = new Vector2(transform.position.x, transform.position.z);
-        rigid_entity_body.detectCollisions = false;
-        rigid_entity_body.useGravity = false;
+
+        transform.Rotate(0, -90, 0);
+
     }
 	
 	// Update is called once per frame
@@ -53,7 +51,7 @@ public class Statue : MonoBehaviour {
             if (player_obj_script.transform.position.x < transform.position.x + distance_push.x && player_obj_script.transform.position.x > transform.position.x - distance_push.x &&
                 player_obj_script.transform.position.z < transform.position.z + distance_push.y && player_obj_script.transform.position.z > transform.position.z - distance_push.y)
             {
-                Vector3 normalized_vec = (player_obj_script.transform.position - transform.position).normalized * 0.5f;
+                Vector3 normalized_vec = (player_obj_script.transform.position - transform.position).normalized * 0.1f;
                 player_obj_script.transform.position += new Vector3(normalized_vec.x, 0, normalized_vec.z);            
             }
 
@@ -61,16 +59,16 @@ public class Statue : MonoBehaviour {
             {
                 is_risen = true;
                 transform.position = new Vector3(starting_pos.x, 0.1f, starting_pos.y);
-                rigid_entity_body.detectCollisions = true;
-                rigid_entity_body.useGravity = true;
             }
 
             float temp = UnityEngine.Random.Range(.001f, .1f);
 
+            float shaking_speed = 0.1f;
+
             transform.position = new Vector3(
-                transform.position.x + ((transform.position.x > starting_pos.x + 0.2f) ? -0.2f : ((transform.position.x < starting_pos.x - 0.2f) ? 0.2f : -0.2f)), 
+                transform.position.x + ((transform.position.x > starting_pos.x + shaking_speed) ? -shaking_speed : ((transform.position.x < starting_pos.x - shaking_speed) ? shaking_speed : -shaking_speed)), 
                 transform.position.y + temp, 
-                transform.position.z + ((transform.position.z > starting_pos.y + 0.2f) ? -0.2f : ((transform.position.z < starting_pos.y - 0.2f) ? 0.2f : -0.2f)));
+                transform.position.z + ((transform.position.z > starting_pos.y + shaking_speed) ? -shaking_speed : ((transform.position.z < starting_pos.y - shaking_speed) ? shaking_speed : -shaking_speed)));
 
         }
         else
