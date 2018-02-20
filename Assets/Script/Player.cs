@@ -29,7 +29,7 @@ public class Player : PlayerSkills
     [SerializeField]
     private float Level = 1f, Health = 10f, Stamina = 5f, AtkSpd = 1f, MoveSpd = 10f, HealthRegenSpd = 0.5f, StaminaRegenSpd = 0.1f, AtkDist = 1.5f, DashDistance = 5f, DashSpd = 4f;
     [SerializeField]
-    private int Damage = 1;
+    private int Damage = 1, Gold = 0;
 
     [SerializeField]
     private bool RegenSkill = false, IronWillSkill = false, EvasionSkill = false;
@@ -68,6 +68,11 @@ public class Player : PlayerSkills
         return Level;
     }
 
+    public int GetGold()
+    {
+        return Gold;
+    }
+
     public float GetStamina()
     {
         return Stamina;
@@ -86,6 +91,11 @@ public class Player : PlayerSkills
     public void SetLevel(float level_input)
     {
         Level = level_input;
+    }
+
+    public void SetGold(int gold_input)
+    {
+        Gold = gold_input;
     }
 
     private void Awake()
@@ -228,16 +238,22 @@ public class Player : PlayerSkills
 
     private void OnCollisionEnter(Collision collision)
     {
-        if ((collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Door") && playerState == PlayerState.Dash)
+        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door")) && playerState == PlayerState.Dash)
         {
             anim.SetBool("dash", false);
             playerState = PlayerState.Idle;
+        }
+
+        if(collision.gameObject.tag.Equals("Coin"))
+        {
+            Gold += collision.gameObject.GetComponent<Gold>().GetGoldValue();
+            Destroy(collision.gameObject);
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if ((collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Door") && playerState == PlayerState.Dash)
+        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door")) && playerState == PlayerState.Dash)
         {
             anim.SetBool("dash", false);
             playerState = PlayerState.Idle;

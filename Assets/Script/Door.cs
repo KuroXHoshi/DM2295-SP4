@@ -25,7 +25,7 @@ public class Door : MonoBehaviour {
             {
                 if (transform.position.y > -5)
                 {
-                    float temp_rand = UnityEngine.Random.Range(.5f, .8f);
+                    float temp_rand = UnityEngine.Random.Range(.01f, .2f);
                     Vector3 temp = new Vector3(transform.position.x, transform.position.y - temp_rand, transform.position.z);
 
                     transform.position = temp;                   
@@ -40,7 +40,7 @@ public class Door : MonoBehaviour {
             {
                 if (transform.position.y < 0)
                 {
-                    float temp_rand = UnityEngine.Random.Range(.8f, 1.0f);
+                    float temp_rand = UnityEngine.Random.Range(.01f, .2f);
                     Vector3 temp = new Vector3(transform.position.x, transform.position.y + temp_rand, transform.position.z);
 
                     transform.position = temp;

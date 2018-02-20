@@ -17,7 +17,7 @@ public class BasicEnemyScript : MonoBehaviour
     //public float movementSpd = 10;
     public bool NEAR_ATTACK = false;
     public float rotSpd = 10;
-    public IntRange coin_range = new IntRange(1, 100);
+    public IntRange coin_range = new IntRange(10, 100);
 
     private bool starting_done;
     private int gold = 0;
@@ -60,6 +60,8 @@ public class BasicEnemyScript : MonoBehaviour
 
         rigid_entity_body.detectCollisions = false;
         rigid_entity_body.useGravity = false;
+
+        gold = coin_range.Random;
 
        // HP = MAX_HP;
     }
@@ -139,7 +141,9 @@ public class BasicEnemyScript : MonoBehaviour
         // If enemy HP reaches 0 set gameObject to false
         if (HP <= 0)
         {
-            Instantiate(gold_pile, transform.position, Quaternion.identity);
+            GameObject obj = Instantiate(gold_pile, transform.position, gold_pile.transform.rotation);
+            obj.GetComponent<Gold>().SetGoldValue(gold);
+
             starting_done = false;
             transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
             rigid_entity_body.detectCollisions = false;

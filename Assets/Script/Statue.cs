@@ -18,7 +18,7 @@ public class Statue : MonoBehaviour {
     public IntRange cost_range;
     public Vector2 distance_push;
 
-    private bool is_risen;
+    private bool is_risen, is_bought, is_done;
     private TYPE type;
     private int cost;
     private Vector2 starting_pos;
@@ -34,15 +34,12 @@ public class Statue : MonoBehaviour {
         player_obj_script = player_obj.GetComponent<Player>();
 
         is_risen = false;
+        is_bought = false;
+        is_done = false;
         cost_range = new IntRange(1000, 3000);
         cost = cost_range.Random;
 
-        IntRange temp = new IntRange(0, (int)TYPE.TOTAL_TYPE);
-        type = (TYPE)temp.Random;
-
         starting_pos = new Vector2(transform.position.x, transform.position.z);
-
-        transform.Rotate(0, -90, 0);
 
         text_mesh.GetComponent<TextMesh>().text = "Cost: " + cost;
         text_mesh.SetActive(false);
@@ -67,7 +64,7 @@ public class Statue : MonoBehaviour {
                 transform.position = new Vector3(starting_pos.x, 0.1f, starting_pos.y);
             }
 
-            float temp = UnityEngine.Random.Range(.001f, .1f);
+            float temp = UnityEngine.Random.Range(.001f, .015f);
 
             float shaking_speed = 0.1f;
 
@@ -84,12 +81,27 @@ public class Statue : MonoBehaviour {
             {
                 if(!text_mesh.activeSelf)
                     text_mesh.SetActive(true);
+
+                if (Input.GetKeyDown("return") && !is_done)
+                {
+                    if (player_obj_script.GetGold() >= cost)
+                    {
+                        is_bought = true;
+                    }
+                }
             }
             else
             {
                 if (text_mesh.activeSelf)   
                     text_mesh.SetActive(false);
             }
+        }
+
+        if(is_bought && !is_done)
+        {
+            player_obj_script.SetGold(player_obj_script.GetGold() - cost);
+            text_mesh.GetComponent<TextMesh>().text = "Bought!";
+            is_done = true;
         }
 	}
 
