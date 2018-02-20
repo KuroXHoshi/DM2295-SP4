@@ -8,9 +8,9 @@ public class BasicEnemyScript : MonoBehaviour
     
     private Player player; //: Transform;
    // public Transform playerTransform;
-    public int MoveSpeed = 2;
-    public int MaxDist = 15;
-    public int MinDist = 1;
+    public float MoveSpeed = 2;
+    public float MaxDist = 15;
+    public float MinDist = 1.5f;
     public float HP = 10;
     public float MAX_HP = 10;
     public int DMG = 1;
@@ -35,8 +35,8 @@ public class BasicEnemyScript : MonoBehaviour
     //when take damage (take damage function)
     //healthBar.fillAmount = health / starthealth ;
 
-    public Canvas healthbar;
-    private Transform camera;
+    [SerializeField]
+    private Transform model;
 
     // Use this for initialization
     void Start()
@@ -44,10 +44,10 @@ public class BasicEnemyScript : MonoBehaviour
         if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()))
             Debug.Log("BasicEnemyScript.cs : Player not loaded");
 
-        if (!(camera = GameObject.FindGameObjectWithTag("MainCamera").transform))
-            Debug.Log("BasicEnemyScript.cs : Camera not loaded");
+        //if (!(camera = GameObject.FindGameObjectWithTag("MainCamera").transform))
+            //Debug.Log("BasicEnemyScript.cs : Camera not loaded");
 
-        animator = GetComponent<Animator>();
+        animator = model.GetComponent<Animator>();
         //transform.position = Player.transform.position - Vector3.forward * MoveSpeed;
         starting_done = false;
 
@@ -67,16 +67,17 @@ public class BasicEnemyScript : MonoBehaviour
         
         if (!starting_done)
         {
-            if (transform.position.y >= 0)
+            if (transform.position.y >= 1)
             {
                 starting_done = true;
-                transform.position = new Vector3(transform.position.x, 0.05f, transform.position.z);
+                //transform.position = new Vector3(transform.position.x, 1, transform.position.z);
                 rigid_entity_body.detectCollisions = true;
                 rigid_entity_body.useGravity = true;
             }
 
             float temp = UnityEngine.Random.Range(.001f, .2f);
-            transform.position =  new Vector3(transform.position.x, transform.position.y + temp, transform.position.z);
+            //transform.position =  new Vector3(transform.position.x, transform.position.y + temp, transform.position.z);
+            transform.Translate(transform.up * temp);
         }
         else
         {
@@ -101,10 +102,11 @@ public class BasicEnemyScript : MonoBehaviour
             }
             else if (Distance <= MaxDist)//Saw player and go to player
             {
-                transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+                //transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+                transform.Translate(model.forward * MoveSpeed * Time.deltaTime);
                 float step = rotSpd * Time.deltaTime;
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, target_player_DIR, step, 0.0f);
-                transform.rotation = Quaternion.LookRotation(newDir);
+                Vector3 newDir = Vector3.RotateTowards(model.forward, target_player_DIR, step, 0.0f);
+                model.rotation = Quaternion.LookRotation(newDir);
 
                 animator.SetBool("walk", true);
 
@@ -126,7 +128,7 @@ public class BasicEnemyScript : MonoBehaviour
     private void LateUpdate()
     {
         //health.transform.LookAt(camera);
-        healthbar.transform.rotation = new Quaternion(70, -180, 0, healthbar.transform.rotation.w);
+        //healthbar.transform.rotation = new Quaternion(70, -180, 0, healthbar.transform.rotation.w);
         //healthbar.transform.LookAt(camera);
 
         // If enemy HP reaches 0 set gameObject to false
