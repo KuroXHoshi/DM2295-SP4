@@ -708,7 +708,7 @@ public class RoomLayoutGen : MonoBehaviour
             total_spawners[i].SetActive(false);
         }
 
-        GameObject []gold_piles = GameObject.FindGameObjectsWithTag("coin");
+        GameObject []gold_piles = GameObject.FindGameObjectsWithTag("Coin");
 
         for(int i = 0; i < gold_piles.Length; ++i)
         {
