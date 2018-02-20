@@ -88,7 +88,7 @@ public class SpawnerBlock : MonoBehaviour {
 
                         if(is_not_in_block)
                         {
-                            GameObject temp_obj = GetObjectFromPool(1);
+                            GameObject temp_obj = GetObjectFromPool(type);
                             temp_obj.transform.position = temp_vec;
                         }
                     }
