@@ -9,7 +9,7 @@ public class CameraScript : MonoBehaviour
     private Transform player;
 
     [SerializeField]
-    private float defaultHeight, defaultZ;
+    private float defaultHeight = 20, defaultZ = -10;
 
     private void Awake()
     {
@@ -42,7 +42,7 @@ public class CameraScript : MonoBehaviour
         //{
             offsetZ = player.position.z - transform.position.z + defaultZ;
         //}
-
+        
         transform.position += new Vector3(offsetX, 0, offsetZ) * 5 * Time.deltaTime;
     }
 }
