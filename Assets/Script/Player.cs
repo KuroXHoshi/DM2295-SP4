@@ -219,7 +219,7 @@ public class Player : PlayerSkills
     {
         if ((collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Door") && playerState == PlayerState.Dash)
         {
-
+            anim.SetBool("dash", false);
             playerState = PlayerState.Idle;
             Debug.Log("Colliding Wall");
         }
