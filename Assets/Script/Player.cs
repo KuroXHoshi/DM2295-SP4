@@ -237,12 +237,15 @@ public class Player : PlayerSkills
         {
             anim.SetBool("dash", false);
             playerState = PlayerState.Idle;
-            Debug.Log("Colliding Wall");
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-
+        if ((collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Door") && playerState == PlayerState.Dash)
+        {
+            anim.SetBool("dash", false);
+            playerState = PlayerState.Idle;
+        }
     }
 }
