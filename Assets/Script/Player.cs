@@ -103,10 +103,10 @@ public class Player : PlayerSkills
     void Start()
     {
         if (!(anim = gameObject.GetComponent<Animator>()))
-            Debug.Log("Player.cs : Animator Controller not Loaded!");
+            Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
 
         if (!(rb = gameObject.GetComponent<Rigidbody>()))
-            Debug.Log("Player.cs : Rigidbody component not Loaded!");
+            Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
     }
 
     private void FixedUpdate()
