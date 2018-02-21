@@ -223,7 +223,7 @@ public class Player : MonoBehaviour
             anim.SetBool("dash", true);
         }
 
-        transform.position += transform.forward * DashSpd * MoveSpd;
+        transform.position += transform.forward * DashSpd * MoveSpd * Time.deltaTime;
 
         if (Vector3.Distance(prevPos, transform.position) > DashDistance)
         {
