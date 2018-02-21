@@ -26,14 +26,17 @@ public class RoomLayoutGen : MonoBehaviour
     public GameObject player_obj;
     public GameObject spawner_block;
     public GameObject door_blocks;
+    public GameObject exit_block;
     public GameObject[] statue;
 
     private Player player_obj_script;
+    private Portal portal_obj_script;
 
     private int[][] room_layout;
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
     private Room[] rooms;                                     // All the rooms that are created for this board.
     private GameObject boardHolder;                           // GameObject that acts as a container for all other tiles.
+    private bool spawned_exit;
 
     private Stack<Vector2> prev_steps = new Stack<Vector2>();
     private List<Corridor> total_corridor = new List<Corridor>();
@@ -58,11 +61,19 @@ public class RoomLayoutGen : MonoBehaviour
         for(int i = 0; i < total_spawners.Length; ++i)
         {
             Vector3 temp_spawner_vec = new Vector3(0, 0, 0);
-            GameObject tileInstance = Instantiate(spawner_block, temp_spawner_vec, Quaternion.identity) as GameObject;
+            GameObject tileInstance = Instantiate(spawner_block, temp_spawner_vec, Quaternion.identity) as GameObject;          
+
             tileInstance.SetActive(false);
 
             total_spawners[i] = tileInstance;
+            total_spawners[i].GetComponent<SpawnerBlock>().SetSpawnerRoomID(i);
         }
+
+        Vector3 temp_exit_vec = new Vector3(0, 0, 0);
+        GameObject exitPortalInstance = Instantiate(exit_block, temp_exit_vec, exit_block.transform.rotation) as GameObject;
+
+        portal_obj_script = exitPortalInstance.GetComponent<Portal>();
+        portal_obj_script.gameObject.SetActive(false);
 
         SetUpMap();
     }
@@ -72,23 +83,47 @@ public class RoomLayoutGen : MonoBehaviour
         if (Input.GetKeyDown("space"))
             SetUpMap();
 
-        bool is_all_spawner_dead = false;
-        for (int i = 0; i < total_spawners.Length; ++i)
+        if (!spawned_exit)
         {
-            if (total_spawners[i].activeSelf)
+            bool is_all_spawner_dead = false;
+            for (int i = 0; i < total_spawners.Length; ++i)
             {
-                is_all_spawner_dead = false;
-                break;
+                if (total_spawners[i].activeSelf)
+                {
+                    is_all_spawner_dead = false;
+                    break;
+                }
+
+                if(total_spawners[i].GetComponent<SpawnerBlock>().IsSpawningBoss())
+                {
+                    is_all_spawner_dead = true;
+                    break;
+                }
+
+                if (!is_all_spawner_dead)
+                    is_all_spawner_dead = true;
             }
 
-            if (!is_all_spawner_dead)
-                is_all_spawner_dead = true;
+            if (is_all_spawner_dead)
+            {
+                portal_obj_script.transform.position = new Vector3(total_spawners[player_obj_script.GetPlayerCurrentRoom()].GetComponent<SpawnerBlock>().transform.position.x + ((Random.Range(0, 100) < 50) ? 4 : -4),
+                -5,
+                total_spawners[player_obj_script.GetPlayerCurrentRoom()].GetComponent<SpawnerBlock>().transform.position.z);
+
+                portal_obj_script.Reset();
+                portal_obj_script.gameObject.SetActive(true);
+                spawned_exit = true;
+            }
+        }
+        else
+        {
+            if(portal_obj_script.GetIsDone())
+            {
+                SetUpMap();
+                player_obj_script.SetLevel(player_obj_script.GetLevel() + 1);
+            }
         }
 
-        if(is_all_spawner_dead)
-        {
-            ///TODO SPAWN STAIRS FOR NEXT LEVEL
-        }
     }
 
     void SetupTilesArray()
@@ -298,6 +333,7 @@ public class RoomLayoutGen : MonoBehaviour
                         Vector3 temp_spawner_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().transform.position = temp_spawner_vec;
                         total_spawners[temp_no_of_room].SetActive(false);
+
                     }
                     else
                     {
@@ -705,6 +741,9 @@ public class RoomLayoutGen : MonoBehaviour
 
     void SetUpMap()
     {
+        spawned_exit = false;
+        portal_obj_script.gameObject.SetActive(false);
+
         for (int i = 0; i < total_spawners.Length; ++i)
         {
             total_spawners[i].GetComponent<SpawnerBlock>().Reset();

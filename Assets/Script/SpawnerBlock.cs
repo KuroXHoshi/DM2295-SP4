@@ -14,6 +14,7 @@ public class SpawnerBlock : MonoBehaviour {
     private bool spawned;
     private bool spawn_boss = false;
     private bool contain_statue = false;
+    private int spawner_room_id;
 
     private List<GameObject> entity_pool_list = new List<GameObject>();
     private List<GameObject> boss_pool_list = new List<GameObject>(); 
@@ -110,7 +111,7 @@ public class SpawnerBlock : MonoBehaviour {
                 }
 
                 spawned = true;
-
+                player.SetPlayerCurrentRoom(GetSpawnerRoomID());
                 foreach (Door d in all_door_script)
                 {
                     d.gameObject.SetActive(true);
@@ -271,5 +272,15 @@ public class SpawnerBlock : MonoBehaviour {
     public bool IsSpawningBoss()
     {
         return spawn_boss;
+    }
+
+    public int GetSpawnerRoomID()
+    {
+        return spawner_room_id;
+    }
+
+    public void SetSpawnerRoomID(int _id)
+    {
+        spawner_room_id = _id;
     }
 }

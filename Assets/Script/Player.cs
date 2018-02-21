@@ -42,6 +42,7 @@ public class Player : PlayerSkills
     private float RotaSpd = 10f;
     private float hitParticleDelay = 0f;
     private Vector3 prevPos = new Vector3();
+    private int current_room;
 
     //public PlayerStatistic playerStat { get; set; }
     public PlayerState playerState { get; set; }
@@ -51,6 +52,11 @@ public class Player : PlayerSkills
     private Player()
     {
 
+    }
+
+    public int GetPlayerCurrentRoom()
+    {
+        return current_room;
     }
 
     public Vector3 Get_Player_Pos()
@@ -96,6 +102,11 @@ public class Player : PlayerSkills
     public void SetGold(int gold_input)
     {
         Gold = gold_input;
+    }
+
+    public void SetPlayerCurrentRoom(int _current_room)
+    {
+        current_room = _current_room;
     }
 
     private void Awake()
