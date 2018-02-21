@@ -14,6 +14,7 @@ public class SpawnerBlock : MonoBehaviour {
     private bool spawned;
     private bool spawn_boss = false;
     private bool contain_statue = false;
+    private int spawner_room_id;
 
     private List<GameObject> entity_pool_list = new List<GameObject>();
     private List<GameObject> boss_pool_list = new List<GameObject>(); 
@@ -97,7 +98,7 @@ public class SpawnerBlock : MonoBehaviour {
 
                 if (spawn_boss)
                 {
-                    for (int i = 0; i < (player.GetLevel() / 10) + 1; ++i)
+                    for (int i = 0; i < (player.GetLevel() / 10); ++i)
                     {
                         int type = UnityEngine.Random.Range(0, boss_entity_list.Length);
 
@@ -110,7 +111,7 @@ public class SpawnerBlock : MonoBehaviour {
                 }
 
                 spawned = true;
-
+                player.SetPlayerCurrentRoom(GetSpawnerRoomID());
                 foreach (Door d in all_door_script)
                 {
                     d.gameObject.SetActive(true);
@@ -193,7 +194,7 @@ public class SpawnerBlock : MonoBehaviour {
     {
         foreach (GameObject entity_obj in boss_pool_list)
         {
-            if (!entity_obj.activeSelf && entity_obj.CompareTag(entity_list[type].tag))
+            if (!entity_obj.activeSelf && entity_obj.CompareTag(boss_entity_list[type].tag))
             {
                 entity_obj.SetActive(true);
                 return entity_obj;
@@ -271,5 +272,15 @@ public class SpawnerBlock : MonoBehaviour {
     public bool IsSpawningBoss()
     {
         return spawn_boss;
+    }
+
+    public int GetSpawnerRoomID()
+    {
+        return spawner_room_id;
+    }
+
+    public void SetSpawnerRoomID(int _id)
+    {
+        spawner_room_id = _id;
     }
 }
