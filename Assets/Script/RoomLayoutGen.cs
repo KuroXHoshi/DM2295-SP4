@@ -98,6 +98,12 @@ public class RoomLayoutGen : MonoBehaviour
         if (Input.GetKeyDown("space"))
             SetUpMap();
 
+        if (player_obj_script.GetPlayerCurrentRoom() != player_prev_room)
+        {
+            player_prev_room = player_obj_script.GetPlayerCurrentRoom();
+            total_quads[player_prev_room].SetActive(false);
+        }
+
         if (!spawned_exit)
         {
             bool is_all_spawner_dead = false;
@@ -109,14 +115,16 @@ public class RoomLayoutGen : MonoBehaviour
                     break;
                 }
 
-                if(total_spawners[i].GetComponent<SpawnerBlock>().IsSpawningBoss())
-                {
-                    is_all_spawner_dead = true;
-                    break;
-                }
-
                 if (!is_all_spawner_dead)
                     is_all_spawner_dead = true;
+            }
+
+            if (total_spawners[player_prev_room].GetComponent<SpawnerBlock>().IsSpawningBoss())
+            {
+                if (!total_spawners[player_prev_room].activeSelf)
+                {
+                    is_all_spawner_dead = true;
+                }
             }
 
             if (is_all_spawner_dead)
@@ -137,12 +145,6 @@ public class RoomLayoutGen : MonoBehaviour
                 SetUpMap();
                 player_obj_script.SetLevel(player_obj_script.GetLevel() + 1);
             }
-        }
-
-        if(player_obj_script.GetPlayerCurrentRoom() != player_prev_room)
-        {
-            player_prev_room = player_obj_script.GetPlayerCurrentRoom();
-            total_quads[player_prev_room].SetActive(false);
         }
 
     }
@@ -195,7 +197,6 @@ public class RoomLayoutGen : MonoBehaviour
             }
         }
     }
-
 
     void CreateRoomsAndCorridors()
     {
@@ -356,7 +357,7 @@ public class RoomLayoutGen : MonoBehaviour
                         total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().transform.position = temp_spawner_vec;
                         total_spawners[temp_no_of_room].SetActive(false);
 
-                        Vector3 temp_quad_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 20, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
+                        Vector3 temp_quad_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 22, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         total_quads[temp_no_of_room].transform.position = temp_quad_vec;
 
                     }
@@ -367,7 +368,7 @@ public class RoomLayoutGen : MonoBehaviour
                         total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().transform.position = temp_spawner_vec;
                         total_spawners[temp_no_of_room].SetActive(true);
 
-                        Vector3 temp_quad_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 20, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
+                        Vector3 temp_quad_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 22, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         total_quads[temp_no_of_room].transform.position = temp_quad_vec;
 
                         if (player_obj_script.GetLevel() % 5 == 0)

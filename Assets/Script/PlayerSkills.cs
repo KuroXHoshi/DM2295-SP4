@@ -2,24 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSkills : MonoBehaviour
+public class Dash : State
 {
-
-    public void Dash(ref Vector3 _translation, ref float _stamina)
+    public Dash() : base("Dash")
     {
-        //_translation += _transform.forward * 5f;
-        _stamina -= 1;
+
     }
 
-	// Use this for initialization
-	void Start ()
+    public override void Enter()
     {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
+        
+    }
+
+    public override void Update()
     {
-		
-	}
+        //base.Update();
+    }
+
+    public override void Exit()
+    {
+        //base.Exit();
+    }
+}
+
+public class Bash : State
+{
+    public Bash() : base("Bash")
+    {
+
+    }
+
+    public override void Enter()
+    {
+
+    }
+
+    public override void Update()
+    {
+        
+    }
+
+    public override void Exit()
+    {
+        
+    }
 }

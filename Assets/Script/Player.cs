@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : PlayerSkills
+public class Player : MonoBehaviour
 {
     public enum PlayerState
     {
@@ -12,18 +12,6 @@ public class Player : PlayerSkills
         Dash,
         Bash,
         TotalState
-    }
-
-    public struct PlayerStatistic
-    {
-        public float level;
-        public float health;
-        public float stamina;
-        public float atkspd;
-        public float movespd;
-        public float healthregenspd;
-        public float staminaregenspd;
-        public float atkdist;
     }
 
     [SerializeField]
@@ -39,6 +27,7 @@ public class Player : PlayerSkills
 
     private Animator anim;
     private Rigidbody rb;
+    private StateMachine sm = new StateMachine();
     private float RotaSpd = 10f;
     private float hitParticleDelay = 0f;
     private Vector3 prevPos = new Vector3();
@@ -114,26 +103,33 @@ public class Player : PlayerSkills
     {
         MaxHealth = Health;
         MaxStamina = Stamina;
+
+        if (!(anim = gameObject.GetComponent<Animator>())) Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
+        if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
+
+        sm.AddState(new Dash());
+        
     }
 
     // Use this for initialization
     void Start()
     {
-        if (!(anim = gameObject.GetComponent<Animator>()))
-            Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
-
-        if (!(rb = gameObject.GetComponent<Rigidbody>()))
-            Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
     }
 
     private void FixedUpdate()
     {
         ProcessStates();
+
+        sm.Update();
+
+        if (RegenSkill)
+            PassiveRegen();
     }
 
     // Update is called once per frame
     void Update()
     {
+
     }
 
     private void LateUpdate()
@@ -144,7 +140,9 @@ public class Player : PlayerSkills
             playerState = (joystick.Horizontal() == 0 && joystick.Vertical() == 0) ? PlayerState.Idle : PlayerState.Movement;
 
             if (Input.GetMouseButtonDown(0))
+            {
                 playerState = PlayerState.NormalAttack;
+            }
             else if (Input.GetMouseButtonDown(1) && playerState != PlayerState.Dash)
             {
                 playerState = PlayerState.Dash;
@@ -225,7 +223,7 @@ public class Player : PlayerSkills
             anim.SetBool("dash", true);
         }
 
-        transform.position += transform.forward * DashSpd * MoveSpd * Time.deltaTime;
+        transform.position += transform.forward * DashSpd * MoveSpd;
 
         if (Vector3.Distance(prevPos, transform.position) > DashDistance)
         {
