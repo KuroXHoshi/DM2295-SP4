@@ -98,7 +98,7 @@ public class SpawnerBlock : MonoBehaviour {
 
                 if (spawn_boss)
                 {
-                    for (int i = 0; i < (player.GetLevel() / 10) + 1; ++i)
+                    for (int i = 0; i < (player.GetLevel() / 10); ++i)
                     {
                         int type = UnityEngine.Random.Range(0, boss_entity_list.Length);
 
@@ -194,7 +194,7 @@ public class SpawnerBlock : MonoBehaviour {
     {
         foreach (GameObject entity_obj in boss_pool_list)
         {
-            if (!entity_obj.activeSelf && entity_obj.CompareTag(entity_list[type].tag))
+            if (!entity_obj.activeSelf && entity_obj.CompareTag(boss_entity_list[type].tag))
             {
                 entity_obj.SetActive(true);
                 return entity_obj;
