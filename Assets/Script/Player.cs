@@ -106,8 +106,11 @@ public class Player : MonoBehaviour
         if (!(anim = gameObject.GetComponent<Animator>())) Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
         if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
 
+        sm.AddState(new PlayerStates.Idle());
+        sm.AddState(new PlayerStates.Movement());
+        sm.AddState(new PlayerStates.Attack());
         sm.AddState(new Dash());
-        
+        sm.AddState(new Bash());
     }
 
     // Use this for initialization
@@ -117,9 +120,10 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ProcessStates();
+        //ProcessStates();
 
-        sm.Update();
+        if (sm.HasStates())
+            sm.Update(Time.deltaTime);
 
         if (RegenSkill)
             PassiveRegen();
@@ -134,9 +138,11 @@ public class Player : MonoBehaviour
     private void LateUpdate()
     {
         //if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && playerState != PlayerState.NormalAttack && playerState != PlayerState.Dash)
-        if (playerState == PlayerState.Idle || playerState == PlayerState.Movement)
+        //if (playerState == PlayerState.Idle || playerState == PlayerState.Movement)
+        if (sm.IsCurrentState("Idle") || sm.IsCurrentState("Movement"))
         {
-            playerState = (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) ? PlayerState.Idle : PlayerState.Movement;
+            //playerState = (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) ? PlayerState.Idle : PlayerState.Movement;
+            sm.SetNextState((Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) ? "Idle" : "Movement");
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -221,7 +227,7 @@ public class Player : MonoBehaviour
             anim.SetBool("dash", true);
         }
 
-        transform.position += transform.forward * DashSpd * MoveSpd;
+        transform.position += transform.forward * DashSpd * MoveSpd * Time.deltaTime;
 
         if (Vector3.Distance(prevPos, transform.position) > DashDistance)
         {
