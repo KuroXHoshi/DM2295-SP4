@@ -64,7 +64,7 @@ public class Statue : MonoBehaviour {
                 transform.position = new Vector3(starting_pos.x, 0.1f, starting_pos.y);
             }
 
-            float temp = UnityEngine.Random.Range(.001f, .015f);
+            float temp = UnityEngine.Random.Range(.015f, .02f);
 
             float shaking_speed = 0.1f;
 
