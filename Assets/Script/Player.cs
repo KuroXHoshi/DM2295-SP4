@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     public PlayerState playerState { get; set; }
     public float MaxHealth { get; protected set; }
     public float MaxStamina { get; protected set; }
+    public JoyStick joystick;
 
     private Player()
     {
@@ -142,7 +143,7 @@ public class Player : MonoBehaviour
         if (sm.IsCurrentState("Idle") || sm.IsCurrentState("Movement"))
         {
             //playerState = (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) ? PlayerState.Idle : PlayerState.Movement;
-            sm.SetNextState((Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) ? "Idle" : "Movement");
+            sm.SetNextState((joystick.Horizontal() == 0 && joystick.Vertical() == 0) ? "Idle" : "Movement");
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -195,7 +196,8 @@ public class Player : MonoBehaviour
             return;
 
         Vector3 prevPos = transform.position;
-        transform.position += new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * MoveSpd * Time.deltaTime;
+        //transform.position += new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * MoveSpd * Time.deltaTime;
+        transform.position += new Vector3(joystick.Horizontal(), 0, joystick.Vertical()) * MoveSpd * Time.deltaTime;
         float step = RotaSpd * Time.deltaTime;
         Vector3 newDir = Vector3.RotateTowards(transform.forward, transform.position - prevPos, step, 0.0f);
         transform.rotation = Quaternion.LookRotation(newDir);

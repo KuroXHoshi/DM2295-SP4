@@ -95,14 +95,14 @@ public class RoomLayoutGen : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown("space"))
+            SetUpMap();
+
         if (player_obj_script.GetPlayerCurrentRoom() != player_prev_room)
         {
             player_prev_room = player_obj_script.GetPlayerCurrentRoom();
             total_quads[player_prev_room].SetActive(false);
         }
-
-        if (Input.GetKeyDown("space"))
-            SetUpMap();
 
         if (!spawned_exit)
         {
