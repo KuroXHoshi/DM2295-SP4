@@ -7,7 +7,7 @@ public class SpawnerBlock : MonoBehaviour {
     public GameObject[] entity_list;
     public GameObject[] boss_entity_list;
     private Player player;
-    public Vector2 distance_detect;
+    private Vector2 distance_detect;
     private bool isDone;
     private List<Door> all_door_script = new List<Door>();
 
@@ -282,5 +282,10 @@ public class SpawnerBlock : MonoBehaviour {
     public void SetSpawnerRoomID(int _id)
     {
         spawner_room_id = _id;
+    }
+
+    public void SetDistanceDetect(Vector2 _input)
+    {
+        distance_detect = _input;
     }
 }
