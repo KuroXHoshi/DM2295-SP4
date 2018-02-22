@@ -44,7 +44,10 @@ public class Grid : MonoBehaviour
             return gridSizeX * gridSizeY;
         }
     }
-
+    private void Update()
+    {
+        CreateGrid();
+    }
     void CreateGrid()
     {
         grid = new Node[gridSizeX, gridSizeY];

@@ -12,11 +12,13 @@ public class Unit : MonoBehaviour
     public float turnSpeed = 3;
     public float turnDst = 5;
     public float stoppingDst = 10;
-
+    private Player player;
+    private GameObject targeted_player;
     Path path;
 
     void Start()
     {
+        targeted_player = GameObject.FindGameObjectWithTag("Player");
         StartCoroutine(UpdatePath());
     }
 
@@ -38,19 +40,19 @@ public class Unit : MonoBehaviour
         {
             yield return new WaitForSeconds(.3f);
         }
-        PathRequestManager.RequestPath(new PathRequest(transform.position, target.position, OnPathFound));
+        PathRequestManager.RequestPath(new PathRequest(transform.position, targeted_player.transform.position, OnPathFound));
 
         float sqrMoveThreshold = pathUpdateMoveThreshold * pathUpdateMoveThreshold;
-        Vector3 targetPosOld = target.position;
+        Vector3 targetPosOld = targeted_player.transform.position;
 
         while (true)
         {
             yield return new WaitForSeconds(minPathUpdateTime);
-            print(((target.position - targetPosOld).sqrMagnitude) + "    " + sqrMoveThreshold);
-            if ((target.position - targetPosOld).sqrMagnitude > sqrMoveThreshold)
+            print(((targeted_player.transform.position - targetPosOld).sqrMagnitude) + "    " + sqrMoveThreshold);
+            if ((targeted_player.transform.position - targetPosOld).sqrMagnitude > sqrMoveThreshold)
             {
-                PathRequestManager.RequestPath(new PathRequest(transform.position, target.position, OnPathFound));
-                targetPosOld = target.position;
+                PathRequestManager.RequestPath(new PathRequest(transform.position, targeted_player.transform.position, OnPathFound));
+                targetPosOld = targeted_player.transform.position;
             }
         }
     }
