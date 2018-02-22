@@ -32,12 +32,15 @@ public class Player : MonoBehaviour
     private float hitParticleDelay = 0f;
     private Vector3 prevPos = new Vector3();
     private int current_room;
+    private bool set_prev;
 
     //public PlayerStatistic playerStat { get; set; }
     public PlayerState playerState { get; set; }
     public float MaxHealth { get; protected set; }
     public float MaxStamina { get; protected set; }
     public JoyStick joystick;
+    public GameObject button_attack;
+    public GameObject button_defend;
 
     private Player()
     {
@@ -103,11 +106,19 @@ public class Player : MonoBehaviour
     {
         MaxHealth = Health;
         MaxStamina = Stamina;
+        set_prev = false;
 
         if (!(anim = gameObject.GetComponent<Animator>())) Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
         if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
 
         sm.AddState(new Dash());
+
+        if (Application.platform != RuntimePlatform.WindowsPlayer)
+        {
+            joystick.gameObject.SetActive(false);
+            button_attack.SetActive(false);
+            button_defend.SetActive(false);
+        }
         
     }
 
@@ -137,16 +148,17 @@ public class Player : MonoBehaviour
         //if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && playerState != PlayerState.NormalAttack && playerState != PlayerState.Dash)
         if (playerState == PlayerState.Idle || playerState == PlayerState.Movement)
         {
-            playerState = (joystick.Horizontal() == 0 && joystick.Vertical() == 0) ? PlayerState.Idle : PlayerState.Movement;
+            if (set_prev)
+                set_prev = false;
+            playerState = ((joystick.Horizontal() == 0 && joystick.Vertical() == 0) ? PlayerState.Idle : PlayerState.Movement);
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
             {
-                playerState = PlayerState.NormalAttack;
+                playerState = PlayerState.NormalAttack; 
             }
-            else if (Input.GetMouseButtonDown(1) && playerState != PlayerState.Dash)
+            else if (Input.GetMouseButtonDown(1) && playerState != PlayerState.Dash && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
             {
                 playerState = PlayerState.Dash;
-                prevPos = transform.position;
             }
         }
 
@@ -218,6 +230,12 @@ public class Player : MonoBehaviour
 
     private void Dash()
     {
+        if (!set_prev)
+        {
+            prevPos = transform.position;
+            set_prev = true;
+        }
+
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
         {
             anim.SetBool("dash", true);
@@ -269,5 +287,10 @@ public class Player : MonoBehaviour
             anim.SetBool("dash", false);
             playerState = PlayerState.Idle;
         }
+    }
+
+    public void SetPlayerState(int _state)
+    {
+        playerState = (PlayerState)_state;
     }
 }
