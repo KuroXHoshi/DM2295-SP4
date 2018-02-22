@@ -57,7 +57,10 @@ public class RoomLayoutGen : MonoBehaviour
 
         Random.InitState(System.DateTime.Now.Millisecond);
 
-        QualitySettings.masterTextureLimit = TextureQuality;
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+            QualitySettings.masterTextureLimit = TextureQuality;
+        else
+            QualitySettings.masterTextureLimit = 5;
 
         total_spawners = new GameObject[numRooms.m_Max - 1];
 

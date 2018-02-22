@@ -113,7 +113,7 @@ public class Player : MonoBehaviour
 
         sm.AddState(new Dash());
 
-        if (Application.platform != RuntimePlatform.WindowsPlayer)
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             joystick.gameObject.SetActive(false);
             button_attack.SetActive(false);
