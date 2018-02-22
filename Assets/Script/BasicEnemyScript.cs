@@ -154,7 +154,7 @@ public class BasicEnemyScript : MonoBehaviour
     {
         if (other.tag == "Player Hitting")
         {
-            HP -= player.GetPlayerDamageOutput();
+            HP -= player.GetpStats().damage;
             health.fillAmount = HP / MAX_HP;
         }
     }

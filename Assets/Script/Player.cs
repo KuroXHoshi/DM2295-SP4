@@ -55,39 +55,17 @@ public class Player : MonoBehaviour
 
     }
 
-    public int GetPlayerCurrentRoom()
-    {
-        return current_room;
-    }
-
-    public Vector3 Get_Player_Pos()
-    {
-        return transform.position;
-    }
-
-    public float GetLevel()
-    {
-        return pStats.level;
-    }
-
-    public int GetPlayerDamageOutput()
-    {
-        return pStats.damage;
-    }
-    
+    public int GetPlayerCurrentRoom() { return current_room; }
+    public Vector3 Get_Player_Pos() { return transform.position; }
     public float GetRotaSpd() { return RotaSpd; }
     public float hitParticleDelay { get; set; }
     public Animator GetAnim() { return anim; }
     public ParticleSystem GetParticle() { return particle; }
     public PlayerStatistics GetpStats() { return pStats; }
 
-    public void TakeDamage(float _dmg)
-    {
-        pStats.health -= _dmg;
-    }
+    public void TakeDamage(float _dmg) { pStats.health -= _dmg; }
 
-    public void SetLevel(float level_input)
-    {
+    public void SetLevel(float level_input) {
         pStats.level = level_input;
     }
 

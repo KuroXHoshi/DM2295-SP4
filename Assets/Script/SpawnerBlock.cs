@@ -98,7 +98,7 @@ public class SpawnerBlock : MonoBehaviour {
 
                 if (spawn_boss)
                 {
-                    for (int i = 0; i < (player.GetLevel() / 10); ++i)
+                    for (int i = 0; i < (player.GetpStats().level * 0.1f); ++i)
                     {
                         int type = UnityEngine.Random.Range(0, boss_entity_list.Length);
 
