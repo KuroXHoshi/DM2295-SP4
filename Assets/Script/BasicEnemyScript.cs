@@ -139,13 +139,9 @@ public class BasicEnemyScript : MonoBehaviour
         {
             GameObject obj = Instantiate(gold_pile, transform.position, gold_pile.transform.rotation);
             obj.GetComponent<Gold>().SetGoldValue(gold);
-
-            starting_done = false;
+          
             transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
-            rigid_entity_body.detectCollisions = false;
-            rigid_entity_body.useGravity = false;
-            HP = MAX_HP;
-            gameObject.SetActive(false);
+            Reset();
         }
     }
 

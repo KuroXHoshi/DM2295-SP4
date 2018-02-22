@@ -36,10 +36,10 @@ public class Player : MonoBehaviour
     private ParticleSystem particle;
 
     private Animator anim;
-    private Rigidbody rb;
+    //private Rigidbody rb;
     private float RotaSpd = 10f;
-    private Vector3 prevPos = new Vector3();
     private int current_room;
+    private bool set_prev;
 
     //public PlayerStatistic playerStat { get; set; }
     public PlayerState playerState { get; set; }
@@ -47,6 +47,8 @@ public class Player : MonoBehaviour
     public float MaxHealth { get; protected set; }
     public float MaxStamina { get; protected set; }
     public JoyStick joystick;
+    public GameObject button_attack;
+    public GameObject button_defend;
 
     private Player()
     {
@@ -104,10 +106,11 @@ public class Player : MonoBehaviour
         MaxHealth = pStats.health;
         MaxStamina = pStats.stamina;
         hitParticleDelay = 0f;
+        set_prev = false;
 
         if (!(anim = gameObject.GetComponent<Animator>())) Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
-        if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
-
+        //if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
+        
         if (sm == null)
             sm = new StateMachine();
 
@@ -116,6 +119,13 @@ public class Player : MonoBehaviour
         sm.AddState(new PlayerStates.Attack(this));
         sm.AddState(new Dash(this));
         sm.AddState(new Bash(this));
+
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            joystick.gameObject.SetActive(false);
+            button_attack.SetActive(false);
+            button_defend.SetActive(false);
+        }
     }
 
     // Use this for initialization
@@ -127,7 +137,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         if (sm.HasStates())
-            sm.Update(Time.deltaTime);
+            sm.Update();
 
         if (RegenSkill)
             PassiveRegen();
@@ -145,11 +155,14 @@ public class Player : MonoBehaviour
         {
             sm.SetNextState((joystick.Horizontal() == 0 && joystick.Vertical() == 0) ? "Idle" : "Movement");
 
-            if (Input.GetMouseButtonDown(0))
+            if (set_prev)
+                set_prev = false;
+
+            if (Input.GetMouseButtonDown(0) && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
             {
                 sm.SetNextState("Attack");
             }
-            else if (Input.GetMouseButtonDown(1))
+            else if (Input.GetMouseButtonDown(1) && playerState != PlayerState.Dash && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
             {
                 sm.SetNextState("Dash");
             }
@@ -190,5 +203,10 @@ public class Player : MonoBehaviour
             anim.SetBool("dash", false);
             sm.SetNextState("Idle");
         }
+    }
+
+    public void SetPlayerState(string _state)
+    {
+        sm.SetNextState(_state);
     }
 }

@@ -57,7 +57,10 @@ public class RoomLayoutGen : MonoBehaviour
 
         Random.InitState(System.DateTime.Now.Millisecond);
 
-        QualitySettings.masterTextureLimit = TextureQuality;
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+            QualitySettings.masterTextureLimit = TextureQuality;
+        else
+            QualitySettings.masterTextureLimit = 5;
 
         total_spawners = new GameObject[numRooms.m_Max - 1];
 
@@ -143,7 +146,6 @@ public class RoomLayoutGen : MonoBehaviour
             if(portal_obj_script.GetIsDone())
             {
                 SetUpMap();
-                player_obj_script.SetLevel(player_obj_script.GetLevel() + 1);
             }
         }
 
@@ -770,6 +772,7 @@ public class RoomLayoutGen : MonoBehaviour
 
     void SetUpMap()
     {
+        player_obj_script.SetLevel(player_obj_script.GetLevel() + 1);
         player_prev_room = -1;
         spawned_exit = false;
         portal_obj_script.gameObject.SetActive(false);

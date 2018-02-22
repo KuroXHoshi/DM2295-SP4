@@ -13,7 +13,7 @@ public class PlayerStates : MonoBehaviour
         public Idle(Player _player) : base("Idle")
         {
             player = _player;
-            anim = _player.GetAnim();
+            anim = player.GetAnim();
         }
 
         public override void Enter()

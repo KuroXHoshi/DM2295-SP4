@@ -54,7 +54,7 @@ public class StateMachine
     }
 
     // Update is called once per frame
-    public void Update (float deltaTime)
+    public void Update ()
     {
 		if (CurrState != NextState)
         {
