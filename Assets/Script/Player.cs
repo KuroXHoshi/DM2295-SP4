@@ -267,7 +267,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door")) && playerState == PlayerState.Dash)
+        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door") || collision.gameObject.tag.Equals("Statue")) && playerState == PlayerState.Dash)
         {
             anim.SetBool("dash", false);
             playerState = PlayerState.Idle;
@@ -282,7 +282,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door")) && playerState == PlayerState.Dash)
+        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door") || collision.gameObject.tag.Equals("Statue")) && playerState == PlayerState.Dash)
         {
             anim.SetBool("dash", false);
             playerState = PlayerState.Idle;
