@@ -84,7 +84,7 @@ public class Statue : MonoBehaviour {
 
                 if (Input.GetKeyDown("return") && !is_done)
                 {
-                    if (player_obj_script.GetGold() >= cost)
+                    if (player_obj_script.GetpStats().gold >= cost)
                     {
                         is_bought = true;
                     }
@@ -99,7 +99,7 @@ public class Statue : MonoBehaviour {
 
         if(is_bought && !is_done)
         {
-            player_obj_script.SetGold(player_obj_script.GetGold() - cost);
+            player_obj_script.SetGold(player_obj_script.GetpStats().gold - cost);
             text_mesh.GetComponent<TextMesh>().text = "Bought!";
             is_done = true;
         }
