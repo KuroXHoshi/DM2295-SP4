@@ -368,10 +368,12 @@ public class RoomLayoutGen : MonoBehaviour
                         // Creating the spawner blocks
                         Vector3 temp_spawner_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 0, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().transform.position = temp_spawner_vec;
+                        total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().SetDistanceDetect(new Vector2(rooms[temp_no_of_room].roomWidth, rooms[temp_no_of_room].roomHeight));
                         total_spawners[temp_no_of_room].SetActive(true);
 
                         Vector3 temp_quad_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 22, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         total_quads[temp_no_of_room].transform.position = temp_quad_vec;
+                        total_quads[temp_no_of_room].transform.localScale = new Vector3(rooms[temp_no_of_room].roomWidth * 2.1f, rooms[temp_no_of_room].roomHeight * 2.2f, 1);
 
                         if (player_obj_script.GetpStats().level % 5 == 0)
                         {
