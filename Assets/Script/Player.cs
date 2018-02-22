@@ -42,7 +42,8 @@ public class Player : MonoBehaviour
     private bool set_prev;
 
     //public PlayerStatistic playerStat { get; set; }
-    public PlayerState playerState { get; set; }
+    //public PlayerState playerState { get; set; }
+    public AudioScript PlayerAudio;
     public StateMachine sm { get; protected set; }
     public float MaxHealth { get; protected set; }
     public float MaxStamina { get; protected set; }
@@ -140,7 +141,7 @@ public class Player : MonoBehaviour
             {
                 sm.SetNextState("Attack");
             }
-            else if (Input.GetMouseButtonDown(1) && playerState != PlayerState.Dash && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
+            else if (Input.GetMouseButtonDown(1) && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
             {
                 sm.SetNextState("Dash");
             }

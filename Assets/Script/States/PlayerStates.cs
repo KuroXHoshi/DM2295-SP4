@@ -88,7 +88,11 @@ public class PlayerStates : MonoBehaviour
         public override void Update()
         {
             if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            {
                 anim.SetBool("attacking", true);
+                player.PlayerAudio.MusicSource.clip = player.PlayerAudio.Attack;
+                player.PlayerAudio.attackclip();
+            }
 
             // Checks if state transits to attack
             if (!anim.IsInTransition(0) && anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && player.hitParticleDelay <= 0)

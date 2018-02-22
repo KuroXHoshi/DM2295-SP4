@@ -7,47 +7,62 @@ public class AudioScript : MonoBehaviour {
     public AudioClip MusicClip;
     public Slider Volume;
     public AudioSource MusicSource;
-    public AudioSource Attack;
-    public AudioSource Defend;
-    public AudioSource PlayerMovement;
-    public AudioSource EnemyMovement;
-    public AudioSource EnemySpell;
-    public AudioSource PlayerSpell;
+    public AudioClip Attack;
+    public AudioClip Defend;
+    public AudioClip PlayerMovement;
+    public AudioClip EnemyMovement;
+    public AudioClip EnemySpell;
+    public AudioClip PlayerSpell;
+    public AudioClip dash;
     // Use this for initialization
     void Start () {
-        MusicSource.clip = MusicClip;
-        MusicSource = GetComponent<AudioSource>();
-        //main menu only
-        MusicSource.Play();
+      
     }
 	
 	// Update is called once per frame
 	void Update () {
-        MusicSource.volume = Volume.value;
+       
 	}
 
     public void attackclip()
     {
-        Attack.Play();
+       
+
+        MusicSource.Play();
     }
     public void defend()
     {
-        Defend.Play();
+        
+
+
+        MusicSource.Play();
     }
     public void playermove()
     {
-        PlayerMovement.Play();
+        
+
+        MusicSource.Play();
     }
     public void enemymove()
     {
-        EnemyMovement.Play();
+       
+
+        MusicSource.Play();
     }
     public void enemyspell()
     {
-       EnemySpell.Play();
+        
+
+        MusicSource.Play();
     }
     public void playerspell()
     {
-        PlayerSpell.Play();
+        
+
+        MusicSource.Play();
+    }
+    public void playerdash()
+    {
+        MusicSource.Play();
     }
 }

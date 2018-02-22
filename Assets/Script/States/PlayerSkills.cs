@@ -18,6 +18,8 @@ public class Dash : State
     {
         prevPos = player.transform.position;
         anim.SetBool("dash", true);
+        player.PlayerAudio.MusicSource.clip = player.PlayerAudio.dash;
+        player.PlayerAudio.playerdash();
     }
 
     public override void Update()
