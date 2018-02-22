@@ -48,9 +48,7 @@ public class Door : MonoBehaviour {
                 else
                 {                   
                     done = true;
-
-                    //if (!rigid_entity_body.detectCollisions)
-                    //    rigid_entity_body.detectCollisions = true;
+                    
                 }
             }
         }

@@ -132,7 +132,7 @@ public class RoomLayoutGen : MonoBehaviour
 
             if (is_all_spawner_dead)
             {
-                portal_obj_script.transform.position = new Vector3(total_spawners[player_obj_script.GetPlayerCurrentRoom()].GetComponent<SpawnerBlock>().transform.position.x + ((Random.Range(0, 100) < 50) ? 4 : -4),
+                portal_obj_script.transform.position = new Vector3(total_spawners[player_obj_script.GetPlayerCurrentRoom()].GetComponent<SpawnerBlock>().transform.position.x + ((Random.Range(0, 100) < 50) ? 5 : -5),
                 -5,
                 total_spawners[player_obj_script.GetPlayerCurrentRoom()].GetComponent<SpawnerBlock>().transform.position.z);
 
