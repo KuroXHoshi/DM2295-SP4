@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class StateMachine
 {
-    Dictionary<string, State> StateMap;
+    Dictionary<string, State> StateMap = new Dictionary<string, State>();
     State CurrState = null, NextState = null;
+
+    public bool HasStates()
+    {
+        if (StateMap == null)
+            return false;
+
+        return (StateMap.Count == 0) ? false : true;
+    }
 
     public void AddState(State newState)
     {
-        if (newState != null || StateMap.ContainsKey(newState.GetStateID()))
+        if (newState == null)
             return;
 
-        if (CurrState != null)
+        if (CurrState == null)
             CurrState = NextState = newState;
 
         StateMap.Add(newState.GetStateID(), newState);
@@ -24,7 +32,10 @@ public class StateMachine
             return;
 
         if (!StateMap.TryGetValue(nextStateID, out NextState))
+        {
+            NextState = CurrState;
             Debug.Log(this.GetType() + ".cs : Unable to SetNextState!");
+        }
     }
 
     public string GetCurrentState()
@@ -32,6 +43,14 @@ public class StateMachine
         if (CurrState != null)
             return CurrState.GetStateID();
         return "<No States>";
+    }
+
+    public bool IsCurrentState(string state)
+    {
+        if (CurrState == null || state == null)
+            return false;
+
+        return (CurrState.GetStateID() == state) ? true : false;
     }
 
     // Update is called once per frame

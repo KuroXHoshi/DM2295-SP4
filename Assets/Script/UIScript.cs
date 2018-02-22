@@ -13,12 +13,13 @@ public class UIScript : MonoBehaviour {
     public Slider staminaslider;
 
     [SerializeField]
-    private Text healthpercent, staminapercent;
+    private Text healthpercent = null, staminapercent = null;
 
     // Use this for initialization
     void Start () {
-		if(!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()))
-            Debug.Log("UIScript.cs : Player not loaded");
+		if(!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>())) Debug.Log(this.GetType() + ".cs : Player not loaded");
+        if (!healthpercent) Debug.Log(this.GetType() + ".cs : Health Text not linked!");
+        if (!staminapercent) Debug.Log(this.GetType() + ".cs : Stamina Text not linked!");
 
         healthslider.maxValue = player.MaxHealth;
         staminaslider.maxValue = player.MaxStamina;
@@ -108,13 +109,13 @@ public class UIScript : MonoBehaviour {
 
     public void healthbar()
     {
-        healthslider.value = player.GetHealth();
-        healthpercent.text = player.GetHealth().ToString();
+        healthslider.value = player.GetpStats().health;
+        healthpercent.text = player.GetpStats().health.ToString();
     }
 
     public void staminabar()
     {
-        staminaslider.value = player.GetStamina();
-        staminapercent.text = player.GetStamina().ToString();
+        staminaslider.value = player.GetpStats().stamina;
+        staminapercent.text = player.GetpStats().stamina.ToString();
     }
 }

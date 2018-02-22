@@ -5,7 +5,6 @@ using UnityEngine;
 public class State
 {
     private string StateID;
-    
     protected State(string _stateID) { StateID = _stateID; }
 
     public string GetStateID() { return StateID; }
