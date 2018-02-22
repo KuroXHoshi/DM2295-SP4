@@ -109,7 +109,7 @@ public class Player : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Debug.Log(gameObject.GetHashCode());
+       // Debug.Log(gameObject.GetHashCode());
     }
 
     private void FixedUpdate()
@@ -166,7 +166,7 @@ public class Player : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision)
-    {
+    {      
         if(collision.gameObject.tag.Equals("Coin"))
         {
             pStats.gold += collision.gameObject.GetComponent<Gold>().GetGoldValue();
@@ -176,7 +176,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door")) && sm.IsCurrentState("Dash"))
+        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door") || collision.gameObject.tag.Equals("Statue")) && sm.IsCurrentState("Dash"))  
         {
             anim.SetBool("dash", false);
             sm.SetNextState("Idle");
