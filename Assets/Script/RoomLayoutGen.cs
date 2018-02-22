@@ -26,6 +26,7 @@ public class RoomLayoutGen : MonoBehaviour
     public GameObject player_obj;
     public GameObject spawner_block;
     public GameObject door_blocks;
+    public GameObject obstacle_blocks;
     public GameObject exit_block;
     public GameObject quad_block;
     public GameObject[] statue;
@@ -508,7 +509,7 @@ public class RoomLayoutGen : MonoBehaviour
                             Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 2, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 1);
                             //  tiles[((currentRoom.xPos + j) + half_room_width) - 2][((currentRoom.yPos + i) + half_room_height) - 1] = TileType.Wall;
 
-                            GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                            GameObject tileInstance = Instantiate(obstacle_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
                             total_blocks.Add(tileInstance);
 
                         }
@@ -525,7 +526,7 @@ public class RoomLayoutGen : MonoBehaviour
                         {
                             Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) + 2, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 1);
 
-                            GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                            GameObject tileInstance = Instantiate(obstacle_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
                             total_blocks.Add(tileInstance);
                             //tiles[((currentRoom.xPos + j) + (half_room_width * 2)) + 2][((currentRoom.yPos + i) + half_room_height) - 1] = TileType.Wall;
                         }
@@ -545,7 +546,7 @@ public class RoomLayoutGen : MonoBehaviour
                         {
                             Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) + 2, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) + 2);
 
-                            GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                            GameObject tileInstance = Instantiate(obstacle_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
                             total_blocks.Add(tileInstance);
 
                             // tiles[((currentRoom.xPos + j) + (half_room_width * 2)) + 2][((currentRoom.yPos + i) + (half_room_height * 2)) + 2] = TileType.Wall;
@@ -566,7 +567,7 @@ public class RoomLayoutGen : MonoBehaviour
                         {
                             Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 2, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) + 2);
 
-                            GameObject tileInstance = Instantiate(door_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
+                            GameObject tileInstance = Instantiate(obstacle_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
                             total_blocks.Add(tileInstance);
 
                             // tiles[((currentRoom.xPos + j) + half_room_width) - 2][((currentRoom.yPos + i) + (half_room_height * 2)) + 2] = TileType.Wall;
