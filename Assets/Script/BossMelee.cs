@@ -20,80 +20,90 @@ public class BossMelee : BossScript
 
         float step = rotSpd * Time.deltaTime;
         Vector3 newDir = Vector3.RotateTowards(transform.forward, target_player_DIR, step, 0.0f);
-
-        if (Distance <= MinDist)//distance reachable, attack!!
+        if (HP > 0)
         {
-            //attack melee animation activate pls
-            //NEAR_ATTACK = true;
+            //   sm.Update();
 
-            bool which_attack = (Random.value > 0.5f);
 
-            transform.rotation = Quaternion.LookRotation(newDir);
-            if (which_attack)
+            if (Distance <= MinDist)//distance reachable, attack!!
             {
-                sm.Update();
-                animator.SetBool("attack 1", true);
-                animator.SetBool("attack 2", false);
-            }
-            else
-            {
-                animator.SetBool("attack 1", false);
-                animator.SetBool("attack 2", true);
-            }
+                //attack melee animation activate pls
+                //NEAR_ATTACK = true;
 
+                bool which_attack = (Random.value > 0.5f);
 
-            animator.SetBool("walk", false);
-            //animator.SetBool("idle", false);
+                transform.rotation = Quaternion.LookRotation(newDir);
+                if (which_attack)
+                {
+                    //sm.Update();
+                    animator.SetBool("attack 1", true);
+                    animator.SetBool("attack 2", false);
+                }
+                else
+                {
+                    // sm.Update();
+                    animator.SetBool("attack 1", false);
+                    animator.SetBool("attack 2", true);
+                }
 
-
-            animator.SetBool("getting hit", false);
-            animator.SetBool("Victory", false);
-            animator.SetBool("Dies", false);
-            animator.SetBool("Run", false);
-
-        }
-        else if (Distance <= MaxDist)//Saw player and go to player
-        {
-            transform.rotation = Quaternion.LookRotation(newDir);
-
-            if (HP < critical_HP)
-            {
-                transform.position += transform.forward * MoveSpeed * 2 * Time.deltaTime;
 
                 animator.SetBool("walk", false);
-                animator.SetBool("Run", true);
+                //animator.SetBool("idle", false);
+
+
+                animator.SetBool("getting hit", false);
+                animator.SetBool("Victory", false);
+                animator.SetBool("Dies", false);
+                animator.SetBool("Run", false);
+
             }
-            else
+            else if (Distance <= MaxDist)//Saw player and go to player
             {
-                transform.position += transform.forward * MoveSpeed * Time.deltaTime;
-                animator.SetBool("walk", true);
+                transform.rotation = Quaternion.LookRotation(newDir);
+
+                if (HP < critical_HP)
+                {
+                    transform.position += transform.forward * MoveSpeed * 2 * Time.deltaTime;
+                    //   sm.Update();
+                    animator.SetBool("walk", false);
+                    animator.SetBool("Run", true);
+                }
+                else
+                {
+                    //   sm.Update();
+                    transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+                    animator.SetBool("walk", true);
+                    animator.SetBool("Run", false);
+                }
+
+
+                animator.SetBool("idle", false);
+                animator.SetBool("attack 1", false);
+                //Here Call any function U want Like Shoot at here or something
+                animator.SetBool("attack 2", false);
+                animator.SetBool("getting hit", false);
+                animator.SetBool("Victory", false);
+                animator.SetBool("Dies", false);
+
+            }
+            else//player unseen
+            {
+                //animator.SetBool("idle", true);
+                //    sm.Update();
+                animator.SetBool("walk", false);
+                animator.SetBool("attack 1", false);
+
+                animator.SetBool("attack 2", false);
+                animator.SetBool("getting hit", false);
+                animator.SetBool("Victory", false);
+                animator.SetBool("Dies", false);
                 animator.SetBool("Run", false);
             }
-
-
-            animator.SetBool("idle", false);
-            animator.SetBool("attack 1", false);
-            //Here Call any function U want Like Shoot at here or something
-            animator.SetBool("attack 2", false);
-            animator.SetBool("getting hit", false);
-            animator.SetBool("Victory", false);
-            animator.SetBool("Dies", false);
-
         }
-        else//player unseen
+        else
         {
-            //animator.SetBool("idle", true);
-
-            animator.SetBool("walk", false);
-            animator.SetBool("attack 1", false);
-
-            animator.SetBool("attack 2", false);
-            animator.SetBool("getting hit", false);
-            animator.SetBool("Victory", false);
-            animator.SetBool("Dies", false);
-            animator.SetBool("Run", false);
+            animator.SetBool("Dies", true);
         }
-
         //float progress = Mathf.Clamp01(operation.progress / 0.9f);
 
         //slider.value = HP;

@@ -75,10 +75,10 @@ public class Portal : MonoBehaviour {
         }
         else
         {
-            if (player_obj_script.transform.position.x < transform.position.x + distance_push.x && player_obj_script.transform.position.x > transform.position.x - distance_push.x &&
-               player_obj_script.transform.position.z < transform.position.z + distance_push.y && player_obj_script.transform.position.z > transform.position.z - distance_push.y)
+            if (player_obj_script.transform.position.x < transform.position.x + (distance_push.x * 0.5f) && player_obj_script.transform.position.x > transform.position.x - (distance_push.x * 0.5f) &&
+               player_obj_script.transform.position.z < transform.position.z + (distance_push.y * 0.5f) && player_obj_script.transform.position.z > transform.position.z - (distance_push.y  * 0.5f))
             {
-                if (Input.GetKeyDown("return") && !is_done)
+                if (!is_done)
                 {
                     is_done = true;
                 }

@@ -30,7 +30,8 @@ public class Player : MonoBehaviour
     private float RotaSpd = 10f;
     private int current_room;
     private bool set_prev;
-    
+
+    public AudioScript PlayerAudio;
     public StateMachine sm { get; protected set; }
     public float MaxHealth { get; protected set; }
     public float MaxStamina { get; protected set; }
