@@ -134,10 +134,6 @@ public class BasicEnemyScript : MonoBehaviour
 
     private void LateUpdate()
     {
-        //health.transform.LookAt(camera);
-        //healthbar.transform.rotation = new Quaternion(70, -180, 0, healthbar.transform.rotation.w);
-        //healthbar.transform.LookAt(camera);
-
         // If enemy HP reaches 0 set gameObject to false
         if (HP <= 0)
         {
@@ -156,14 +152,10 @@ public class BasicEnemyScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("BasicEnemyScript.cs : Hash<" + gameObject.GetHashCode() + "> Enemy HP is " + HP);
         if (other.tag == "Player Hitting")
         {
-            HP -= player.GetPlayerDamageOutput();
+            HP -= player.GetpStats().damage;
             health.fillAmount = HP / MAX_HP;
-            Debug.Log("BasicEnemyScript.cs : Enemy HashCode<" + gameObject.GetHashCode() + "> HP is " + HP);
-            //Debug.Log("BasicEnemyScript.cs : Enemy got hit! <" + gameObject.GetHashCode() + ">");
-          
         }
     }
 

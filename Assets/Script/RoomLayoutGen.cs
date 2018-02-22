@@ -57,7 +57,10 @@ public class RoomLayoutGen : MonoBehaviour
 
         Random.InitState(System.DateTime.Now.Millisecond);
 
-        QualitySettings.masterTextureLimit = TextureQuality;
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+            QualitySettings.masterTextureLimit = TextureQuality;
+        else
+            QualitySettings.masterTextureLimit = 5;
 
         total_spawners = new GameObject[numRooms.m_Max - 1];
 
@@ -160,7 +163,7 @@ public class RoomLayoutGen : MonoBehaviour
         total_corridor.Clear();
         prev_steps.Clear();
 
-        if(player_obj_script.GetLevel() % 5 == 0)
+        if(player_obj_script.GetpStats().level % 5 == 0)
             rooms = new Room[numRooms.Random];
         else
             rooms = new Room[numRooms_simple.Random];
@@ -370,7 +373,7 @@ public class RoomLayoutGen : MonoBehaviour
                         Vector3 temp_quad_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 22, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         total_quads[temp_no_of_room].transform.position = temp_quad_vec;
 
-                        if (player_obj_script.GetLevel() % 5 == 0)
+                        if (player_obj_script.GetpStats().level % 5 == 0)
                         {
                             if (!set_boss_spawn)
                             {
@@ -769,7 +772,7 @@ public class RoomLayoutGen : MonoBehaviour
 
     void SetUpMap()
     {
-        player_obj_script.SetLevel(player_obj_script.GetLevel() + 1);
+        player_obj_script.SetLevel(player_obj_script.GetpStats().level + 1);
         player_prev_room = -1;
         spawned_exit = false;
         portal_obj_script.gameObject.SetActive(false);

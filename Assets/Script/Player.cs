@@ -2,6 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public struct PlayerStatistics
+{
+    public float level;
+    public float health;
+    public float stamina;
+    public float atkSpd, moveSpd, healthRegenSpd, staminaRegenSpd;
+    public float atkDist, dashDist, dashSpd;
+    public int damage;
+    public int gold;
+}
+
 public class Player : MonoBehaviour
 {
     public enum PlayerState
@@ -15,9 +27,7 @@ public class Player : MonoBehaviour
     }
 
     [SerializeField]
-    private float Level = 1f, Health = 10f, Stamina = 5f, AtkSpd = 1f, MoveSpd = 10f, HealthRegenSpd = 0.5f, StaminaRegenSpd = 0.1f, AtkDist = 1.5f, DashDistance = 5f, DashSpd = 4f;
-    [SerializeField]
-    private int Damage = 1, Gold = 0;
+    private PlayerStatistics pStats;
 
     [SerializeField]
     private bool RegenSkill = false, IronWillSkill = false, EvasionSkill = false;
@@ -26,16 +36,14 @@ public class Player : MonoBehaviour
     private ParticleSystem particle;
 
     private Animator anim;
-    private Rigidbody rb;
-    private StateMachine sm = new StateMachine();
+    //private Rigidbody rb;
     private float RotaSpd = 10f;
-    private float hitParticleDelay = 0f;
-    private Vector3 prevPos = new Vector3();
     private int current_room;
     private bool set_prev;
 
     //public PlayerStatistic playerStat { get; set; }
     public PlayerState playerState { get; set; }
+    public StateMachine sm { get; protected set; }
     public float MaxHealth { get; protected set; }
     public float MaxStamina { get; protected set; }
     public JoyStick joystick;
@@ -47,54 +55,23 @@ public class Player : MonoBehaviour
 
     }
 
-    public int GetPlayerCurrentRoom()
-    {
-        return current_room;
-    }
+    public int GetPlayerCurrentRoom() { return current_room; }
+    public Vector3 Get_Player_Pos() { return transform.position; }
+    public float GetRotaSpd() { return RotaSpd; }
+    public float hitParticleDelay { get; set; }
+    public Animator GetAnim() { return anim; }
+    public ParticleSystem GetParticle() { return particle; }
+    public PlayerStatistics GetpStats() { return pStats; }
 
-    public Vector3 Get_Player_Pos()
-    {
-        return transform.position;
-    }
+    public void TakeDamage(float _dmg) { pStats.health -= _dmg; }
 
-    public float GetHealth()
-    {
-        return Health;
-    }
-
-    public float GetLevel()
-    {
-        return Level;
-    }
-
-    public int GetGold()
-    {
-        return Gold;
-    }
-
-    public float GetStamina()
-    {
-        return Stamina;
-    }
-
-    public int GetPlayerDamageOutput()
-    {
-        return Damage;
-    }
-
-    public void TakeDamage(float _dmg)
-    {
-        Health -= _dmg;
-    }
-
-    public void SetLevel(float level_input)
-    {
-        Level = level_input;
+    public void SetLevel(float level_input) {
+        pStats.level = level_input;
     }
 
     public void SetGold(int gold_input)
     {
-        Gold = gold_input;
+        pStats.gold = gold_input;
     }
 
     public void SetPlayerCurrentRoom(int _current_room)
@@ -104,34 +81,41 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        MaxHealth = Health;
-        MaxStamina = Stamina;
+        MaxHealth = pStats.health;
+        MaxStamina = pStats.stamina;
+        hitParticleDelay = 0f;
         set_prev = false;
 
         if (!(anim = gameObject.GetComponent<Animator>())) Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
-        if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
+        //if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
+        
+        if (sm == null)
+            sm = new StateMachine();
 
-        sm.AddState(new Dash());
+        sm.AddState(new PlayerStates.Idle(this));
+        sm.AddState(new PlayerStates.Movement(this));
+        sm.AddState(new PlayerStates.Attack(this));
+        sm.AddState(new Dash(this));
+        sm.AddState(new Bash(this));
 
-        if (Application.platform != RuntimePlatform.WindowsPlayer)
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             joystick.gameObject.SetActive(false);
             button_attack.SetActive(false);
             button_defend.SetActive(false);
         }
-        
     }
 
     // Use this for initialization
     void Start()
     {
+       // Debug.Log(gameObject.GetHashCode());
     }
 
     private void FixedUpdate()
     {
-        ProcessStates();
-
-        sm.Update();
+        if (sm.HasStates())
+            sm.Update();
 
         if (RegenSkill)
             PassiveRegen();
@@ -145,109 +129,25 @@ public class Player : MonoBehaviour
 
     private void LateUpdate()
     {
-        //if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && playerState != PlayerState.NormalAttack && playerState != PlayerState.Dash)
-        if (playerState == PlayerState.Idle || playerState == PlayerState.Movement)
+        if (sm.IsCurrentState("Idle") || sm.IsCurrentState("Movement"))
         {
+            sm.SetNextState((joystick.Horizontal() == 0 && joystick.Vertical() == 0) ? "Idle" : "Movement");
+
             if (set_prev)
                 set_prev = false;
-            playerState = ((joystick.Horizontal() == 0 && joystick.Vertical() == 0) ? PlayerState.Idle : PlayerState.Movement);
 
             if (Input.GetMouseButtonDown(0) && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
             {
-                playerState = PlayerState.NormalAttack; 
+                sm.SetNextState("Attack");
             }
             else if (Input.GetMouseButtonDown(1) && playerState != PlayerState.Dash && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
             {
-                playerState = PlayerState.Dash;
+                sm.SetNextState("Dash");
             }
         }
 
         if (hitParticleDelay > 0)
             hitParticleDelay -= Time.deltaTime;
-    }
-
-    private void ProcessStates()
-    {
-        switch (playerState)
-        {
-            case PlayerState.Idle:
-                Idle();
-                break;
-
-            case PlayerState.Movement:
-                Movement();
-                break;
-
-            case PlayerState.NormalAttack:
-                NormalAttack();
-                break;
-
-            case PlayerState.Dash:
-                Dash();
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    private void Idle()
-    {
-        anim.SetBool("moving", false);
-    }
-
-    private void Movement()
-    {
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
-            return;
-
-        Vector3 prevPos = transform.position;
-        //transform.position += new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * MoveSpd * Time.deltaTime;
-        transform.position += new Vector3(joystick.Horizontal(), 0, joystick.Vertical()) * MoveSpd * Time.deltaTime;
-        float step = RotaSpd * Time.deltaTime;
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, transform.position - prevPos, step, 0.0f);
-        transform.rotation = Quaternion.LookRotation(newDir);
-
-        anim.SetBool("moving", true);
-    }
-
-    private void NormalAttack()
-    {
-        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
-            anim.SetBool("attacking", true);
-
-        // Checks if state transits to attack
-        if (!anim.IsInTransition(0) && anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && hitParticleDelay <= 0)
-        {
-            Vector3 offset = new Vector3(transform.forward.x * AtkDist, transform.forward.y + 1, transform.forward.z * AtkDist);
-            Instantiate(particle, transform.position + offset, Quaternion.identity);
-            hitParticleDelay = 0.3f;
-            anim.SetBool("attacking", false);
-
-            playerState = PlayerState.Idle;
-        }
-    }
-
-    private void Dash()
-    {
-        if (!set_prev)
-        {
-            prevPos = transform.position;
-            set_prev = true;
-        }
-
-        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
-        {
-            anim.SetBool("dash", true);
-        }
-
-        transform.position += transform.forward * DashSpd * MoveSpd * Time.deltaTime;
-
-        if (Vector3.Distance(prevPos, transform.position) > DashDistance)
-        {
-            anim.SetBool("dash", false);
-            playerState = (anim.GetBool("attacking")) ? PlayerState.NormalAttack : PlayerState.Idle;
-        }
     }
 
     void PassiveRegen()
@@ -266,31 +166,25 @@ public class Player : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision)
-    {
-        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door")) && playerState == PlayerState.Dash)
-        {
-            anim.SetBool("dash", false);
-            playerState = PlayerState.Idle;
-        }
-
+    {      
         if(collision.gameObject.tag.Equals("Coin"))
         {
-            Gold += collision.gameObject.GetComponent<Gold>().GetGoldValue();
+            pStats.gold += collision.gameObject.GetComponent<Gold>().GetGoldValue();
             Destroy(collision.gameObject);
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door")) && playerState == PlayerState.Dash)
+        if ((collision.gameObject.tag.Equals("Wall") || collision.gameObject.tag.Equals("Door") || collision.gameObject.tag.Equals("Statue")) && sm.IsCurrentState("Dash"))  
         {
             anim.SetBool("dash", false);
-            playerState = PlayerState.Idle;
+            sm.SetNextState("Idle");
         }
     }
 
-    public void SetPlayerState(int _state)
+    public void SetPlayerState(string _state)
     {
-        playerState = (PlayerState)_state;
+        sm.SetNextState(_state);
     }
 }
