@@ -6,11 +6,22 @@ public class Portal : MonoBehaviour {
 
     public GameObject player_obj;
     private Player player_obj_script;
+    [SerializeField]
+    private Material material;
 
     public Vector2 distance_push;
 
     private bool is_risen, is_done;
     private Vector2 starting_pos;
+
+    //private Color emission;
+    private bool emissionToggle = false;
+
+    private void Awake()
+    {
+        Renderer renderer = GetComponent<Renderer>();
+        material = renderer.material;
+    }
 
     // Use this for initialization
     void Start()
@@ -19,7 +30,18 @@ public class Portal : MonoBehaviour {
 
         player_obj_script = player_obj.GetComponent<Player>();
 
+        //material = gameObject.GetComponent<Material>();
+
+        //emission = material.GetColor("_EMISSION");
+
         Reset();
+    }
+
+    private void FixedUpdate()
+    {
+        float emis = Mathf.PingPong(Time.time, 1f);
+
+        material.SetColor("_EmissionColor", Color.white * Mathf.LinearToGammaSpace(emis));
     }
 
     // Update is called once per frame

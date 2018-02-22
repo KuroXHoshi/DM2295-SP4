@@ -16,16 +16,6 @@ public struct PlayerStatistics
 
 public class Player : MonoBehaviour
 {
-    public enum PlayerState
-    {
-        Idle,
-        Movement,
-        NormalAttack,
-        Dash,
-        Bash,
-        TotalState
-    }
-
     [SerializeField]
     private PlayerStatistics pStats;
 
@@ -40,9 +30,7 @@ public class Player : MonoBehaviour
     private float RotaSpd = 10f;
     private int current_room;
     private bool set_prev;
-
-    //public PlayerStatistic playerStat { get; set; }
-    public PlayerState playerState { get; set; }
+    
     public StateMachine sm { get; protected set; }
     public float MaxHealth { get; protected set; }
     public float MaxStamina { get; protected set; }
@@ -140,7 +128,7 @@ public class Player : MonoBehaviour
             {
                 sm.SetNextState("Attack");
             }
-            else if (Input.GetMouseButtonDown(1) && playerState != PlayerState.Dash && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
+            else if (Input.GetMouseButtonDown(1) && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
             {
                 sm.SetNextState("Dash");
             }
