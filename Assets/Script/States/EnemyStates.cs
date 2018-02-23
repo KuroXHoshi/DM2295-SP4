@@ -10,6 +10,9 @@ public class EnemyStates : MonoBehaviour
         private BasicEnemyScript enemy;
         private Animator anim;
 
+        private Vector3 player_pos;
+        private Vector3 enemy_pos;
+
         public Idle(BasicEnemyScript _enemy) : base("Idle")
         {
             enemy = _enemy;
@@ -27,11 +30,16 @@ public class EnemyStates : MonoBehaviour
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
                 return;
 
-            float Distance = Vector3.Distance(enemy.transform.position, enemy.GetPlayerPos());
+            player_pos = enemy.GetPlayerPos();
+            enemy_pos = enemy.transform.position;
+            float Distance = Vector3.Distance(player_pos, enemy_pos);
 
-            if (Distance <= enemy.MinDist)
+            if (Distance < enemy.MinDist)
             {
-                enemy.sm.SetNextState("Attack");
+                Vector3 target = player_pos - enemy_pos;
+                float Angle = Vector3.Angle(enemy.GetModel().forward, target);
+                if (Angle < 60f && Angle > -60f)
+                    enemy.sm.SetNextState("Attack");
             }
             else if (Distance <= enemy.MaxDist)//Saw player and go to player
             {
@@ -100,6 +108,8 @@ public class EnemyStates : MonoBehaviour
         private Vector3 player_pos;
         private Vector3 enemy_pos;
 
+        private float particleDelay;
+
         public Attack(BasicEnemyScript _enemy) : base("Attack")
         {
             enemy = _enemy;
@@ -108,16 +118,34 @@ public class EnemyStates : MonoBehaviour
 
         public override void Enter()
         {
+            particleDelay = 0.4f;
             anim.SetBool("attack", true);
         }
 
         public override void Update()
         {
-            // Instantiate enemy attack
+            if (particleDelay <= 0f)
+            {
+                player_pos = enemy.GetPlayerPos();
+                enemy_pos = enemy.transform.position;
+                float Distance = Vector3.Distance(player_pos, enemy_pos);
 
+                if (Distance < enemy.MinDist + 0.5f)
+                {
+                    Vector3 target = player_pos - enemy_pos;
+                    float Angle = Vector3.Angle(enemy.GetModel().forward, target);
 
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                    if (Angle < 60f && Angle > -60f)
+                    {
+                        enemy.GetPlayer().TakeDamage(enemy.DMG);
+                        Instantiate(enemy.particle, new Vector3(player_pos.x, player_pos.y + 0.5f, player_pos.z), Quaternion.LookRotation(enemy_pos - player_pos));
+                    }
+                }
+
                 enemy.sm.SetNextState("Idle");
+            }
+
+            particleDelay -= Time.deltaTime;
         }
 
         public override void Exit()

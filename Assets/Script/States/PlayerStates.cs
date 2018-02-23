@@ -45,7 +45,7 @@ public class PlayerStates : MonoBehaviour
 
         public override void Enter()
         {
-
+            anim.SetBool("moving", true);
         }
 
         public override void Update()
@@ -59,8 +59,6 @@ public class PlayerStates : MonoBehaviour
             float step = player.GetRotaSpd() * Time.deltaTime;
             Vector3 newDir = Vector3.RotateTowards(player.transform.forward, player.transform.position - prevPos, step, 0.0f);
             player.transform.rotation = Quaternion.LookRotation(newDir);
-
-            anim.SetBool("moving", true);
         }
 
         public override void Exit()

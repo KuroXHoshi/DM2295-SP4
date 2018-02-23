@@ -23,16 +23,17 @@ public class BasicEnemyScript : MonoBehaviour
     private int gold = 0;
 
     public GameObject gold_pile;
+    public ParticleSystem particle;
 
     private Rigidbody rigid_entity_body;
 
     Animator animator;
 
-    Vector3 player_pos;
-    Vector3 enemy_pos;
-    Vector3 new_enemy_pos;
-    Vector3 target_player_DIR;
-    float Distance;
+    //Vector3 player_pos;
+    //Vector3 enemy_pos;
+    //Vector3 new_enemy_pos;
+    //Vector3 target_player_DIR;
+    //float Distance;
 
     //[Header("Unity Stuff")]
     public Image health;
@@ -45,6 +46,7 @@ public class BasicEnemyScript : MonoBehaviour
 
     public StateMachine sm { get; protected set; }
     public Animator GetAnim() { return animator; }
+    public Player GetPlayer() { return player; }
     public Vector3 GetPlayerPos() { return player.transform.position; }
     public Transform GetModel() { return model; }
 
@@ -98,6 +100,8 @@ public class BasicEnemyScript : MonoBehaviour
         }
         else
         {
+            if (gameObject.tag == "Skele_Medium")
+                return;
 
             if (sm != null)
                 sm.Update();
