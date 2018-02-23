@@ -30,9 +30,13 @@ public class RoomLayoutGen : MonoBehaviour
     public GameObject exit_block;
     public GameObject quad_block;
     public GameObject[] statue;
+    public GameObject AI_Controller;
+    
 
     private Player player_obj_script;
     private Portal portal_obj_script;
+    private Grid AI_Controller_Grid;
+    private GameObject AI_Controller_Obj;
 
     private int[][] room_layout;
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
@@ -53,6 +57,10 @@ public class RoomLayoutGen : MonoBehaviour
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
         player_obj = GameObject.FindGameObjectWithTag("Player");
+
+        GameObject controllerInstance = Instantiate(AI_Controller, AI_Controller.transform.position, Quaternion.identity) as GameObject;
+        AI_Controller_Obj = controllerInstance;
+        AI_Controller_Grid = controllerInstance.GetComponent<Grid>();
 
         player_obj_script = player_obj.GetComponent<Player>();
 
@@ -154,7 +162,11 @@ public class RoomLayoutGen : MonoBehaviour
 
     void SetupTilesArray()
     {
-        foreach(GameObject i in total_blocks)
+        foreach (GameObject i in total_blocks)
+        {
+            i.SetActive(false);
+        }
+        foreach (GameObject i in total_blocks)
         {
             Destroy(i);
         }
@@ -795,7 +807,7 @@ public class RoomLayoutGen : MonoBehaviour
 
         for(int i = 0; i < gold_piles.Length; ++i)
         {
-            Destroy(gold_piles[i]);        
+            Destroy(gold_piles[i]);
         }
 
         SetupTilesArray();
@@ -807,5 +819,7 @@ public class RoomLayoutGen : MonoBehaviour
 
         InstantiateTiles();
         InstantiateOuterWalls();
+
+        AI_Controller_Grid.CreateGrid();
     }
 }
