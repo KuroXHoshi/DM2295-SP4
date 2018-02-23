@@ -23,6 +23,9 @@ public class Player : MonoBehaviour
     private bool RegenSkill = false, IronWillSkill = false, EvasionSkill = false;
 
     [SerializeField]
+    public float HealthRegenAmount = 1, StaminaRegenAmount = 1;
+
+    [SerializeField]
     private ParticleSystem particle;
 
     private Animator anim;
@@ -32,31 +35,26 @@ public class Player : MonoBehaviour
     private bool set_prev;
 
     public AudioScript PlayerAudio;
-    public StateMachine sm { get; protected set; }
-    public float MaxHealth { get; protected set; }
-    public float MaxStamina { get; protected set; }
     public JoyStick joystick;
     public GameObject button_attack;
     public GameObject button_defend;
 
-    private Player()
-    {
-
-    }
+    private Player() { }
 
     public int GetPlayerCurrentRoom() { return current_room; }
     public Vector3 Get_Player_Pos() { return transform.position; }
-    public float GetRotaSpd() { return RotaSpd; }
-    public float hitParticleDelay { get; set; }
     public Animator GetAnim() { return anim; }
     public ParticleSystem GetParticle() { return particle; }
     public PlayerStatistics GetpStats() { return pStats; }
+    public StateMachine sm { get; protected set; }
+    public float MaxHealth { get; protected set; }
+    public float MaxStamina { get; protected set; }
+    public float GetRotaSpd() { return RotaSpd; }
+    public float hitParticleDelay { get; set; }
+    public float hpRegenDelay { get; set; }
+    public float stamRegenDelay { get; set; }
 
     [SerializeField]
-    public float HealthRegen;
-
-    [SerializeField]
-    public float StaminaRegen;
 
     public void TakeDamage(float _dmg) { pStats.health -= _dmg; }
 
@@ -79,8 +77,6 @@ public class Player : MonoBehaviour
         MaxHealth = pStats.health;
         MaxStamina = pStats.stamina;
         hitParticleDelay = 0f;
-        pStats.healthRegenSpd = HealthRegen;
-        pStats.staminaRegenSpd = StaminaRegen ;
         set_prev = false;
 
         if (!(anim = gameObject.GetComponent<Animator>())) Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
@@ -134,14 +130,14 @@ public class Player : MonoBehaviour
             if (set_prev)
                 set_prev = false;
 
-            if (Input.GetMouseButtonDown(0) && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
+            if (Input.GetButtonDown("Fire1") && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
             {
                 sm.SetNextState("Attack");
             }
-            else if (Input.GetMouseButtonDown(1) && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) && pStats.stamina > 1)
+            else if (Input.GetButtonDown("Skill1") && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) && pStats.stamina > 0)
             {
                 sm.SetNextState("Dash");
-                pStats.stamina = pStats.stamina - 1;
+                pStats.stamina -= 1;
             }
         }
 
@@ -152,14 +148,24 @@ public class Player : MonoBehaviour
     void PassiveRegen()
     {
         
-        if(sm.IsCurrentState("Idle") && pStats.health < MaxHealth )
+        if(sm.IsCurrentState("Idle"))
         {
-            pStats.health += pStats.healthRegenSpd * Time.deltaTime;
+            if (pStats.health < MaxHealth && hpRegenDelay <= 0f)
+            {
+                pStats.health += HealthRegenAmount;
+                hpRegenDelay = pStats.healthRegenSpd;
+            }
+
+            hpRegenDelay -= Time.deltaTime;
         }
-        if (sm.IsCurrentState("Idle") && pStats.stamina < MaxStamina)
+
+        if (pStats.stamina < MaxStamina && stamRegenDelay <= 0f)
         {
-            pStats.stamina += pStats.staminaRegenSpd * Time.deltaTime;
+            pStats.stamina += StaminaRegenAmount;
+            stamRegenDelay = pStats.staminaRegenSpd;
         }
+
+        stamRegenDelay -= Time.deltaTime;
     }
 
     void PassiveIronSkin()

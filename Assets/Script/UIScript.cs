@@ -11,6 +11,7 @@ public class UIScript : MonoBehaviour {
     public GameObject equip_menu;
     public Slider healthslider;
     public Slider staminaslider;
+    public Text goldText;
 
     [SerializeField]
     private Text healthpercent = null, staminapercent = null;
@@ -29,6 +30,7 @@ public class UIScript : MonoBehaviour {
     {
         healthbar();
         staminabar();
+        goldIndication();
     }
 
     // Update is called once per frame
@@ -117,5 +119,10 @@ public class UIScript : MonoBehaviour {
     {
         staminaslider.value = player.GetpStats().stamina;
         staminapercent.text = player.GetpStats().stamina.ToString();
+    }
+
+    public void goldIndication()
+    {
+        goldText.text = "Gold : " + player.GetpStats().gold;
     }
 }
