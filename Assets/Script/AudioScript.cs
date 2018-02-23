@@ -22,12 +22,13 @@ public class AudioScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-       
-	}
+       // attackclip();
+       // playerdash();
+    }
 
     public void attackclip()
     {
-       
+        MusicSource.clip = Attack;
 
         MusicSource.Play();
     }
@@ -64,10 +65,12 @@ public class AudioScript : MonoBehaviour {
     }
     public void playerdash()
     {
+        MusicSource.clip = dash;
         MusicSource.Play();
     }
     public void collide()
     {
+         
         MusicSource.Play();
     }
 }
