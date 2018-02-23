@@ -52,6 +52,12 @@ public class Player : MonoBehaviour
     public ParticleSystem GetParticle() { return particle; }
     public PlayerStatistics GetpStats() { return pStats; }
 
+    [SerializeField]
+    public float HealthRegen;
+
+    [SerializeField]
+    public float StaminaRegen;
+
     public void TakeDamage(float _dmg) { pStats.health -= _dmg; }
 
     public void SetLevel(float level_input) {
@@ -73,6 +79,8 @@ public class Player : MonoBehaviour
         MaxHealth = pStats.health;
         MaxStamina = pStats.stamina;
         hitParticleDelay = 0f;
+        pStats.healthRegenSpd = HealthRegen;
+        pStats.staminaRegenSpd = StaminaRegen ;
         set_prev = false;
 
         if (!(anim = gameObject.GetComponent<Animator>())) Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
@@ -98,6 +106,7 @@ public class Player : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        RegenSkill = true;
        // Debug.Log(gameObject.GetHashCode());
     }
 
@@ -129,9 +138,10 @@ public class Player : MonoBehaviour
             {
                 sm.SetNextState("Attack");
             }
-            else if (Input.GetMouseButtonDown(1) && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor))
+            else if (Input.GetMouseButtonDown(1) && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) && pStats.stamina > 1)
             {
                 sm.SetNextState("Dash");
+                pStats.stamina = pStats.stamina - 1;
             }
         }
 
@@ -141,7 +151,15 @@ public class Player : MonoBehaviour
 
     void PassiveRegen()
     {
-
+        
+        if(sm.IsCurrentState("Idle") && pStats.health < MaxHealth )
+        {
+            pStats.health += pStats.healthRegenSpd * Time.deltaTime;
+        }
+        if (sm.IsCurrentState("Idle") && pStats.stamina < MaxStamina)
+        {
+            pStats.stamina += pStats.staminaRegenSpd * Time.deltaTime;
+        }
     }
 
     void PassiveIronSkin()

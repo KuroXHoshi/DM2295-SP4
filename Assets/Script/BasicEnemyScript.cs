@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class BasicEnemyScript : MonoBehaviour
 {
-    
+    public string currState;
     private Player player; //: Transform;
    // public Transform playerTransform;
     public float MoveSpeed = 2;
@@ -23,16 +23,17 @@ public class BasicEnemyScript : MonoBehaviour
     private int gold = 0;
 
     public GameObject gold_pile;
+    public ParticleSystem particle;
 
     private Rigidbody rigid_entity_body;
 
     Animator animator;
 
-    Vector3 player_pos;
-    Vector3 enemy_pos;
-    Vector3 new_enemy_pos;
-    Vector3 target_player_DIR;
-    float Distance;
+    //Vector3 player_pos;
+    //Vector3 enemy_pos;
+    //Vector3 new_enemy_pos;
+    //Vector3 target_player_DIR;
+    //float Distance;
 
     //[Header("Unity Stuff")]
     public Image health;
@@ -43,6 +44,29 @@ public class BasicEnemyScript : MonoBehaviour
     [SerializeField]
     private Transform model;
 
+    public StateMachine sm { get; protected set; }
+    public Animator GetAnim() { return animator; }
+    public Player GetPlayer() { return player; }
+    public Vector3 GetPlayerPos() { return player.transform.position; }
+    public Transform GetModel() { return model; }
+
+    private void Awake()
+    {
+        animator = model.GetComponent<Animator>();
+        rigid_entity_body = GetComponent<Rigidbody>();
+
+        if (sm == null)
+            sm = new StateMachine();
+
+        sm.AddState(new EnemyStates.Idle(this));
+        sm.AddState(new EnemyStates.Movement(this));
+        sm.AddState(new EnemyStates.Attack(this));
+
+        starting_done = false;
+        rigid_entity_body.detectCollisions = false;
+        rigid_entity_body.useGravity = false;
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -52,22 +76,13 @@ public class BasicEnemyScript : MonoBehaviour
         //if (!(camera = GameObject.FindGameObjectWithTag("MainCamera").transform))
             //Debug.Log("BasicEnemyScript.cs : Camera not loaded");
 
-        animator = model.GetComponent<Animator>();
         //transform.position = Player.transform.position - Vector3.forward * MoveSpeed;
-        starting_done = false;
-
-        rigid_entity_body = GetComponent<Rigidbody>();
-
-        rigid_entity_body.detectCollisions = false;
-        rigid_entity_body.useGravity = false;
-
         gold = coin_range.Random;
 
        // HP = MAX_HP;
     }
     
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
         if (!starting_done)
         {
@@ -88,46 +103,49 @@ public class BasicEnemyScript : MonoBehaviour
             if (gameObject.tag == "Skele_Medium")
                 return;
 
-            player_pos = player.Get_Player_Pos();
-            enemy_pos = transform.position;
-            Distance = Vector3.Distance(enemy_pos, player_pos);
-            new_enemy_pos = transform.position + player_pos * MoveSpeed * Time.deltaTime;
-            target_player_DIR = player_pos - enemy_pos;
+            if (sm != null)
+                sm.Update();
 
-            //health.fillAmount = HP / MAX_HP;
+            //player_pos = player.Get_Player_Pos();
+            //enemy_pos = transform.position;
+            //Distance = Vector3.Distance(enemy_pos, player_pos);
+            //new_enemy_pos = transform.position + player_pos * MoveSpeed * Time.deltaTime;
+            //target_player_DIR = player_pos - enemy_pos;
 
-            if (Distance <= MinDist)//distance reachable,attack
-            {
+            ////health.fillAmount = HP / MAX_HP;
 
-                //attack melee animation activate pls
-                //NEAR_ATTACK = true;
-                animator.SetBool("attack", true);
+            //if (Distance <= MinDist)//distance reachable,attack
+            //{
 
-                animator.SetBool("walk", false);
-                animator.SetBool("idle", false);
+            //    //attack melee animation activate pls
+            //    //NEAR_ATTACK = true;
+            //    animator.SetBool("attack", true);
 
-            }
-            else if (Distance <= MaxDist)//Saw player and go to player
-            {
-                //transform.position += transform.forward * MoveSpeed * Time.deltaTime;
-                transform.Translate(model.forward * MoveSpeed * Time.deltaTime);
-                float step = rotSpd * Time.deltaTime;
-                Vector3 newDir = Vector3.RotateTowards(model.forward, target_player_DIR, step, 0.0f);
-                model.rotation = Quaternion.LookRotation(newDir);
+            //    animator.SetBool("walk", false);
+            //    animator.SetBool("idle", false);
 
-                animator.SetBool("walk", true);
+            //}
+            //else if (Distance <= MaxDist)//Saw player and go to player
+            //{
+            //    //transform.position += transform.forward * MoveSpeed * Time.deltaTime;
+            //    transform.Translate(model.forward * MoveSpeed * Time.deltaTime);
+            //    float step = rotSpd * Time.deltaTime;
+            //    Vector3 newDir = Vector3.RotateTowards(model.forward, target_player_DIR, step, 0.0f);
+            //    model.rotation = Quaternion.LookRotation(newDir);
 
-                animator.SetBool("idle", false);
-                animator.SetBool("attack", false);
-                //Here Call any function U want Like Shoot at here or something
-            }
-            else//player unseen
-            {
-                animator.SetBool("idle", true);
+            //    animator.SetBool("walk", true);
 
-                animator.SetBool("walk", false);
-                animator.SetBool("attack", false);
-            }
+            //    animator.SetBool("idle", false);
+            //    animator.SetBool("attack", false);
+            //    //Here Call any function U want Like Shoot at here or something
+            //}
+            //else//player unseen
+            //{
+            //    animator.SetBool("idle", true);
+
+            //    animator.SetBool("walk", false);
+            //    animator.SetBool("attack", false);
+            //}
 
         }
     }

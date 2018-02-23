@@ -7,18 +7,18 @@ public class PlayerStates : MonoBehaviour
 
     public class Idle : State
     {
-        private Player player;
-        private Animator anim;
+        //private Player player;
+        //private Animator anim;
 
         public Idle(Player _player) : base("Idle")
         {
-            player = _player;
-            anim = player.GetAnim();
+            //player = _player;
+            //anim = player.GetAnim();
         }
 
         public override void Enter()
         {
-            anim.SetBool("moving", false);
+            
         }
 
         public override void Update()
@@ -45,12 +45,12 @@ public class PlayerStates : MonoBehaviour
 
         public override void Enter()
         {
-
+            anim.SetBool("moving", true);
         }
 
         public override void Update()
         {
-            if (player.GetAnim().GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
                 return;
 
             Vector3 prevPos = player.transform.position;
@@ -59,13 +59,11 @@ public class PlayerStates : MonoBehaviour
             float step = player.GetRotaSpd() * Time.deltaTime;
             Vector3 newDir = Vector3.RotateTowards(player.transform.forward, player.transform.position - prevPos, step, 0.0f);
             player.transform.rotation = Quaternion.LookRotation(newDir);
-
-            anim.SetBool("moving", true);
         }
 
         public override void Exit()
         {
-
+            anim.SetBool("moving", false);
         }
     }
 
