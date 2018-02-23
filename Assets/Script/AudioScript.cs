@@ -14,6 +14,7 @@ public class AudioScript : MonoBehaviour {
     public AudioClip EnemySpell;
     public AudioClip PlayerSpell;
     public AudioClip dash;
+    public AudioClip Collided;
     // Use this for initialization
     void Start () {
       
@@ -62,6 +63,10 @@ public class AudioScript : MonoBehaviour {
         MusicSource.Play();
     }
     public void playerdash()
+    {
+        MusicSource.Play();
+    }
+    public void collide()
     {
         MusicSource.Play();
     }
