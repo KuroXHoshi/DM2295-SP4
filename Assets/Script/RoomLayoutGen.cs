@@ -446,8 +446,8 @@ public class RoomLayoutGen : MonoBehaviour
     {
         int[][] temp_array;
 
-        int half_room_height = ((int)((roomHeight * 0.5) * 0.5));
-        int half_room_width = ((int)((roomWidth * 0.5) * 0.5));
+        int half_room_height = ((int)((roomHeight * 0.5) * 0.9));
+        int half_room_width = ((int)((roomWidth * 0.5) * 0.8));
        
         // Go through all the rooms...
         for (int i = 0; i < rooms.Length; i++)
@@ -506,7 +506,7 @@ public class RoomLayoutGen : MonoBehaviour
                     {
                         if (temp_array[i][j] == 1)
                         {
-                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 2, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 1);
+                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 7, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 3.5f);
                             //  tiles[((currentRoom.xPos + j) + half_room_width) - 2][((currentRoom.yPos + i) + half_room_height) - 1] = TileType.Wall;
 
                             GameObject tileInstance = Instantiate(obstacle_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
@@ -524,7 +524,7 @@ public class RoomLayoutGen : MonoBehaviour
                     {
                         if (temp_array[i][x] == 1)
                         {
-                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) + 2, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 1);
+                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) - 5, height_of_blocks, ((currentRoom.yPos + i) + half_room_height) - 3.5f);
 
                             GameObject tileInstance = Instantiate(obstacle_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
                             total_blocks.Add(tileInstance);
@@ -544,7 +544,7 @@ public class RoomLayoutGen : MonoBehaviour
                     {
                         if (temp_array[y][x] == 1)
                         {
-                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) + 2, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) + 2);
+                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + (half_room_width * 2)) - 5, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) - 2.5f);
 
                             GameObject tileInstance = Instantiate(obstacle_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
                             total_blocks.Add(tileInstance);
@@ -565,7 +565,7 @@ public class RoomLayoutGen : MonoBehaviour
                     {
                         if (temp_array[y][j] == 1)
                         {
-                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 2, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) + 2);
+                            Vector3 temp_vec = new Vector3(((currentRoom.xPos + j) + half_room_width) - 7, height_of_blocks, ((currentRoom.yPos + i) + (half_room_height * 2)) - 2.5f);
 
                             GameObject tileInstance = Instantiate(obstacle_blocks, temp_vec * 2, Quaternion.identity) as GameObject;
                             total_blocks.Add(tileInstance);
