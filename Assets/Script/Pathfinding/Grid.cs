@@ -34,7 +34,7 @@ public class Grid : MonoBehaviour
             walkableRegionsDictionary.Add((int)Mathf.Log(region.terrainMask.value, 2), region.terrainPenalty);
         }
 
-        CreateGrid();
+      //  CreateGrid();
     }
 
     public int MaxSize
@@ -44,12 +44,18 @@ public class Grid : MonoBehaviour
             return gridSizeX * gridSizeY;
         }
     }
-    private void Update()
+
+  //  public static bool temp = false;
+
+    public void CreateGrid()
     {
-        CreateGrid();
-    }
-    void CreateGrid()
-    {
+
+        if (grid != null)
+        {
+            System.Array.Clear(grid, 0, grid.Length);
+        }   
+          
+
         grid = new Node[gridSizeX, gridSizeY];
         Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.forward * gridWorldSize.y / 2;
 
@@ -81,6 +87,7 @@ public class Grid : MonoBehaviour
         }
 
         BlurPenaltyMap(3);
+        //temp = true;
 
     }
 
