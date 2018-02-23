@@ -39,9 +39,9 @@ public class Unit : MonoBehaviour
     IEnumerator UpdatePath()
     {
 
-        if (Time.timeSinceLevelLoad < .3f)
+        if (Time.timeSinceLevelLoad < .5f)
         {
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(.5f);
         }
         PathRequestManager.RequestPath(new PathRequest(transform.position, targeted_player.transform.position, OnPathFound));
 
