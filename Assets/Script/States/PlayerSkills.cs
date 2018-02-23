@@ -7,6 +7,7 @@ public class Dash : State
     private Player player;
     private Animator anim;
     private Vector3 prevPos;
+    
 
     public Dash(Player _player) : base("Dash")
     {

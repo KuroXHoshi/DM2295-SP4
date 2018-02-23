@@ -7,7 +7,7 @@ public class Unit : MonoBehaviour
     const float minPathUpdateTime = .2f;
     const float pathUpdateMoveThreshold = .5f;
 
-    public Transform target;
+    //public Transform target;
     public float speed = 20;
     public float turnSpeed = 3;
     public float turnDst = 5;
@@ -15,6 +15,9 @@ public class Unit : MonoBehaviour
     private Player player;
     private GameObject targeted_player;
     Path path;
+
+    [SerializeField]
+    private Transform model;
 
     void Start()
     {
@@ -36,9 +39,9 @@ public class Unit : MonoBehaviour
     IEnumerator UpdatePath()
     {
 
-        if (Time.timeSinceLevelLoad < .3f)
+        if (Time.timeSinceLevelLoad < .5f)
         {
-            yield return new WaitForSeconds(.3f);
+            yield return new WaitForSeconds(.5f);
         }
         PathRequestManager.RequestPath(new PathRequest(transform.position, targeted_player.transform.position, OnPathFound));
 
@@ -48,7 +51,7 @@ public class Unit : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(minPathUpdateTime);
-            print(((targeted_player.transform.position - targetPosOld).sqrMagnitude) + "    " + sqrMoveThreshold);
+            //print(((targeted_player.transform.position - targetPosOld).sqrMagnitude) + "    " + sqrMoveThreshold);
             if ((targeted_player.transform.position - targetPosOld).sqrMagnitude > sqrMoveThreshold)
             {
                 PathRequestManager.RequestPath(new PathRequest(transform.position, targeted_player.transform.position, OnPathFound));
@@ -62,7 +65,7 @@ public class Unit : MonoBehaviour
 
         bool followingPath = true;
         int pathIndex = 0;
-        transform.LookAt(path.lookPoints[0]);
+        model.LookAt(path.lookPoints[0]);
 
         float speedPercent = 1;
 
@@ -95,9 +98,14 @@ public class Unit : MonoBehaviour
                 }
 
                 Quaternion targetRotation = Quaternion.LookRotation(path.lookPoints[pathIndex] - transform.position);
-                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
-                transform.Translate(Vector3.forward * Time.deltaTime * speed * speedPercent, Space.Self);
+                //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
+                //transform.Translate(Vector3.forward * Time.deltaTime * speed * speedPercent, Space.Self);
+
+                model.rotation = targetRotation;
+                transform.position += model.forward * speed * Time.deltaTime;
             }
+
+            model.rotation = new Quaternion(0f, model.rotation.y, 0f, model.rotation.w);
 
             yield return null;
 
