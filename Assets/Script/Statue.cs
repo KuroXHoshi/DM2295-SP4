@@ -24,7 +24,7 @@ public class Statue : MonoBehaviour {
     private int cost;
     private Vector2 starting_pos;
 
-    private GameObject chosen_blessing;
+   // private GameObject chosen_blessing;
 
     [SerializeField]
     private GameObject text_mesh;
@@ -36,9 +36,9 @@ public class Statue : MonoBehaviour {
 
         player_obj_script = player_obj.GetComponent<Player>();
 
-        chosen_blessing = Instantiate(blessing_list[(int)type], transform.position, blessing_list[(int)type].transform.rotation);
-        chosen_blessing.GetComponent<Blessing>().SetBlessingType((int)type);
-        chosen_blessing.SetActive(false);
+       // chosen_blessing = Instantiate(blessing_list[(int)type], transform.position, blessing_list[(int)type].transform.rotation);
+       // chosen_blessing.GetComponent<Blessing>().SetBlessingType((int)type);
+        //chosen_blessing.SetActive(false);
 
         is_risen = false;
         is_bought = false;
@@ -96,7 +96,7 @@ public class Statue : MonoBehaviour {
                         if (Random.Range(0, 100) < 50)
                         {
                             is_bought = true;
-                            chosen_blessing.SetActive(true);
+                           // chosen_blessing.SetActive(true);
                         }
                         else
                         {
