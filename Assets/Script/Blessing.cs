@@ -7,7 +7,7 @@ public class Blessing : MonoBehaviour {
     public float timer = 5.0f;
 
     public enum TYPE
-    {
+    {       
         REGEN,
         IRON_WILL,
         EVASION,
@@ -19,6 +19,8 @@ public class Blessing : MonoBehaviour {
         WARCRY,
         ULT_DEF,
 
+        NONE,
+
         TOTAL_TYPE
     }
 
@@ -29,13 +31,13 @@ public class Blessing : MonoBehaviour {
        
     }
 
-    public void SetBlessingType(int _type)
+    public void SetBlessingType(TYPE _type)
     {
-        type = (TYPE)_type;
+        type = _type;
     }
 
-    public int GetBlessingType()
+    public TYPE GetBlessingType()
     {
-        return (int)type;
+        return type;
     }
 }
