@@ -13,7 +13,9 @@ public class UIScript : MonoBehaviour {
     public Slider staminaslider;
     public Text goldText;
 
-    [SerializeField]
+    public RawImage bloodscreen;
+    bool stop;
+   [SerializeField]
     private Text healthpercent = null, staminapercent = null;
 
     // Use this for initialization
@@ -24,7 +26,9 @@ public class UIScript : MonoBehaviour {
 
         healthslider.maxValue = player.MaxHealth;
         staminaslider.maxValue = player.MaxStamina;
-	}
+        bloodscreen.canvasRenderer.SetAlpha(0.0f);
+        stop = false;
+    }
 
     private void FixedUpdate()
     {
@@ -35,6 +39,17 @@ public class UIScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+       
+        if(player.GetpStats().gothit == true)
+        {
+        bloodscreen.canvasRenderer.SetAlpha(1.0f);
+            stop = false;
+        }
+        else if((player.GetpStats().health == player.GetpStats().MAXHEALTH)&&(!stop))
+        {
+         bloodscreen.CrossFadeAlpha(0.0f, 2.5f, false);
+            stop = true;
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             pause_menu.SetActive(!pause_menu.activeSelf);
