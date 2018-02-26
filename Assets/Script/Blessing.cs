@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Blessing : MonoBehaviour {
 
-    public float timer = 5.0f;
+    private float dur;
 
     public enum TYPE
     {       
@@ -28,7 +28,15 @@ public class Blessing : MonoBehaviour {
 
     public void Update()
     {
-       
+        if(dur >= 0)
+        {
+            dur -= Time.deltaTime;
+        }
+
+       if(transform.position.y > 0.1f)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y - 3 * Time.deltaTime, transform.position.z);
+        }
     }
 
     public void SetBlessingType(TYPE _type)
@@ -39,5 +47,15 @@ public class Blessing : MonoBehaviour {
     public TYPE GetBlessingType()
     {
         return type;
+    }
+
+    public float GetDuration()
+    {
+        return dur;
+    }
+
+    public void SetDuration(float _input)
+    {
+        dur = _input;
     }
 }

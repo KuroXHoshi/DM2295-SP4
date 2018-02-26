@@ -812,11 +812,18 @@ public class RoomLayoutGen : MonoBehaviour
             total_quads[i].SetActive(true);
         }
 
-        GameObject []gold_piles = GameObject.FindGameObjectsWithTag("Coin");
+        GameObject []delete_array = GameObject.FindGameObjectsWithTag("Coin");
 
-        for(int i = 0; i < gold_piles.Length; ++i)
+        for(int i = 0; i < delete_array.Length; ++i)
         {
-            Destroy(gold_piles[i]);
+            Destroy(delete_array[i]);
+        }
+
+        delete_array = GameObject.FindGameObjectsWithTag("Blessing");
+
+        for (int i = 0; i < delete_array.Length; ++i)
+        {
+            Destroy(delete_array[i]);
         }
 
         SetupTilesArray();
