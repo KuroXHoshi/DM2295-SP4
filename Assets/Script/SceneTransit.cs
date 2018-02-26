@@ -15,7 +15,7 @@ public class SceneTransit : MonoBehaviour {
     Canvas currentCanvas;
 
     [SerializeField]
-    Canvas FriendlistCanvas;
+    Canvas instruct;
 
     Canvas TimerCanvas;
 
@@ -25,6 +25,7 @@ public class SceneTransit : MonoBehaviour {
     {
        // startertime = Time.time;
         optionsCanvas.enabled = false;
+        instruct.enabled = false;
     }
     public void Game()
     {
@@ -58,12 +59,12 @@ public void Options()
         currentCanvas = optionsCanvas;
     }
 
-    public void HighScore()
+    public void instructions()
     {
         mainMenu.enabled = false;
-        //highscoreCanvas.enabled = true;
+        instruct.enabled = true;
 
-        //currentCanvas = highscoreCanvas;
+        currentCanvas = instruct;
     }
     public void Back() // options back btn, highscore back btn
     {
