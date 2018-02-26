@@ -15,9 +15,11 @@ public class AudioScript : MonoBehaviour {
     public AudioClip PlayerSpell;
     public AudioClip dash;
     public AudioClip Collided;
+    public AudioClip damage;
+    public AudioClip damage2;
     // Use this for initialization
     void Start () {
-      
+        int temp;
     }
 	
 	// Update is called once per frame
@@ -72,5 +74,20 @@ public class AudioScript : MonoBehaviour {
     {
          
         MusicSource.Play();
+    }
+    public void takedamage()
+    {
+        int temp = UnityEngine.Random.Range(0, 10);
+        Debug.Log(temp);
+        if (temp < 5)
+        {
+            MusicSource.clip = damage;
+            MusicSource.Play();
+        }
+        else
+        {
+            MusicSource.clip = damage2;
+            MusicSource.Play();
+        }
     }
 }

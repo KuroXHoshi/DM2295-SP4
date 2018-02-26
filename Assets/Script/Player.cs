@@ -13,6 +13,9 @@ public struct PlayerStatistics
     public float atkDist, dashDist, dashSpd;
     public int damage;
     public int gold;
+
+    public bool gothit;
+    public float MAXHEALTH;
 }
 
 public class Player : MonoBehaviour
@@ -61,10 +64,20 @@ public class Player : MonoBehaviour
 
     [SerializeField]
 
-    public void TakeDamage(float _dmg) { pStats.health -= _dmg; }
+    public void TakeDamage(float _dmg)
+    {
+        pStats.health -= _dmg;
+        PlayerAudio.takedamage();
+        pStats.gothit = true;
+    }
 
     public void SetLevel(float level_input) {
         pStats.level = level_input;
+    }
+
+    public void SetHealth(float hp)
+    {
+        pStats.health = hp;
     }
 
     public void SetGold(int gold_input)
@@ -76,13 +89,14 @@ public class Player : MonoBehaviour
     {
         current_room = _current_room;
     }
-
+  
     private void Awake()
     {
         MaxHealth = pStats.health;
         MaxStamina = pStats.stamina;
         hitParticleDelay = 0f;
         set_prev = false;
+        pStats.MAXHEALTH = MaxHealth;
 
         if (!(anim = gameObject.GetComponent<Animator>())) Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
         //if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
@@ -177,6 +191,8 @@ public class Player : MonoBehaviour
 
         if (hitParticleDelay > 0)
             hitParticleDelay -= Time.deltaTime;
+            
+
 
     }
 
@@ -188,6 +204,7 @@ public class Player : MonoBehaviour
             {
                 pStats.health += HealthRegenAmount;
                 hpRegenDelay = pStats.healthRegenSpd;
+                pStats.gothit = false;
             }
 
             hpRegenDelay -= Time.deltaTime;
