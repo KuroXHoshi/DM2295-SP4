@@ -173,7 +173,8 @@ public class BasicEnemyScript : MonoBehaviour
         if (other.tag == "Player Hitting")
         {
             HP -= player.GetpStats().damage;
-            health.fillAmount = HP / MAX_HP;
+            if (health != null)
+                health.fillAmount = HP / MAX_HP;
         }
     }
 
@@ -186,7 +187,8 @@ public class BasicEnemyScript : MonoBehaviour
         rigid_entity_body.detectCollisions = false;
         rigid_entity_body.useGravity = false;
         HP = MAX_HP;
-        health.fillAmount = HP / MAX_HP;
+        if (health != null)
+            health.fillAmount = HP / MAX_HP;
         gameObject.SetActive(false);
     }
 }
