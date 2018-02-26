@@ -54,7 +54,7 @@ public class UIScript : MonoBehaviour {
         bloodscreen.canvasRenderer.SetAlpha(1.0f);
             stop = false;
         }
-        else if((player.GetpStats().health == player.GetpStats().MAXHEALTH)&&(!stop))
+        else if(!stop)
         {
          bloodscreen.CrossFadeAlpha(0.0f, 2.5f, false);
             stop = true;
