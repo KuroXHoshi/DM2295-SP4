@@ -13,6 +13,7 @@ public class UIScript : MonoBehaviour {
     public Slider staminaslider;
     public Text goldText;
 
+    public Text textObjective;
     public RawImage bloodscreen;
     bool stop;
    [SerializeField]
@@ -26,6 +27,8 @@ public class UIScript : MonoBehaviour {
 
         healthslider.maxValue = player.MaxHealth;
         staminaslider.maxValue = player.MaxStamina;
+
+        textObjective.canvasRenderer.SetAlpha(1.0f);
         bloodscreen.canvasRenderer.SetAlpha(0.0f);
         stop = false;
     }
@@ -39,6 +42,8 @@ public class UIScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
+
        if(player.GetpStats().health <= 0)
         {
             SceneManager.LoadScene("gameover");
