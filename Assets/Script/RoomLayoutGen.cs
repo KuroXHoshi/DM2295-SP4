@@ -116,7 +116,8 @@ public class RoomLayoutGen : MonoBehaviour
         {
             if (count > 0 )
             {
-                canvas_layout.GetComponent<UIScript>().SetRoomObjective("Defeat Monsters");
+
+               canvas_layout.GetComponent<UIScript>().SetRoomObjective("Defeat Monsters");
             }
             player_prev_room = player_obj_script.GetPlayerCurrentRoom();
             total_quads[player_prev_room].SetActive(false);
@@ -163,7 +164,7 @@ public class RoomLayoutGen : MonoBehaviour
             if(portal_obj_script.GetIsDone())
             {
                 SetUpMap();
-                count = 0;
+                //count = 0;
             }
         }
 
@@ -403,6 +404,7 @@ public class RoomLayoutGen : MonoBehaviour
                             {
                                 if (player_spawn_point_y > 0 && i == 0)
                                 {
+                                    canvas_layout.GetComponent<UIScript>().SetRoomObjective("BOSS!!!");
                                     total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().SpawnBoss(true);
                                     set_boss_spawn = true;
                                 }
