@@ -31,6 +31,7 @@ public class RoomLayoutGen : MonoBehaviour
     public GameObject quad_block;
     public GameObject[] statue;
     public GameObject AI_Controller;
+    public GameObject canvas_layout;
     
 
     private Player player_obj_script;
@@ -821,5 +822,7 @@ public class RoomLayoutGen : MonoBehaviour
         InstantiateOuterWalls();
 
         AI_Controller_Grid.CreateGrid();
+
+        canvas_layout.GetComponent<UIScript>().SetRoomLevelLayout();
     }
 }
