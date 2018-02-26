@@ -170,19 +170,27 @@ public class Player : MonoBehaviour
 
         if (sm.IsCurrentState("Idle"))
         {
-            if (pStats.health < MaxHealth && hpRegenDelay <= 0f)
+            if (pStats.health < MaxHealth)
             {
-                pStats.health += HealthRegenAmount * pStats.passiveHPRegenMultiplyer;
+                if (hpRegenDelay <= 0f)
+                {
+                    pStats.health += HealthRegenAmount * pStats.passiveHPRegenMultiplyer;
+                    hpRegenDelay = pStats.healthRegenSpd;
+                    pStats.gothit = false;
+                }
+
+                hpRegenDelay -= Time.deltaTime;
+            }
+            else
+            {
                 hpRegenDelay = pStats.healthRegenSpd;
-                pStats.gothit = false;
+
+                if (pStats.health > MaxHealth)
+                {
+                    pStats.health = MaxHealth;
+                }
             }
 
-            hpRegenDelay -= Time.deltaTime;
-
-            if (pStats.health > MaxHealth)
-            {
-                pStats.health = MaxHealth;
-            }
         }
 
         if (pStats.stamina < MaxStamina && stamRegenDelay <= 0f)
