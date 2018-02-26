@@ -114,9 +114,8 @@ public class RoomLayoutGen : MonoBehaviour
 
         if (player_obj_script.GetPlayerCurrentRoom() != player_prev_room)
         {
-            if (count > 0 )
+            if (count == 1 )
             {
-
                canvas_layout.GetComponent<UIScript>().SetRoomObjective("Defeat Monsters");
             }
             player_prev_room = player_obj_script.GetPlayerCurrentRoom();
@@ -841,6 +840,6 @@ public class RoomLayoutGen : MonoBehaviour
         AI_Controller_Grid.CreateGrid();
 
         canvas_layout.GetComponent<UIScript>().SetRoomLevelLayout();
-        canvas_layout.GetComponent<UIScript>().SetRoomObjective("Explore");
+        //canvas_layout.GetComponent<UIScript>().SetRoomObjective("Explore");
     }
 }

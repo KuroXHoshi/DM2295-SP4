@@ -36,6 +36,7 @@ public class UIScript : MonoBehaviour
         level_data = (int)player.GetpStats().level;//ME TOO
         levels.text = "Level  " + level_data;
         levels.canvasRenderer.SetAlpha(1.0f);
+        levels.CrossFadeAlpha(0.0f, 2.5f, false);
 
 
         //sets to can see
@@ -47,7 +48,7 @@ public class UIScript : MonoBehaviour
         stop = false;
         //fades away
        
-        levels.CrossFadeAlpha(0.0f, 2.5f, false);
+       
 
     }
     public void SetRoomLevelLayout()
@@ -55,6 +56,7 @@ public class UIScript : MonoBehaviour
         level_data = (int)player.GetpStats().level;//ME TOO
         levels.text = "Level  " + level_data;
         levels.canvasRenderer.SetAlpha(1.0f);
+        levels.CrossFadeAlpha(0.0f, 2.5f, false);
     }
     
     public void SetRoomObjective(string objective)
