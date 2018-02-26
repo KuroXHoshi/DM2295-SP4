@@ -9,7 +9,9 @@ public struct PlayerStatistics
     public float level;
     public float health;
     public float stamina;
-    public float atkSpd, moveSpd, healthRegenSpd, staminaRegenSpd;
+    public float atkSpd, moveSpd, healthRegenSpd, staminaRegenSpd,
+                 HPRegenMultiplyer, DefMultiplyer, EvaMultiplyer;
+
     public float atkDist, dashDist, dashSpd;
     public int damage;
     public int gold;
@@ -23,8 +25,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private PlayerStatistics pStats;
 
-    [SerializeField]
-    private bool RegenSkill = false, IronWillSkill = false, EvasionSkill = false;
+    //[SerializeField]
+    //private bool RegenSkill = false, IronWillSkill = false, EvasionSkill = false;
 
     [SerializeField]
     public float HealthRegenAmount = 1, StaminaRegenAmount = 1;
@@ -151,8 +153,27 @@ public class Player : MonoBehaviour
 
         for (int i = 0; i < blessing_inven.Length; ++i)
         {
-            if(blessing_inven[i].GetBlessingType() != Blessing.TYPE.NONE)
+            if (blessing_inven[i].GetBlessingType() != Blessing.TYPE.NONE)
+            {
                 skill_function_list[(int)blessing_inven[i].GetBlessingType()].DynamicInvoke();
+            }
+        }
+
+        if (sm.IsCurrentState("Idle"))
+        {
+            if (pStats.health < MaxHealth && hpRegenDelay <= 0f)
+            {
+                pStats.health += HealthRegenAmount * pStats.HPRegenMultiplyer;
+                hpRegenDelay = pStats.healthRegenSpd;
+                pStats.gothit = false;
+            }
+
+            hpRegenDelay -= Time.deltaTime;
+
+            if (pStats.health > MaxHealth)
+            {
+                pStats.health = MaxHealth;
+            }
         }
 
         if (pStats.stamina < MaxStamina && stamRegenDelay <= 0f)
@@ -191,34 +212,25 @@ public class Player : MonoBehaviour
 
         if (hitParticleDelay > 0)
             hitParticleDelay -= Time.deltaTime;
-            
 
-
+        pStats.HPRegenMultiplyer = 0;
+        pStats.DefMultiplyer = 0;
+        pStats.EvaMultiplyer = 0;
     }
 
     void PassiveRegen()
-    {   
-        if(sm.IsCurrentState("Idle"))
-        {
-            if (pStats.health < MaxHealth && hpRegenDelay <= 0f)
-            {
-                pStats.health += HealthRegenAmount;
-                hpRegenDelay = pStats.healthRegenSpd;
-                pStats.gothit = false;
-            }
-
-            hpRegenDelay -= Time.deltaTime;
-        }
+    {
+        pStats.HPRegenMultiplyer++;
     }
 
     void PassiveIronSkin()
     {
-
+        pStats.DefMultiplyer++;
     }
 
     void PassiveEvasion()
     {
-
+        pStats.EvaMultiplyer++;
     }
 
     void ActiveSummon()
@@ -259,20 +271,6 @@ public class Player : MonoBehaviour
             pStats.gold += collision.gameObject.GetComponent<Gold>().GetGoldValue();
             Destroy(collision.gameObject);
         }
-
-        if (collision.gameObject.tag.Equals("Blessing"))
-        {
-            if (Input.GetKeyDown(";"))
-            {
-                SetPlayerBlessing(true, collision.gameObject.GetComponent<Blessing>());
-                Destroy(collision.gameObject);
-            }
-            else if(Input.GetKeyDown("'"))
-            {
-                SetPlayerBlessing(false, collision.gameObject.GetComponent<Blessing>());
-                Destroy(collision.gameObject);
-            }
-        }
     }
 
     private void OnCollisionStay(Collision collision)
@@ -281,6 +279,23 @@ public class Player : MonoBehaviour
         {
             anim.SetBool("dash", false);
             sm.SetNextState("Idle");
+        }
+    }
+
+    private void OnTriggerStay(Collider collision)
+    {
+        if (collision.gameObject.tag.Equals("Blessing"))
+        {
+            if (Input.GetButtonDown("Skill_Select_Left"))
+            {
+                SetPlayerBlessing(true, collision.gameObject.GetComponent<Blessing>());
+                Destroy(collision.gameObject);
+            }
+            else if (Input.GetButtonDown("Skill_Select_Right"))
+            {
+                SetPlayerBlessing(false, collision.gameObject.GetComponent<Blessing>());
+                Destroy(collision.gameObject);
+            }
         }
     }
 

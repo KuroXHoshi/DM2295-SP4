@@ -28,7 +28,10 @@ public class Blessing : MonoBehaviour {
 
     public void Update()
     {
-       
+       if(transform.position.y > 0.1f)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y - 3 * Time.deltaTime, transform.position.z);
+        }
     }
 
     public void SetBlessingType(TYPE _type)
