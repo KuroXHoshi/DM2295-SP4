@@ -46,6 +46,7 @@ public class UIScript : MonoBehaviour {
 
        if(player.GetpStats().health <= 0)
         {
+          //  player.SetHealth(100.0f);
             SceneManager.LoadScene("gameover");
         }
         if(player.GetpStats().gothit == true)

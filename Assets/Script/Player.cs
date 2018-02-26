@@ -75,6 +75,11 @@ public class Player : MonoBehaviour
         pStats.level = level_input;
     }
 
+    public void SetHealth(float hp)
+    {
+        pStats.health = hp;
+    }
+
     public void SetGold(int gold_input)
     {
         pStats.gold = gold_input;
