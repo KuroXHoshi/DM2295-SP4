@@ -30,13 +30,16 @@ public class UIScript : MonoBehaviour {
         healthslider.maxValue = player.MaxHealth;
         staminaslider.maxValue = player.MaxStamina;
 
-         level_data = (int)player.GetpStats().level;//ME TOO
+        level_data = (int)player.GetpStats().level;//ME TOO
         levels.text = "Level  " + level_data;
         levels.canvasRenderer.SetAlpha(1.0f);
-       
-       
+
+
         //sets to can see
-       
+        textObjective.text = "Explore";
+        textObjective.canvasRenderer.SetAlpha(1.0f);
+        textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
+
         bloodscreen.canvasRenderer.SetAlpha(0.0f);
         stop = false;
         //fades away
@@ -51,8 +54,9 @@ public class UIScript : MonoBehaviour {
         levels.canvasRenderer.SetAlpha(1.0f);
     }
     
-    public void SetRoomObjective()
+    public void SetRoomObjective(string objective)
     {
+        textObjective.text = objective;
         textObjective.canvasRenderer.SetAlpha(1.0f);
         textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
     }

@@ -58,7 +58,7 @@ public class RoomLayoutGen : MonoBehaviour
         // Create the board holder.
         boardHolder = new GameObject("BoardHolder");
         player_obj = GameObject.FindGameObjectWithTag("Player");
-
+        
         GameObject controllerInstance = Instantiate(AI_Controller, AI_Controller.transform.position, Quaternion.identity) as GameObject;
         AI_Controller_Obj = controllerInstance;
         AI_Controller_Grid = controllerInstance.GetComponent<Grid>();
@@ -104,8 +104,9 @@ public class RoomLayoutGen : MonoBehaviour
         portal_obj_script.gameObject.SetActive(false);
 
         SetUpMap();
+       
     }
-
+    int count = 0;
     void Update()
     {
         if (Input.GetKeyDown("space"))
@@ -113,9 +114,13 @@ public class RoomLayoutGen : MonoBehaviour
 
         if (player_obj_script.GetPlayerCurrentRoom() != player_prev_room)
         {
-            canvas_layout.GetComponent<UIScript>().SetRoomObjective();
+            if (count > 0 )
+            {
+                canvas_layout.GetComponent<UIScript>().SetRoomObjective("Defeat Monsters");
+            }
             player_prev_room = player_obj_script.GetPlayerCurrentRoom();
             total_quads[player_prev_room].SetActive(false);
+            count++; 
         }
 
         if (!spawned_exit)
@@ -150,6 +155,7 @@ public class RoomLayoutGen : MonoBehaviour
                 portal_obj_script.Reset();
                 portal_obj_script.gameObject.SetActive(true);
                 spawned_exit = true;
+              
             }
         }
         else
@@ -157,6 +163,7 @@ public class RoomLayoutGen : MonoBehaviour
             if(portal_obj_script.GetIsDone())
             {
                 SetUpMap();
+                count = 0;
             }
         }
 
@@ -825,5 +832,6 @@ public class RoomLayoutGen : MonoBehaviour
         AI_Controller_Grid.CreateGrid();
 
         canvas_layout.GetComponent<UIScript>().SetRoomLevelLayout();
+        canvas_layout.GetComponent<UIScript>().SetRoomObjective("Explore");
     }
 }
