@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class UIScript : MonoBehaviour {
+public class UIScript : MonoBehaviour
+{
 
     private Player player;
     public GameObject pause_menu;
@@ -16,12 +17,13 @@ public class UIScript : MonoBehaviour {
     public Text textObjective;
     public RawImage bloodscreen;
     bool stop;
-   [SerializeField]
+    [SerializeField]
     private Text healthpercent = null, staminapercent = null;
 
     // Use this for initialization
-    void Start () {
-		if(!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>())) Debug.Log(this.GetType() + ".cs : Player not loaded");
+    void Start()
+    {
+        if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>())) Debug.Log(this.GetType() + ".cs : Player not loaded");
         if (!healthpercent) Debug.Log(this.GetType() + ".cs : Health Text not linked!");
         if (!staminapercent) Debug.Log(this.GetType() + ".cs : Stamina Text not linked!");
 
@@ -31,7 +33,7 @@ public class UIScript : MonoBehaviour {
         textObjective.canvasRenderer.SetAlpha(1.0f);
         bloodscreen.canvasRenderer.SetAlpha(0.0f);
         stop = false;
-     
+
     }
 
     private void FixedUpdate()
@@ -42,10 +44,11 @@ public class UIScript : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
 
-       if(Input.GetKey("l"))
+        if (Input.GetKey("l"))
         {
             instruct.enabled = true;
         }
@@ -53,19 +56,19 @@ public class UIScript : MonoBehaviour {
         {
             instruct.enabled = false;
         }
-       if(player.GetpStats().health <= 0)
+        if (player.GetpStats().health <= 0)
         {
-          //  player.SetHealth(100.0f);
+            //  player.SetHealth(100.0f);
             SceneManager.LoadScene("gameover");
         }
-        if(player.GetpStats().gothit == true)
+        if (player.GetpStats().gothit == true)
         {
-        bloodscreen.canvasRenderer.SetAlpha(1.0f);
+            bloodscreen.canvasRenderer.SetAlpha(1.0f);
             stop = false;
         }
-        else if((player.GetpStats().health == player.GetpStats().MAXHEALTH)&&(!stop))
+        else if ((player.GetpStats().health == player.GetpStats().MAXHEALTH) && (!stop))
         {
-         bloodscreen.CrossFadeAlpha(0.0f, 2.5f, false);
+            bloodscreen.CrossFadeAlpha(0.0f, 2.5f, false);
             stop = true;
         }
         if (Input.GetKeyDown(KeyCode.Escape))
