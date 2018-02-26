@@ -36,11 +36,11 @@ public class UIScript : MonoBehaviour {
        
        
         //sets to can see
-       textObjective.canvasRenderer.SetAlpha(1.0f);
+       
         bloodscreen.canvasRenderer.SetAlpha(0.0f);
         stop = false;
         //fades away
-        textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
+       
         levels.CrossFadeAlpha(0.0f, 2.5f, false);
 
     }
@@ -50,7 +50,12 @@ public class UIScript : MonoBehaviour {
         levels.text = "Level  " + level_data;
         levels.canvasRenderer.SetAlpha(1.0f);
     }
-
+    
+    public void SetRoomObjective()
+    {
+        textObjective.canvasRenderer.SetAlpha(1.0f);
+        textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
+    }
     private void FixedUpdate()
     {
         healthbar();

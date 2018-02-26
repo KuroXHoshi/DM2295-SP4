@@ -113,6 +113,7 @@ public class RoomLayoutGen : MonoBehaviour
 
         if (player_obj_script.GetPlayerCurrentRoom() != player_prev_room)
         {
+            canvas_layout.GetComponent<UIScript>().SetRoomObjective();
             player_prev_room = player_obj_script.GetPlayerCurrentRoom();
             total_quads[player_prev_room].SetActive(false);
         }
