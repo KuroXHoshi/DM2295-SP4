@@ -30,16 +30,19 @@ public class UIScript : MonoBehaviour {
         healthslider.maxValue = player.MaxHealth;
         staminaslider.maxValue = player.MaxStamina;
 
-        level_data = (int)player.GetpStats().level;//ME TOO
+         level_data = (int)player.GetpStats().level;//ME TOO
         levels.text = "Level  " + level_data;
         levels.canvasRenderer.SetAlpha(1.0f);
-
-
+       
+       
         //sets to can see
-        textObjective.canvasRenderer.SetAlpha(1.0f);
+       textObjective.canvasRenderer.SetAlpha(1.0f);
         bloodscreen.canvasRenderer.SetAlpha(0.0f);
         stop = false;
-     
+        //fades away
+        textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
+        levels.CrossFadeAlpha(0.0f, 2.5f, false);
+
     }
     public void SetRoomLevelLayout()
     {
@@ -57,10 +60,7 @@ public class UIScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        //fades away
-        textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
-        levels.CrossFadeAlpha(0.0f, 2.5f, false);
-
+       
         if (Input.GetKey("l"))
         {
             instruct.enabled = true;
