@@ -20,6 +20,8 @@ public class AudioScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
         int temp;
+        MusicSource.clip = MusicClip;
+        MusicSource.Play();
     }
 	
 	// Update is called once per frame

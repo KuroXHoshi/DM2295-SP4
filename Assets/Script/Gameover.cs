@@ -7,7 +7,7 @@ public class Gameover : MonoBehaviour {
 
     [SerializeField]
     Canvas gameover;
-
+    private float delay = 2.0f;
  
     // Use this for initialization
     void Start () {
@@ -16,7 +16,8 @@ public class Gameover : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetMouseButtonDown(0))
+        delay -= Time.deltaTime;
+        if ((Input.GetMouseButtonDown(0))&&(delay<=0.0f))
         {
             gameover.enabled = false;
             SceneManager.LoadScene("MainMenu");
