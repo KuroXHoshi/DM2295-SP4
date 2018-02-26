@@ -12,7 +12,7 @@ public class UIScript : MonoBehaviour {
     public Slider healthslider;
     public Slider staminaslider;
     public Text goldText;
-
+    public Image instruct;
     public Text textObjective;
     public RawImage bloodscreen;
     bool stop;
@@ -31,6 +31,7 @@ public class UIScript : MonoBehaviour {
         textObjective.canvasRenderer.SetAlpha(1.0f);
         bloodscreen.canvasRenderer.SetAlpha(0.0f);
         stop = false;
+     
     }
 
     private void FixedUpdate()
@@ -44,6 +45,14 @@ public class UIScript : MonoBehaviour {
     void Update () {
         textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
 
+       if(Input.GetKey("l"))
+        {
+            instruct.enabled = true;
+        }
+        else
+        {
+            instruct.enabled = false;
+        }
        if(player.GetpStats().health <= 0)
         {
           //  player.SetHealth(100.0f);
@@ -54,7 +63,7 @@ public class UIScript : MonoBehaviour {
         bloodscreen.canvasRenderer.SetAlpha(1.0f);
             stop = false;
         }
-        else if((player.GetpStats().health == player.GetpStats().MAXHEALTH)&&(!stop))
+        else if(!stop)
         {
          bloodscreen.CrossFadeAlpha(0.0f, 2.5f, false);
             stop = true;

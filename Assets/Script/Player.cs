@@ -10,7 +10,8 @@ public struct PlayerStatistics
     public float health;
     public float stamina;
     public float atkSpd, moveSpd, healthRegenSpd, staminaRegenSpd,
-                 HPRegenMultiplyer, DefMultiplyer, EvaMultiplyer;
+                 passiveHPRegenMultiplyer, passiveDefMultiplyer, passiveEvaMultiplyer, passiveDmgMultiplyer,
+                 activeHPRegenMultiplyer, activeDefMultiplyer, activeDmgMultiplyer;
 
     public float atkDist, dashDist, dashSpd;
     public int damage;
@@ -45,7 +46,7 @@ public class Player : MonoBehaviour
     public GameObject button_attack;
     public GameObject button_defend;
 
-    private List<Action> skill_function_list = new List<Action>();
+    private List<Action<Blessing>> skill_function_list = new List<Action<Blessing>>();
 
     private Blessing[] blessing_inven;
 
@@ -68,7 +69,12 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(float _dmg)
     {
-        pStats.health -= _dmg;
+        float temp = pStats.passiveDefMultiplyer + pStats.activeDefMultiplyer;
+
+        if (temp > 100)
+            temp = 100;
+
+        pStats.health -= _dmg * ((100 - temp) / 100);
         PlayerAudio.takedamage();
         pStats.gothit = true;
     }
@@ -140,7 +146,7 @@ public class Player : MonoBehaviour
         blessing_inven[0].SetBlessingType(Blessing.TYPE.REGEN);   //SET BLESSING TYPE TO HEALING
 
         blessing_inven[1] = new Blessing();
-        blessing_inven[1].SetBlessingType(Blessing.TYPE.NONE);   //SET BLESSING TYPE TO EMPTY
+        blessing_inven[1].SetBlessingType(Blessing.TYPE.DASH);   //SET BLESSING TYPE TO DASH  -  TEMP, WILL CHANGE TO EMPTY LATER
 
 
         // Debug.Log(gameObject.GetHashCode());
@@ -155,7 +161,7 @@ public class Player : MonoBehaviour
         {
             if (blessing_inven[i].GetBlessingType() != Blessing.TYPE.NONE)
             {
-                skill_function_list[(int)blessing_inven[i].GetBlessingType()].DynamicInvoke();
+                skill_function_list[(int)blessing_inven[i].GetBlessingType()].DynamicInvoke(blessing_inven[i]);
             }
         }
 
@@ -163,7 +169,7 @@ public class Player : MonoBehaviour
         {
             if (pStats.health < MaxHealth && hpRegenDelay <= 0f)
             {
-                pStats.health += HealthRegenAmount * pStats.HPRegenMultiplyer;
+                pStats.health += HealthRegenAmount * pStats.passiveHPRegenMultiplyer;
                 hpRegenDelay = pStats.healthRegenSpd;
                 pStats.gothit = false;
             }
@@ -206,62 +212,110 @@ public class Player : MonoBehaviour
             }
             else if (Input.GetButtonDown("Skill1") && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) && pStats.stamina > 0)
             {
-                skill_function_list[6].DynamicInvoke();
+               // skill_function_list[6].DynamicInvoke();
             }
         }
 
         if (hitParticleDelay > 0)
             hitParticleDelay -= Time.deltaTime;
 
-        pStats.HPRegenMultiplyer = 0;
-        pStats.DefMultiplyer = 0;
-        pStats.EvaMultiplyer = 0;
+        pStats.passiveHPRegenMultiplyer = 0;
+        pStats.passiveDefMultiplyer = 0;
+        pStats.passiveEvaMultiplyer = 0;
+        pStats.passiveDmgMultiplyer = 0;
+
+        pStats.activeDefMultiplyer = 0;
+        pStats.activeDmgMultiplyer = 0;
+        pStats.activeHPRegenMultiplyer = 0;
     }
 
-    void PassiveRegen()
+    void PassiveRegen(Blessing _input)
     {
-        pStats.HPRegenMultiplyer++;
+        pStats.passiveHPRegenMultiplyer++;
     }
 
-    void PassiveIronSkin()
+    void PassiveIronSkin(Blessing _input)
     {
-        pStats.DefMultiplyer++;
+        pStats.passiveDefMultiplyer++;
     }
 
-    void PassiveEvasion()
+    void PassiveEvasion(Blessing _input)
     {
-        pStats.EvaMultiplyer++;
+        pStats.passiveEvaMultiplyer++;
     }
 
-    void ActiveSummon()
-    {
-
-    }
-
-    void ActiveSmite()
-    {
-
-    }
-
-    void ActiveBash()
+    void ActiveSummon(Blessing _input)
     {
 
     }
 
-    void ActiveDash()
-    {
-        sm.SetNextState("Dash");
-        pStats.stamina -= 1;
-    }
-
-    void ActiveWarCry()
+    void ActiveSmite(Blessing _input)
     {
 
     }
 
-    void ActiveUltDef()
+    void ActiveBash(Blessing _input)
     {
 
+    }
+
+    void ActiveDash(Blessing _input)
+    {
+        if (pStats.stamina >= 1 && !sm.IsCurrentState("Dash"))
+        {
+            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType()) ||
+                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType()))
+            {
+                //print("BLESSING TPYE: " + _input.GetBlessingType());
+                //print("BLESSING SLOT 0: " + blessing_inven[0].GetBlessingType());
+                //print("BLESSING SLOT 1: " + blessing_inven[1].GetBlessingType());
+
+                sm.SetNextState("Dash");
+                pStats.stamina -= 1;
+            }
+        }
+    }
+
+    void ActiveWarCry(Blessing _input)
+    {
+        if (pStats.stamina >= 5)
+        {
+            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
+                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
+            {
+                pStats.stamina -= 5;
+                _input.SetDuration(10);
+
+                sm.SetNextState("WarCry");
+
+            }
+        }
+
+        if(_input.GetDuration() > 0)
+        {
+            pStats.passiveDmgMultiplyer += .1f;
+            pStats.passiveDefMultiplyer += 10;
+        }
+    }
+
+    void ActiveUltDef(Blessing _input)
+    {
+        if (pStats.stamina >= 5)
+        {
+            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
+                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
+            {
+                pStats.stamina -= 10;
+                _input.SetDuration(3);
+
+                sm.SetNextState("UltDef");
+            }
+        }
+
+        if (_input.GetDuration() > 0)
+        {
+            pStats.passiveDefMultiplyer += 100;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -310,5 +364,10 @@ public class Player : MonoBehaviour
             blessing_inven[0] = _input;
         else
             blessing_inven[1] = _input;
+    }
+
+    public float GetPlayerDamage()
+    {
+        return pStats.damage * (pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer);
     }
 }
