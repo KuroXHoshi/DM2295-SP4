@@ -67,11 +67,17 @@ public class Player : MonoBehaviour
     public void TakeDamage(float _dmg)
     {
         pStats.health -= _dmg;
+        PlayerAudio.takedamage();
         pStats.gothit = true;
     }
 
     public void SetLevel(float level_input) {
         pStats.level = level_input;
+    }
+
+    public void SetHealth(float hp)
+    {
+        pStats.health = hp;
     }
 
     public void SetGold(int gold_input)

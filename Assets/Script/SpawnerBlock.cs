@@ -59,7 +59,7 @@ public class SpawnerBlock : MonoBehaviour {
             {
                 // Debug.Log("PLAYER DETECTED");
 
-                for (int i = 0; i < 10; ++i)
+                for (int i = 0; i < pool_amount; ++i)
                 {
                     bool is_not_in_block = false;
 
@@ -67,8 +67,19 @@ public class SpawnerBlock : MonoBehaviour {
                     {
                         int type = UnityEngine.Random.Range(0, entity_list.Length);
 
-                        float rand_x = UnityEngine.Random.Range(transform.position.x - (distance_detect.x - 1), transform.position.x + (distance_detect.x - 1));
-                        float rand_z = UnityEngine.Random.Range(transform.position.z - (distance_detect.y - 1), transform.position.z + (distance_detect.y - 1));
+                        float rand_x;
+                        float rand_z;
+
+                        if (UnityEngine.Random.Range(0, 100) < 50)
+                        {
+                            rand_x = UnityEngine.Random.Range(transform.position.x - (distance_detect.x * 0.5f), transform.position.x + (distance_detect.x * 0.5f));
+                            rand_z = transform.position.z;
+                        }
+                        else
+                        {
+                            rand_x = transform.position.x;
+                            rand_z = UnityEngine.Random.Range(transform.position.z - (distance_detect.y * 0.5f), transform.position.z + (distance_detect.y * 0.5f));
+                        }
 
                         Vector3 temp_vec = new Vector3(rand_x, -5, rand_z);
 
