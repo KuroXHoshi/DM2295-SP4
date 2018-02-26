@@ -39,7 +39,10 @@ public class UIScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-       
+       if(player.GetpStats().health <= 0)
+        {
+            SceneManager.LoadScene("gameover");
+        }
         if(player.GetpStats().gothit == true)
         {
         bloodscreen.canvasRenderer.SetAlpha(1.0f);

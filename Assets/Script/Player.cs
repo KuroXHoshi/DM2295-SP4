@@ -67,6 +67,7 @@ public class Player : MonoBehaviour
     public void TakeDamage(float _dmg)
     {
         pStats.health -= _dmg;
+        PlayerAudio.takedamage();
         pStats.gothit = true;
     }
 
