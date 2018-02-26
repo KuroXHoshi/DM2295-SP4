@@ -65,10 +65,13 @@ public class Player : MonoBehaviour
     public float hpRegenDelay { get; set; }
     public float stamRegenDelay { get; set; }
 
-    [SerializeField]
+    public bool debugImmune = false;
 
     public void TakeDamage(float _dmg)
     {
+        if (debugImmune)
+            return;
+        
         float temp = pStats.passiveDefMultiplyer + pStats.activeDefMultiplyer;
 
         if (temp > 100)
