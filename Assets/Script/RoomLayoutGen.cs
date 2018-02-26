@@ -417,7 +417,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                         if(!set_statue_spawn)
                         {
-                            if(Random.Range(0, 100) < 10)
+                            if(Random.Range(0, 100) < 30)
                             {
                                 int rand_statue = Random.Range(0, statue.Length);
                                 Vector3 temp_statue_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, -10, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
