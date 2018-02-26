@@ -62,10 +62,13 @@ public class Player : MonoBehaviour
     public float hpRegenDelay { get; set; }
     public float stamRegenDelay { get; set; }
 
-    [SerializeField]
+    public bool debugImmune = false;
 
     public void TakeDamage(float _dmg)
     {
+        if (debugImmune)
+            return;
+
         pStats.health -= _dmg;
         PlayerAudio.takedamage();
         pStats.gothit = true;

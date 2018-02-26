@@ -38,8 +38,11 @@ public class EnemyStates : MonoBehaviour
             {
                 Vector3 target = player_pos - enemy_pos;
                 float Angle = Vector3.Angle(enemy.GetModel().forward, target);
+
                 if (Angle < 60f && Angle > -60f)
                     enemy.sm.SetNextState("Attack");
+                else
+                    enemy.sm.SetNextState("Movement");
             }
             else if (Distance <= enemy.MaxDist)//Saw player and go to player
             {
@@ -70,7 +73,7 @@ public class EnemyStates : MonoBehaviour
         public override void Enter()
         {
             anim.SetBool("walk", true);
-            //enemy.SetPathFind(true);
+            enemy.SetPathFind(true);
         }
 
         public override void Update()
@@ -87,7 +90,11 @@ public class EnemyStates : MonoBehaviour
 
             if (Distance <= enemy.MinDist)//distance reachable,attack
             {
-                enemy.sm.SetNextState("Attack");
+                Vector3 target = player_pos - enemy_pos;
+                float Angle = Vector3.Angle(enemy.GetModel().forward, target);
+
+                if (Angle < 60f && Angle > -60f)
+                    enemy.sm.SetNextState("Attack");
             }
             else if (Distance > enemy.MaxDist)
             {

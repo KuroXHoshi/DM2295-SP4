@@ -8,7 +8,7 @@ public class BasicEnemyScript : MonoBehaviour
     const float minPathUpdateTime = .2f;
     const float pathUpdateMoveThreshold = .5f;
     public float turnSpeed = 3;
-    public float turnDst = 5;
+    const float turnDst = 0;
     public float stoppingDst = 10;
     Path path;
 
@@ -36,12 +36,6 @@ public class BasicEnemyScript : MonoBehaviour
     private Rigidbody rigid_entity_body;
 
     Animator animator;
-
-    Vector3 player_pos;
-    Vector3 enemy_pos;
-    Vector3 new_enemy_pos;
-    Vector3 target_player_DIR;
-    float Distance;
 
     //[Header("Unity Stuff")]
     public Image health;
@@ -111,66 +105,8 @@ public class BasicEnemyScript : MonoBehaviour
         }
         else
         {
-
             if (sm != null)
                 sm.Update();
-
-            //if (!pathFind)
-            //{
-            //    StopCoroutine(UpdatePath());
-            //    StopCoroutine("FollowPath");
-            //}
-            //else
-            //    StartCoroutine(UpdatePath());
-
-            //player_pos = player.Get_Player_Pos();
-            //enemy_pos = transform.position;
-            //Distance = Vector3.Distance(enemy_pos, player_pos);
-            //new_enemy_pos = transform.position + player_pos * MoveSpeed * Time.deltaTime;
-            //target_player_DIR = player_pos - enemy_pos;
-
-            ////health.fillAmount = HP / MAX_HP;
-
-            //if (Distance <= MinDist)//distance reachable,attack
-            //{
-            //    StopCoroutine("FollowPath");
-            //    //attack melee animation activate pls
-            //    //NEAR_ATTACK = true;
-            //    animator.SetBool("attack", true);
-
-            //    animator.SetBool("walk", false);
-            //    animator.SetBool("idle", false);
-
-            //}
-            //else if (Distance <= MaxDist)//Saw player and go to player
-            //{
-            //    //transform.position += transform.forward * MoveSpeed * Time.deltaTime;
-            //    if (gameObject.tag == "Skele_Medium")
-            //    {
-            //        UpdatePath();
-            //    }
-            //    else
-            //    {
-            //        transform.Translate(model.forward * MoveSpeed * Time.deltaTime);
-            //        float step = rotSpd * Time.deltaTime;
-            //        Vector3 newDir = Vector3.RotateTowards(model.forward, target_player_DIR, step, 0.0f);
-            //        model.rotation = Quaternion.LookRotation(newDir);
-            //    }
-
-            //    animator.SetBool("walk", true);
-
-            //    animator.SetBool("idle", false);
-            //    animator.SetBool("attack", false);
-            //    //Here Call any function U want Like Shoot at here or something
-            //}
-            //else//player unseen
-            //{
-            //    StopCoroutine("FollowPath");
-            //    animator.SetBool("idle", true);
-
-            //    animator.SetBool("walk", false);
-            //    animator.SetBool("attack", false);
-            //}
         }
     }
 
@@ -205,16 +141,6 @@ public class BasicEnemyScript : MonoBehaviour
     public void SetPathFind(bool _set)
     {
         pathFind = _set;
-
-        if (_set)
-        {
-            StartCoroutine(UpdatePath());
-        }
-        else
-        {
-            StopCoroutine(UpdatePath());
-            StopCoroutine("FollowPath");
-        }
     }
 
     public void OnPathFound(Vector3[] waypoints, bool pathSuccessful)
@@ -257,9 +183,9 @@ public class BasicEnemyScript : MonoBehaviour
 
         bool followingPath = true;
         int pathIndex = 0;
-        model.LookAt(path.lookPoints[0]);
+        //model.LookAt(path.lookPoints[0]);
 
-        float speedPercent = 1;
+        //float speedPercent = 1;
 
         while (followingPath)
         {
@@ -280,21 +206,25 @@ public class BasicEnemyScript : MonoBehaviour
             if (followingPath)
             {
 
-                if (pathIndex >= path.slowDownIndex && stoppingDst > 0)
+                //if (pathIndex >= path.slowDownIndex && stoppingDst > 0)
+                //{
+                //    speedPercent = Mathf.Clamp01(path.turnBoundaries[path.finishLineIndex].DistanceFromPoint(pos2D) / stoppingDst);
+                //    if (speedPercent < 0.01f)
+                //    {
+                //        followingPath = false;
+                //    }
+                //}
+
+                if (pathFind)
                 {
-                    speedPercent = Mathf.Clamp01(path.turnBoundaries[path.finishLineIndex].DistanceFromPoint(pos2D) / stoppingDst);
-                    if (speedPercent < 0.01f)
-                    {
-                        followingPath = false;
-                    }
+                    Debug.Log("Moving To: " + pathIndex);
+                    float step = turnSpeed * Time.deltaTime;
+                    Vector3 newDir = Vector3.RotateTowards(model.forward, path.lookPoints[pathIndex] - transform.position, step, 0f);
+                    model.rotation = Quaternion.LookRotation(newDir);
+                    //Quaternion targetRotation = Quaternion.LookRotation(path.lookPoints[pathIndex] - transform.position);
+                    //model.rotation = targetRotation;
+                    transform.Translate(model.forward * MoveSpeed * Time.deltaTime);
                 }
-
-                Quaternion targetRotation = Quaternion.LookRotation(path.lookPoints[pathIndex] - transform.position);
-                //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
-                //transform.Translate(Vector3.forward * Time.deltaTime * speed * speedPercent, Space.Self);
-
-                model.rotation = targetRotation;
-                transform.position += model.forward * MoveSpeed * Time.deltaTime;
             }
 
             model.rotation = new Quaternion(0f, model.rotation.y, 0f, model.rotation.w);

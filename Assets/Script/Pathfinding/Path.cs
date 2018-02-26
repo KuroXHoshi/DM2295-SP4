@@ -55,7 +55,7 @@ public class Path
         Gizmos.color = Color.white;
         foreach (Line l in turnBoundaries)
         {
-            l.DrawWithGizmos(10);
+            l.DrawWithGizmos(5);
         }
 
     }
