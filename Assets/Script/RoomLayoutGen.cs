@@ -470,7 +470,7 @@ public class RoomLayoutGen : MonoBehaviour
     {
         int[][] temp_array;
 
-        int half_room_height = ((int)((roomHeight * 0.5) * 0.9));
+        int half_room_height = ((int)((roomHeight * 0.5) * 0.8));
         int half_room_width = ((int)((roomWidth * 0.5) * 0.8));
        
         // Go through all the rooms...
@@ -501,7 +501,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                 temp_array = new int[half_room_height][];
 
-                for (int i = 0; i < half_room_height; ++i)
+                for (int i = 1; i < half_room_height; ++i)
                 {
                     temp_array[i] = new int[half_room_width];
                 }

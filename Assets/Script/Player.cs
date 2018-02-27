@@ -7,25 +7,40 @@ using UnityEngine;
 public struct PlayerStatisticsLevel
 {
     public string name;
-    public float level;
+    public float level, max_level;
+    public float exp_gain_timer , exp_gain_timer_max;
 
     public float exp, maxExp;
 
-    public PlayerStatisticsLevel(string _name, float _level, float _exp, float _maxexp)
+    public PlayerStatisticsLevel(string _name, float _level, float _max_level, float _exp, float _maxexp, float _timer = 0.0f)
     {
         name = _name;
         level = _level;
+        max_level = _max_level;
         exp = _exp;
         maxExp = _maxexp;
+        exp_gain_timer = _timer;
+        exp_gain_timer_max = exp_gain_timer;
     }
 
-    public void IncreaseLevel(float _input)
+    public void IncreaseExp(float _input)
     {
-        if (exp >= maxExp)
+        if (level < max_level)
         {
-            exp -= maxExp;
-            maxExp = maxExp + (int)((double)maxExp * (8.0f / 100.0f));      //PLUS 8%
-            level += 1;
+            exp_gain_timer -= Time.deltaTime;
+
+            if (exp_gain_timer <= 0)
+            {
+                exp += _input;
+                exp_gain_timer = exp_gain_timer_max;
+            }
+
+            if (exp >= maxExp)
+            {
+                exp -= maxExp;
+                maxExp = maxExp + (int)((double)maxExp * (8.0f / 100.0f));      //PLUS 8%
+                level += 1;
+            }
         }
     }
 }
@@ -48,7 +63,7 @@ public struct PlayerStatistics
 
 
     public bool gothit;
-    public float MAXHEALTH;
+    public float MAXHEALTH, MAXSTAMINA;
 }
 
 public class Player : MonoBehaviour
@@ -56,7 +71,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     private PlayerStatistics pStats;
 
-    private List<PlayerStatisticsLevel> pStatsLevel = new List<PlayerStatisticsLevel>();
+    /*
+     * 0 - SWORD
+     * 1 - ARMOR
+     * 2 - STAMINA
+     * 3 - STRENGTH
+     */
+    private List<PlayerStatisticsLevel> pStatsLevel = new List<PlayerStatisticsLevel>(); 
 
     //[SerializeField]
     //private bool RegenSkill = false, IronWillSkill = false, EvasionSkill = false;
@@ -104,7 +125,7 @@ public class Player : MonoBehaviour
         if (debugImmune)
             return;
         
-        float temp = pStats.passiveDefMultiplyer + pStats.activeDefMultiplyer;
+        float temp = pStats.passiveDefMultiplyer + pStats.activeDefMultiplyer + pStatsLevel[1].level;
 
         if (temp > 100)
             temp = 100;
@@ -112,6 +133,7 @@ public class Player : MonoBehaviour
         pStats.health -= _dmg * ((100 - temp) / 100);
         PlayerAudio.takedamage();
         pStats.gothit = true;
+        pStatsLevel[1].IncreaseExp(2);
     }
 
     public void SetLevel(float level_input) {
@@ -140,6 +162,7 @@ public class Player : MonoBehaviour
         hitParticleDelay = 0f;
         set_prev = false;
         pStats.MAXHEALTH = MaxHealth;
+        pStats.MAXSTAMINA = MaxStamina;
 
         if (!(anim = gameObject.GetComponent<Animator>())) Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
         //if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
@@ -173,10 +196,10 @@ public class Player : MonoBehaviour
 
         blessing_inven = new Blessing[2];
 
-        pStatsLevel.Add(new PlayerStatisticsLevel("Weapon", 1, 0, 100));
-        pStatsLevel.Add(new PlayerStatisticsLevel("Armor", 1, 0, 100));
-        pStatsLevel.Add(new PlayerStatisticsLevel("Stamina", 1, 0, 100));
-        pStatsLevel.Add(new PlayerStatisticsLevel("Strength", 1, 0, 100));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Weapon", 0, 100, 0, 100));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Armor", 0, 50, 0, 100));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Stamina", 0, 100, 0, 100, 2));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Strength", 0, 100, 0, 100));
     }
 
     // Use this for initialization
@@ -213,7 +236,12 @@ public class Player : MonoBehaviour
                 {
                     pStats.health += HealthRegenAmount * pStats.passiveHPRegenMultiplyer;
                     hpRegenDelay = pStats.healthRegenSpd;
-                    
+
+                    if (pStats.health > pStats.MAXHEALTH)
+                    {
+                        pStats.health = pStats.MAXHEALTH;
+                    }
+
                 }
 
                 hpRegenDelay -= Time.deltaTime;
@@ -221,21 +249,26 @@ public class Player : MonoBehaviour
             else
             {
                 hpRegenDelay = pStats.healthRegenSpd;
-
-                if (pStats.health > pStats.MAXHEALTH)
-                {
-                    pStats.health = pStats.MAXHEALTH;
-                }
             }
 
         }
+        else if(sm.IsCurrentState("Movement"))
+        {
+            pStatsLevel[2].IncreaseExp(1f);       //STAMINA STAT
+        }
 
-        if (pStats.stamina < MaxStamina)
+        if (pStats.stamina < pStats.MAXSTAMINA)
         {
             if (stamRegenDelay <= 0f)
             {
-                pStats.stamina += StaminaRegenAmount;
+                pStats.stamina += StaminaRegenAmount * ((100 + pStatsLevel[2].level) / 100);
                 stamRegenDelay = pStats.staminaRegenSpd;
+
+                if (pStats.stamina > pStats.MAXSTAMINA)
+                {
+                    pStats.stamina = pStats.MAXSTAMINA;
+                }
+
             }
 
             stamRegenDelay -= Time.deltaTime;
@@ -434,6 +467,7 @@ public class Player : MonoBehaviour
 
     public float GetPlayerDamage()
     {
+        pStatsLevel[0].IncreaseExp(0.5f);
         return pStats.damage * (pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer);
     }
 }
