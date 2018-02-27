@@ -38,9 +38,9 @@ public class UIScript : MonoBehaviour
         // level_data = 100;
         if (!healthpercent) Debug.Log(this.GetType() + ".cs : Health Text not linked!");
         if (!staminapercent) Debug.Log(this.GetType() + ".cs : Stamina Text not linked!");
-        BOSShealthslider.image.canvasRenderer.SetAlpha(0.0f);
-        healthslider.maxValue = player.MaxHealth;
-        staminaslider.maxValue = player.MaxStamina;
+        //BOSShealthslider.image.canvasRenderer.SetAlpha(0.0f);
+        healthslider.maxValue = player.GetpStats().MAXHEALTH;
+        staminaslider.maxValue = player.GetpStats().MAXSTAMINA;
 
         //level_data = (int)player.GetpStats().level;//ME TOO
         //levels.text = "Level  " + level_data;

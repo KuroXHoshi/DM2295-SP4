@@ -711,7 +711,7 @@ public class RoomLayoutGen : MonoBehaviour
         
         // Set the tile's parent to the board holder.
         tileInstance.transform.parent = boardHolder.transform;
-        tileInstance.transform.localScale = new Vector3(columns * 2, tileInstance.transform.localScale.y, rows * 2);
+        tileInstance.transform.localScale = new Vector3(columns * 0.2f, tileInstance.transform.localScale.y, rows * 0.2f);
 
         total_blocks.Add(tileInstance);
 

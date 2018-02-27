@@ -49,7 +49,7 @@ public class PlayerStatisticsLevel
             }
 
            // if(!name.Equals("Stamina"))
-                Debug.Log("STAT Name: " + name + " Level: " + level + " ExP: " + exp + " / " + maxExp + " TIMER: " + exp_gain_timer);
+           //Debug.Log("STAT Name: " + name + " Level: " + level + " ExP: " + exp + " / " + maxExp + " TIMER: " + exp_gain_timer);
         }
     }
 }
