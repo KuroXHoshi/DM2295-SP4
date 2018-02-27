@@ -10,6 +10,7 @@ public class UIScript : MonoBehaviour
     private Player player;
     public GameObject pause_menu;
     public GameObject equip_menu;
+    public Slider BOSShealthslider;
     public Slider healthslider;
     public Slider staminaslider;
     public Text goldText;
