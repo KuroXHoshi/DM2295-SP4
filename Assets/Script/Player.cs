@@ -176,7 +176,7 @@ public class Player : MonoBehaviour
                 {
                     pStats.health += HealthRegenAmount * pStats.passiveHPRegenMultiplyer;
                     hpRegenDelay = pStats.healthRegenSpd;
-                    pStats.gothit = false;
+                    
                 }
 
                 hpRegenDelay -= Time.deltaTime;
@@ -205,7 +205,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    
+        
     }
 
     private void LateUpdate()
@@ -238,6 +238,8 @@ public class Player : MonoBehaviour
         pStats.activeDefMultiplyer = 0;
         pStats.activeDmgMultiplyer = 0;
         pStats.activeHPRegenMultiplyer = 0;
+
+        pStats.gothit = false;
     }
 
     void PassiveRegen(Blessing _input)
