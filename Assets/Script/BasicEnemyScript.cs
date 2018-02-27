@@ -11,8 +11,7 @@ public class BasicEnemyScript : MonoBehaviour
     const float turnDst = 0;
     public float stoppingDst = 10;
     Path path;
-
-    public string currState;
+    
     private Player player; //: Transform;
    // public Transform playerTransform;
     public float MoveSpeed = 2;
