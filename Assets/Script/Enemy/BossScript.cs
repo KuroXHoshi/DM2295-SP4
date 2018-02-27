@@ -31,6 +31,8 @@ public class BossScript : MonoBehaviour
     protected Vector3 target_player_DIR;
     protected float Distance;
 
+    public GameObject theUIcanvas;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -40,6 +42,8 @@ public class BossScript : MonoBehaviour
     public void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        animator = GetComponent<Animator>();
+        theUIcanvas.GetComponent<UIScript>().BossMax(MAX_HP);
     }
 
     // Update is called once per frame
@@ -51,8 +55,13 @@ public class BossScript : MonoBehaviour
         target_player_DIR = player_pos - enemy_pos;
 
         HP -= Time.deltaTime * 20;
+        theUIcanvas.GetComponent<UIScript>().UpdateBossHP(HP);
     }
 
+    public void SpawnBossHPActive()
+    {
+        theUIcanvas.GetComponent<UIScript>().SpawnBossHP();
+    }
     public void Reset()
     {
         HP = MAX_HP;

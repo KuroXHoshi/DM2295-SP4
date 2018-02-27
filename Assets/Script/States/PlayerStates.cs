@@ -55,7 +55,7 @@ public class PlayerStates : MonoBehaviour
 
             Vector3 prevPos = player.transform.position;
             //transform.position += new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * MoveSpd * Time.deltaTime;
-            player.transform.position += new Vector3(player.joystick.Horizontal(), 0, player.joystick.Vertical()) * player.GetpStats().moveSpd * Time.deltaTime;
+            player.transform.position += new Vector3(player.joystick.Horizontal(), 0, player.joystick.Vertical()) * player.GetPlayerSpeed() * Time.deltaTime;
             float step = player.GetRotaSpd() * Time.deltaTime;
             Vector3 newDir = Vector3.RotateTowards(player.transform.forward, player.transform.position - prevPos, step, 0.0f);
             player.transform.rotation = Quaternion.LookRotation(newDir);

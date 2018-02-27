@@ -20,6 +20,7 @@ public class UIScript : MonoBehaviour
     public Text levels;
     bool stop;
     int level_data;//CHANGE ME if needed
+    
 
     [SerializeField]
     private Text healthpercent = null, staminapercent = null;
@@ -27,6 +28,8 @@ public class UIScript : MonoBehaviour
     private void Awake()
     {
         if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>())) Debug.Log(this.GetType() + ".cs : Player not loaded");
+        //if (!(BOSS = GameObject.FindGameObjectWithTag("BossMelee").GetComponent<BossMelee>())) Debug.Log(this.GetType() + ".cs : Boss not loaded");
+
     }
 
     // Use this for initialization
@@ -35,7 +38,7 @@ public class UIScript : MonoBehaviour
         // level_data = 100;
         if (!healthpercent) Debug.Log(this.GetType() + ".cs : Health Text not linked!");
         if (!staminapercent) Debug.Log(this.GetType() + ".cs : Stamina Text not linked!");
-
+        BOSShealthslider.image.canvasRenderer.SetAlpha(0.0f);
         healthslider.maxValue = player.MaxHealth;
         staminaslider.maxValue = player.MaxStamina;
 
@@ -72,6 +75,18 @@ public class UIScript : MonoBehaviour
         textObjective.text = objective;
         textObjective.canvasRenderer.SetAlpha(1.0f);
         textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
+    }
+    public void SpawnBossHP()
+    {
+        BOSShealthslider.image.canvasRenderer.SetAlpha(1.0f);
+    }
+    public void UpdateBossHP( float data)
+    {
+        BOSShealthslider.value = data;
+    }
+    public void BossMax(float data)
+    {
+        BOSShealthslider.maxValue = data;
     }
     private void FixedUpdate()
     {
@@ -184,13 +199,13 @@ public class UIScript : MonoBehaviour
     public void healthbar()
     {
         healthslider.value = player.GetpStats().health;
-        healthpercent.text = player.GetpStats().health.ToString();
+        healthpercent.text = Mathf.CeilToInt(player.GetpStats().health).ToString();
     }
 
     public void staminabar()
     {
         staminaslider.value = player.GetpStats().stamina;
-        staminapercent.text = player.GetpStats().stamina.ToString();
+        staminapercent.text = Mathf.CeilToInt(player.GetpStats().stamina).ToString();
     }
 
     public void goldIndication()

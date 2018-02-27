@@ -66,6 +66,7 @@ public class Skeleton : EnemyScript {
     protected override void OnCollisionEnter(Collision collision)
     {
         base.OnCollisionEnter(collision);
+        //Debug.Log("BasicEnemyScript.cs : Enemy got hit! <" + gameObject.GetHashCode() + ">");
     }
 
     protected override void OnTriggerEnter(Collider other)
