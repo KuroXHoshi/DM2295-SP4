@@ -26,18 +26,18 @@ public class UIScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>())) Debug.Log(this.GetType() + ".cs : Player not loaded");
+       // level_data = 100;
         if (!healthpercent) Debug.Log(this.GetType() + ".cs : Health Text not linked!");
         if (!staminapercent) Debug.Log(this.GetType() + ".cs : Stamina Text not linked!");
 
         healthslider.maxValue = player.MaxHealth;
         staminaslider.maxValue = player.MaxStamina;
 
-        level_data = (int)player.GetpStats().level;//ME TOO
-        levels.text = "Level  " + level_data;
-        levels.canvasRenderer.SetAlpha(1.0f);
-        levels.CrossFadeAlpha(0.0f, 2.5f, false);
-
+        //level_data = (int)player.GetpStats().level;//ME TOO
+        //levels.text = "Level  " + level_data;
+        //levels.canvasRenderer.SetAlpha(1.0f);
+        //levels.CrossFadeAlpha(0.0f, 2.5f, false);
+        SetRoomLevelLayout();
 
         //sets to can see
         textObjective.text = "Explore";
@@ -53,6 +53,9 @@ public class UIScript : MonoBehaviour
     }
     public void SetRoomLevelLayout()
     {
+        if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>())) Debug.Log(this.GetType() + ".cs : Player not loaded");
+
+        // level_data = 100;
         level_data = (int)player.GetpStats().level;//ME TOO
         levels.text = "Level  " + level_data;
         levels.canvasRenderer.SetAlpha(1.0f);

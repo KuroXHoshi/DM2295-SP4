@@ -383,6 +383,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                         Vector3 temp_quad_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 22, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         total_quads[temp_no_of_room].transform.position = temp_quad_vec;
+                        total_quads[temp_no_of_room].SetActive(true);
 
                     }
                     else
@@ -396,6 +397,7 @@ public class RoomLayoutGen : MonoBehaviour
                         Vector3 temp_quad_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, 22, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
                         total_quads[temp_no_of_room].transform.position = temp_quad_vec;
                         total_quads[temp_no_of_room].transform.localScale = new Vector3(rooms[temp_no_of_room].roomWidth * 2.1f, rooms[temp_no_of_room].roomHeight * 2.2f, 1);
+                        total_quads[temp_no_of_room].SetActive(true);
 
                         if (player_obj_script.GetpStats().level % 5 == 0)
                         {
@@ -810,7 +812,7 @@ public class RoomLayoutGen : MonoBehaviour
 
         for (int i = 0; i < total_quads.Length; ++i)
         {
-            total_quads[i].SetActive(true);
+            total_quads[i].SetActive(false);
         }
 
         GameObject []delete_array = GameObject.FindGameObjectsWithTag("Coin");
