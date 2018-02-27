@@ -1,85 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class BasicEnemyScript : MonoBehaviour
-{
+public class Skeleton : EnemyScript {
+
     const float minPathUpdateTime = .2f;
     const float pathUpdateMoveThreshold = .5f;
     public float turnSpeed = 3;
     const float turnDst = 0;
     public float stoppingDst = 10;
     Path path;
-    
-    private Player player; //: Transform;
-   // public Transform playerTransform;
-    public float MoveSpeed = 2;
-    public float MaxDist = 15;
-    public float MinDist = 1.5f;
-    public float HP = 10;
-    public float MAX_HP = 10;
-    public int DMG = 1;
-    private float dmgMultiplier = 1f;
-    //public float movementSpd = 10;
-    public bool NEAR_ATTACK = false;
-    public float rotSpd = 10;
-    public IntRange coin_range = new IntRange(10, 100);
 
-    private bool starting_done;
-    private int gold = 0;
-    private bool pathFind = false;
-
-    public GameObject gold_pile;
-    public ParticleSystem particle;
-
-    private Rigidbody rigid_entity_body;
-
-    Animator animator;
-
-    //[Header("Unity Stuff")]
-    public Image health;
-    //health = starthealth;
-    //when take damage (take damage function)
-    //healthBar.fillAmount = health / starthealth ;
-
-    [SerializeField]
-    private Transform model;
-
-    public StateMachine sm { get; protected set; }
-    public Animator GetAnim() { return animator; }
-    public Player GetPlayer() { return player; }
-    public Vector3 GetPlayerPos() { return player.transform.position; }
-    public Transform GetModel() { return model; }
-
-    private void Awake()
+    protected override void Awake()
     {
-        animator = model.GetComponent<Animator>();
-        rigid_entity_body = GetComponent<Rigidbody>();
-
-        if (sm == null)
-            sm = new StateMachine();
-
+        base.Awake();
+        
         sm.AddState(new EnemyStates.Idle(this));
         sm.AddState(new EnemyStates.Movement(this));
         sm.AddState(new EnemyStates.Attack(this));
-
-        starting_done = false;
-        rigid_entity_body.detectCollisions = false;
-        rigid_entity_body.useGravity = false;
     }
 
     // Use this for initialization
-    void Start()
+    protected override void Start()
     {
-        if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()))
-            Debug.Log("BasicEnemyScript.cs : Player not loaded");
-
-        //if (!(camera = GameObject.FindGameObjectWithTag("MainCamera").transform))
-            //Debug.Log("BasicEnemyScript.cs : Camera not loaded");
-
-        //transform.position = Player.transform.position - Vector3.forward * MoveSpeed;
-        gold = coin_range.Random;
+        base.Start();
 
         StartCoroutine(UpdatePath());
         //UpdatePath();
@@ -87,9 +31,12 @@ public class BasicEnemyScript : MonoBehaviour
         // HP = MAX_HP;
         health.gameObject.SetActive(false);
     }
-    
-    private void FixedUpdate()
+
+    // Update is called once per frame
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if (!starting_done)
         {
             if (transform.position.y >= 1)
@@ -111,40 +58,19 @@ public class BasicEnemyScript : MonoBehaviour
         }
     }
 
-    private void LateUpdate()
+    protected override void LateUpdate()
     {
-        // If enemy HP reaches 0 set gameObject to false
-        if (HP <= 0)
-        {
-            GameObject obj = Instantiate(gold_pile, transform.position, gold_pile.transform.rotation);
-            obj.GetComponent<Gold>().SetGoldValue(gold);
-          
-            transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
-            Reset();
-        }
+        base.LateUpdate();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected override void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log("BasicEnemyScript.cs : Enemy got hit! <" + gameObject.GetHashCode() + ">");
+        base.OnCollisionEnter(collision);
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player Hitting")
-        {
-            HP -= player.GetpStats().damage;
-            if (health != null)
-            {
-                health.gameObject.SetActive(true);
-                health.fillAmount = HP / MAX_HP;
-            }
-        }
-    }
-
-    public void SetPathFind(bool _set)
-    {
-        pathFind = _set;
+        base.OnTriggerEnter(other);
     }
 
     public void OnPathFound(Vector3[] waypoints, bool pathSuccessful)
@@ -158,7 +84,7 @@ public class BasicEnemyScript : MonoBehaviour
         }
     }
 
-    IEnumerator UpdatePath()
+    protected IEnumerator UpdatePath()
     {
 
         if (Time.timeSinceLevelLoad < .5f)
@@ -221,7 +147,7 @@ public class BasicEnemyScript : MonoBehaviour
 
                 if (pathFind)
                 {
-                    Debug.Log("Moving To: " + pathIndex);
+                    //Debug.Log("Moving To: " + pathIndex);
                     float step = turnSpeed * Time.deltaTime;
                     Vector3 newDir = Vector3.RotateTowards(model.forward, path.lookPoints[pathIndex] - transform.position, step, 0f);
                     model.rotation = Quaternion.LookRotation(newDir);
@@ -244,19 +170,5 @@ public class BasicEnemyScript : MonoBehaviour
         {
             path.DrawWithGizmos();
         }
-    }
-
-    public void Reset()
-    {
-        starting_done = false;
-        rigid_entity_body.detectCollisions = false;
-        rigid_entity_body.useGravity = false;
-        HP = MAX_HP;
-        if (health != null)
-        {
-            health.fillAmount = HP / MAX_HP;
-            health.gameObject.SetActive(false);
-        }
-        gameObject.SetActive(false);
     }
 }

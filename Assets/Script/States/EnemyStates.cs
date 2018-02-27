@@ -7,13 +7,13 @@ public class EnemyStates : MonoBehaviour
 
     public class Idle : State
     {
-        private BasicEnemyScript enemy;
+        private EnemyScript enemy;
         private Animator anim;
 
         private Vector3 player_pos;
         private Vector3 enemy_pos;
 
-        public Idle(BasicEnemyScript _enemy) : base("Idle")
+        public Idle(EnemyScript _enemy) : base("Idle")
         {
             enemy = _enemy;
             anim = enemy.GetAnim();
@@ -58,13 +58,13 @@ public class EnemyStates : MonoBehaviour
 
     public class Movement : State
     {
-        private BasicEnemyScript enemy;
+        private EnemyScript enemy;
         private Animator anim;
 
         private Vector3 player_pos;
         private Vector3 enemy_pos;
 
-        public Movement(BasicEnemyScript _enemy) : base("Movement")
+        public Movement(EnemyScript _enemy) : base("Movement")
         {
             enemy = _enemy;
             anim = enemy.GetAnim();
@@ -111,7 +111,7 @@ public class EnemyStates : MonoBehaviour
 
     public class Attack : State
     {
-        private BasicEnemyScript enemy;
+        private EnemyScript enemy;
         private Animator anim;
 
         private Vector3 player_pos;
@@ -119,7 +119,7 @@ public class EnemyStates : MonoBehaviour
 
         private float particleDelay;
 
-        public Attack(BasicEnemyScript _enemy) : base("Attack")
+        public Attack(EnemyScript _enemy) : base("Attack")
         {
             enemy = _enemy;
             anim = enemy.GetAnim();

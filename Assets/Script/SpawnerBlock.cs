@@ -252,7 +252,7 @@ public class SpawnerBlock : MonoBehaviour {
         {
             if (obj.activeSelf)
             {
-                obj.GetComponent<BasicEnemyScript>().Reset();
+                obj.GetComponent<EnemyScript>().Reset();
                 obj.SetActive(false);
             }
         }

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class BossScript : MonoBehaviour
 {
-    protected StateMachine sm;
     public Slider slider;
     public Text progresstext;
 
@@ -21,18 +20,26 @@ public class BossScript : MonoBehaviour
     public bool NEAR_ATTACK = false;
     public float rotSpd = 10;
 
+    [SerializeField]
+    protected Transform model;
     protected Animator animator;
+    protected StateMachine sm;
 
     protected Vector3 player_pos;
     protected Vector3 enemy_pos;
     protected Vector3 new_enemy_pos;
     protected Vector3 target_player_DIR;
     protected float Distance;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     // Use this for initialization
     public void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
