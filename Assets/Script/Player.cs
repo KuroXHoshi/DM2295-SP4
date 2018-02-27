@@ -4,13 +4,13 @@ using System;
 using UnityEngine;
 
 [System.Serializable]
-public struct PlayerStatisticsLevel
+public class PlayerStatisticsLevel
 {
     public string name;
     public float level, max_level;
     public float exp_gain_timer , exp_gain_timer_max;
 
-    public float exp, maxExp;
+    public double exp, maxExp;
 
     public PlayerStatisticsLevel(string _name, float _level, float _max_level, float _exp, float _maxexp, float _timer = 0.0f)
     {
@@ -35,12 +35,21 @@ public struct PlayerStatisticsLevel
                 exp_gain_timer = exp_gain_timer_max;
             }
 
-            if (exp >= maxExp)
+            while (exp >= maxExp)
             {
                 exp -= maxExp;
                 maxExp = maxExp + (int)((double)maxExp * (8.0f / 100.0f));      //PLUS 8%
                 level += 1;
             }
+
+            if (level > max_level)
+            {
+                level = max_level;
+                exp = maxExp;
+            }
+
+           // if(!name.Equals("Stamina"))
+                Debug.Log("STAT Name: " + name + " Level: " + level + " ExP: " + exp + " / " + maxExp + " TIMER: " + exp_gain_timer);
         }
     }
 }
@@ -198,7 +207,7 @@ public class Player : MonoBehaviour
 
         pStatsLevel.Add(new PlayerStatisticsLevel("Weapon", 0, 100, 0, 100));
         pStatsLevel.Add(new PlayerStatisticsLevel("Armor", 0, 50, 0, 100));
-        pStatsLevel.Add(new PlayerStatisticsLevel("Stamina", 0, 100, 0, 100, 2));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Stamina", 0, 100, 0, 100, 1));
         pStatsLevel.Add(new PlayerStatisticsLevel("Strength", 0, 100, 0, 100));
     }
 
@@ -252,11 +261,7 @@ public class Player : MonoBehaviour
             }
 
         }
-        else if(sm.IsCurrentState("Movement"))
-        {
-            pStatsLevel[2].IncreaseExp(1f);       //STAMINA STAT
-        }
-
+     
         if (pStats.stamina < pStats.MAXSTAMINA)
         {
             if (stamRegenDelay <= 0f)
@@ -286,7 +291,7 @@ public class Player : MonoBehaviour
         if (hitParticleDelay > 0)
         {
             hitParticleDelay -= Time.deltaTime * pStats.atkSpd;
-            Debug.Log(hitParticleDelay);
+          //  Debug.Log(hitParticleDelay);
         }
     }
 
@@ -335,12 +340,12 @@ public class Player : MonoBehaviour
 
     void PassiveIronSkin(Blessing _input)
     {
-        pStats.passiveDefMultiplyer++;
+        pStats.passiveDefMultiplyer += 10;
     }
 
     void PassiveEvasion(Blessing _input)
     {
-        pStats.passiveEvaMultiplyer++;
+        pStats.passiveEvaMultiplyer += 10;
     }
 
     void ActiveSummon(Blessing _input)
@@ -392,8 +397,8 @@ public class Player : MonoBehaviour
 
         if(_input.GetDuration() > 0)
         {
-            pStats.passiveDmgMultiplyer += .1f;
-            pStats.passiveDefMultiplyer += 10;
+            pStats.passiveDmgMultiplyer += 30;
+            pStats.passiveDefMultiplyer += 40;
         }
     }
 
@@ -467,7 +472,14 @@ public class Player : MonoBehaviour
 
     public float GetPlayerDamage()
     {
-        pStatsLevel[0].IncreaseExp(0.5f);
-        return pStats.damage * (pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer);
+        float temp = pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer;
+        pStatsLevel[0].IncreaseExp(2f);
+        return pStats.damage * ((100 + temp) / 100);
+    }
+
+    public float GetPlayerSpeed()
+    {
+        pStatsLevel[2].IncreaseExp(1f);       //STAMINA STAT
+        return pStats.moveSpd * ((100 + pStatsLevel[2].level) / 100);
     }
 }
