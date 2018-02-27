@@ -4,9 +4,37 @@ using System;
 using UnityEngine;
 
 [System.Serializable]
+public struct PlayerStatisticsLevel
+{
+    public string name;
+    public float level;
+
+    public float exp, maxExp;
+
+    public PlayerStatisticsLevel(string _name, float _level, float _exp, float _maxexp)
+    {
+        name = _name;
+        level = _level;
+        exp = _exp;
+        maxExp = _maxexp;
+    }
+
+    public void IncreaseLevel(float _input)
+    {
+        if (exp >= maxExp)
+        {
+            exp -= maxExp;
+            maxExp = maxExp + (int)((double)maxExp * (8.0f / 100.0f));      //PLUS 8%
+            level += 1;
+        }
+    }
+}
+
+[System.Serializable]
 public struct PlayerStatistics
 {
     public float level;
+    
     public float health;
     public float stamina;
     public float atkSpd, moveSpd, healthRegenSpd, staminaRegenSpd,
@@ -17,6 +45,8 @@ public struct PlayerStatistics
     public int damage;
     public int gold;
 
+
+
     public bool gothit;
     public float MAXHEALTH;
 }
@@ -25,6 +55,8 @@ public class Player : MonoBehaviour
 {
     [SerializeField]
     private PlayerStatistics pStats;
+
+    private List<PlayerStatisticsLevel> pStatsLevel = new List<PlayerStatisticsLevel>();
 
     //[SerializeField]
     //private bool RegenSkill = false, IronWillSkill = false, EvasionSkill = false;
@@ -140,6 +172,11 @@ public class Player : MonoBehaviour
         skill_function_list.Add(ActiveUltDef);
 
         blessing_inven = new Blessing[2];
+
+        pStatsLevel.Add(new PlayerStatisticsLevel("Weapon", 1, 0, 100));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Armor", 1, 0, 100));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Stamina", 1, 0, 100));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Strength", 1, 0, 100));
     }
 
     // Use this for initialization
@@ -170,7 +207,7 @@ public class Player : MonoBehaviour
 
         if (sm.IsCurrentState("Idle"))
         {
-            if (pStats.health < MaxHealth)
+            if (pStats.health < pStats.MAXHEALTH)
             {
                 if (hpRegenDelay <= 0f)
                 {
@@ -185,9 +222,9 @@ public class Player : MonoBehaviour
             {
                 hpRegenDelay = pStats.healthRegenSpd;
 
-                if (pStats.health > MaxHealth)
+                if (pStats.health > pStats.MAXHEALTH)
                 {
-                    pStats.health = MaxHealth;
+                    pStats.health = pStats.MAXHEALTH;
                 }
             }
 
