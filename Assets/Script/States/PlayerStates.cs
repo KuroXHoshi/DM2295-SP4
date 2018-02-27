@@ -71,6 +71,7 @@ public class PlayerStates : MonoBehaviour
     {
         private Player player;
         private Animator anim;
+        private bool attacked;
 
         public Attack(Player _player) : base("Attack")
         {
@@ -80,34 +81,35 @@ public class PlayerStates : MonoBehaviour
 
         public override void Enter()
         {
+            anim.SetBool("attacking", true);
 
+            player.PlayerAudio.MusicSource.clip = player.PlayerAudio.Attack;
+            player.PlayerAudio.attackclip();
+
+            attacked = false;
         }
 
         public override void Update()
         {
             if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
             {
-                anim.SetBool("attacking", true);
-                player.PlayerAudio.MusicSource.clip = player.PlayerAudio.Attack;
-                player.PlayerAudio.attackclip();
             }
 
             // Checks if state transits to attack
-            if (!anim.IsInTransition(0) && anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && player.hitParticleDelay <= 0)
+            if (!anim.IsInTransition(0) && anim.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !attacked)
             {
                 Vector3 offset = new Vector3(player.transform.forward.x * player.GetpStats().atkDist, player.transform.forward.y + 1, player.transform.forward.z * player.GetpStats().atkDist);
                 Instantiate(player.GetParticle(), player.transform.position + offset, Quaternion.identity);
-                player.hitParticleDelay = 0.3f;
-                anim.SetBool("attacking", false);
+                player.hitParticleDelay = 1;
 
-                //playerState = PlayerState.Idle;
+                attacked = true;
+                anim.SetBool("attacking", false);
                 player.sm.SetNextState("Idle");
             }
         }
 
         public override void Exit()
         {
-            
         }
     }
 
