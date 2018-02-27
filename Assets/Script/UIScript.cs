@@ -184,13 +184,13 @@ public class UIScript : MonoBehaviour
     public void healthbar()
     {
         healthslider.value = player.GetpStats().health;
-        healthpercent.text = player.GetpStats().health.ToString();
+        healthpercent.text = Mathf.CeilToInt(player.GetpStats().health).ToString();
     }
 
     public void staminabar()
     {
         staminaslider.value = player.GetpStats().stamina;
-        staminapercent.text = player.GetpStats().stamina.ToString();
+        staminapercent.text = Mathf.CeilToInt(player.GetpStats().stamina).ToString();
     }
 
     public void goldIndication()
