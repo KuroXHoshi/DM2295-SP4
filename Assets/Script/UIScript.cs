@@ -23,10 +23,15 @@ public class UIScript : MonoBehaviour
     [SerializeField]
     private Text healthpercent = null, staminapercent = null;
 
+    private void Awake()
+    {
+        if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>())) Debug.Log(this.GetType() + ".cs : Player not loaded");
+    }
+
     // Use this for initialization
     void Start()
     {
-       // level_data = 100;
+        // level_data = 100;
         if (!healthpercent) Debug.Log(this.GetType() + ".cs : Health Text not linked!");
         if (!staminapercent) Debug.Log(this.GetType() + ".cs : Stamina Text not linked!");
 
@@ -53,7 +58,6 @@ public class UIScript : MonoBehaviour
     }
     public void SetRoomLevelLayout()
     {
-        if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>())) Debug.Log(this.GetType() + ".cs : Player not loaded");
 
         // level_data = 100;
         level_data = (int)player.GetpStats().level;//ME TOO

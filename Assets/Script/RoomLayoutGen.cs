@@ -501,7 +501,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                 temp_array = new int[half_room_height][];
 
-                for (int i = 1; i < half_room_height; ++i)
+                for (int i = 0; i < half_room_height; ++i)
                 {
                     temp_array[i] = new int[half_room_width];
                 }
@@ -524,7 +524,7 @@ public class RoomLayoutGen : MonoBehaviour
                 }
 
                 //BOTTOM LEFT
-                for (int i = 0; i < half_room_height; ++i)
+                for (int i = 1; i < half_room_height; ++i)
                 {
                     for (int j = 0; j < half_room_width; ++j)
                     {
@@ -541,7 +541,7 @@ public class RoomLayoutGen : MonoBehaviour
                 }
 
                 //BOTTOM RIGHT
-                for (int i = 0; i < half_room_height; ++i)
+                for (int i = 1; i < half_room_height; ++i)
                 {
                     int x = half_room_width - 1;
                     for (int j = 0; j < half_room_width; ++j)
@@ -561,7 +561,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                 //TOP RIGHT
                 int y = half_room_height - 1;
-                for (int i = 0; i < half_room_height; ++i)
+                for (int i = 0; i < half_room_height - 1; ++i)
                 {
                     int x = half_room_width - 1;
                     for (int j = 0; j < half_room_width; ++j)
@@ -583,7 +583,7 @@ public class RoomLayoutGen : MonoBehaviour
 
                 //TOP LEFT
                 y = half_room_height - 1;
-                for (int i = 0; i < half_room_height; ++i)
+                for (int i = 0; i < half_room_height - 1; ++i)
                 {
                     for (int j = 0; j < half_room_width; ++j)
                     {
