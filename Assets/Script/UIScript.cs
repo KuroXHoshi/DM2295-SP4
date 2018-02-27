@@ -93,7 +93,8 @@ public class UIScript : MonoBehaviour
         }
         if (player.GetpStats().gothit == true)
         {
-            bloodscreen.canvasRenderer.SetAlpha(1.0f);
+            bloodscreen.CrossFadeAlpha(1.0f, 0, false);
+            //bloodscreen.canvasRenderer.SetAlpha(1.0f);
             stop = false;
         }
         else if(!stop)

@@ -21,6 +21,7 @@ public class BasicEnemyScript : MonoBehaviour
     public float HP = 10;
     public float MAX_HP = 10;
     public int DMG = 1;
+    private float dmgMultiplier = 1f;
     //public float movementSpd = 10;
     public bool NEAR_ATTACK = false;
     public float rotSpd = 10;
@@ -85,6 +86,7 @@ public class BasicEnemyScript : MonoBehaviour
         //UpdatePath();
 
         // HP = MAX_HP;
+        health.gameObject.SetActive(false);
     }
     
     private void FixedUpdate()
@@ -134,7 +136,10 @@ public class BasicEnemyScript : MonoBehaviour
         {
             HP -= player.GetpStats().damage;
             if (health != null)
+            {
+                health.gameObject.SetActive(true);
                 health.fillAmount = HP / MAX_HP;
+            }
         }
     }
 
@@ -249,7 +254,10 @@ public class BasicEnemyScript : MonoBehaviour
         rigid_entity_body.useGravity = false;
         HP = MAX_HP;
         if (health != null)
+        {
             health.fillAmount = HP / MAX_HP;
+            health.gameObject.SetActive(false);
+        }
         gameObject.SetActive(false);
     }
 }

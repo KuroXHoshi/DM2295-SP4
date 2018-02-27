@@ -24,17 +24,18 @@ public class Dash : State
 
     public override void Update()
     {
-        player.transform.position += player.transform.forward * player.GetpStats().dashSpd * player.GetpStats().moveSpd * Time.deltaTime;
 
         if (Vector3.Distance(prevPos, player.transform.position) > player.GetpStats().dashDist)
         {
             player.sm.SetNextState((anim.GetBool("attacking")) ? "Attack" : "Idle");
         }
+
+        player.transform.position += player.transform.forward * player.GetpStats().dashSpd * player.GetpStats().moveSpd * Time.deltaTime;
+        anim.SetBool("dash", false);
     }
 
     public override void Exit()
     {
-        anim.SetBool("dash", false);
     }
 }
 

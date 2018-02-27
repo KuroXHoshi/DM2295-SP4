@@ -204,7 +204,7 @@ public class Player : MonoBehaviour
                 skill_function_list[(int)blessing_inven[i].GetBlessingType()].DynamicInvoke(blessing_inven[i]);
             }
         }
-
+        
         if (sm.IsCurrentState("Idle"))
         {
             if (pStats.health < pStats.MAXHEALTH)
@@ -213,7 +213,7 @@ public class Player : MonoBehaviour
                 {
                     pStats.health += HealthRegenAmount * pStats.passiveHPRegenMultiplyer;
                     hpRegenDelay = pStats.healthRegenSpd;
-                    pStats.gothit = false;
+                    
                 }
 
                 hpRegenDelay -= Time.deltaTime;
@@ -230,19 +230,37 @@ public class Player : MonoBehaviour
 
         }
 
-        if (pStats.stamina < MaxStamina && stamRegenDelay <= 0f)
+        if (pStats.stamina < MaxStamina)
         {
-            pStats.stamina += StaminaRegenAmount;
+            if (stamRegenDelay <= 0f)
+            {
+                pStats.stamina += StaminaRegenAmount;
+                stamRegenDelay = pStats.staminaRegenSpd;
+            }
+
+            stamRegenDelay -= Time.deltaTime;
+        }
+        else
+        {
             stamRegenDelay = pStats.staminaRegenSpd;
+
+            if (pStats.stamina > MaxStamina)
+            {
+                pStats.stamina = MaxStamina;
+            }
         }
 
-        stamRegenDelay -= Time.deltaTime;
+        if (hitParticleDelay > 0)
+        {
+            hitParticleDelay -= Time.deltaTime * pStats.atkSpd;
+            Debug.Log(hitParticleDelay);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-    
+        
     }
 
     private void LateUpdate()
@@ -254,18 +272,16 @@ public class Player : MonoBehaviour
             if (set_prev)
                 set_prev = false;
 
-            if (Input.GetButtonDown("Fire1") && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
+            if (Input.GetButtonDown("Fire1") && hitParticleDelay <= 0 && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
             {
                 sm.SetNextState("Attack");
+                hitParticleDelay = pStats.atkSpd;
             }
             else if (Input.GetButtonDown("Skill1") && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) && pStats.stamina > 0)
             {
                // skill_function_list[6].DynamicInvoke();
             }
         }
-
-        if (hitParticleDelay > 0)
-            hitParticleDelay -= Time.deltaTime;
 
         pStats.passiveHPRegenMultiplyer = 0;
         pStats.passiveDefMultiplyer = 0;
@@ -275,6 +291,8 @@ public class Player : MonoBehaviour
         pStats.activeDefMultiplyer = 0;
         pStats.activeDmgMultiplyer = 0;
         pStats.activeHPRegenMultiplyer = 0;
+
+        pStats.gothit = false;
     }
 
     void PassiveRegen(Blessing _input)
