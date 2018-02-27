@@ -20,7 +20,7 @@ public class SpawnerBlock : MonoBehaviour {
     private List<GameObject> boss_pool_list = new List<GameObject>(); 
     private GameObject statue_script;
     public int pool_amount = 10;
-
+    
     // Use this for initialization
     void Start () {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
@@ -118,7 +118,10 @@ public class SpawnerBlock : MonoBehaviour {
 
                         GameObject temp_obj = GetBossObjectFromPool(type);
                         temp_obj.transform.position = new Vector3(rand_x, 0.05f, rand_z);
+
                     }
+
+                    //<-
                 }
 
                 spawned = true;
