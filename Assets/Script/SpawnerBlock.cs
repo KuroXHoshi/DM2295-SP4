@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class SpawnerBlock : MonoBehaviour {
 
-    public GameObject[] entity_list;
-    public GameObject[] boss_entity_list;
     private Player player;
     private Vector2 distance_detect;
     private bool isDone;
@@ -16,34 +14,12 @@ public class SpawnerBlock : MonoBehaviour {
     private bool contain_statue = false;
     private int spawner_room_id;
 
-    private List<GameObject> entity_pool_list = new List<GameObject>();
-    private List<GameObject> boss_pool_list = new List<GameObject>(); 
     private GameObject statue_script;
     public int pool_amount = 10;
     
     // Use this for initialization
     void Start () {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-
-        for (int entity_list_count = 0; entity_list_count < entity_list.Length; ++entity_list_count)
-        {
-            for (int i = 0; i < pool_amount; ++i)
-            {
-                GameObject obj = Instantiate(entity_list[entity_list_count]);
-                obj.SetActive(false);
-                entity_pool_list.Add(obj);
-            }
-        }
-
-        for (int entity_list_count = 0; entity_list_count < boss_entity_list.Length; ++entity_list_count)
-        {
-            for (int i = 0; i < pool_amount; ++i)
-            {
-                GameObject obj = Instantiate(boss_entity_list[entity_list_count]);
-                obj.SetActive(false);
-                boss_pool_list.Add(obj);
-            }
-        }
 
         //Debug.Log("SPAWNER BLOCK X: " + transform.position.x + " Y: " + transform.position.z);
         //Debug.Log("PLAYER POS X: " + player.transform.position.x + " Y: " + player.transform.position.y);
@@ -65,7 +41,7 @@ public class SpawnerBlock : MonoBehaviour {
 
                     while (!is_not_in_block)
                     {
-                        int type = UnityEngine.Random.Range(0, entity_list.Length);
+                        int type = UnityEngine.Random.Range(0, SpawnerManager.Instance.GetSizeOfEntity(0));
 
                         float rand_x;
                         float rand_z;
@@ -100,7 +76,7 @@ public class SpawnerBlock : MonoBehaviour {
 
                         if(is_not_in_block)
                         {
-                            GameObject temp_obj = GetObjectFromPool(type);
+                            GameObject temp_obj = SpawnerManager.Instance.GetEntityObjectFromPool(type);
                             temp_obj.transform.position = temp_vec;
                         }
                     }
@@ -111,12 +87,12 @@ public class SpawnerBlock : MonoBehaviour {
                 {
                     for (int i = 0; i < (player.GetpStats().level * 0.1f); ++i)
                     {
-                        int type = UnityEngine.Random.Range(0, boss_entity_list.Length);
+                        int type = UnityEngine.Random.Range(0, SpawnerManager.Instance.GetSizeOfEntity(1));
 
                         float rand_x = UnityEngine.Random.Range(transform.position.x - (distance_detect.x * 0.5f), transform.position.x + (distance_detect.x * 0.5f));
                         float rand_z = UnityEngine.Random.Range(transform.position.z - (distance_detect.y * 0.5f), transform.position.z + (distance_detect.y * 0.5f));
 
-                        GameObject temp_obj = GetBossObjectFromPool(type);
+                        GameObject temp_obj = SpawnerManager.Instance.GetBossEntityObjectFromPool(type);
                         temp_obj.transform.position = new Vector3(rand_x, 0.05f, rand_z);
 
                     }
@@ -137,32 +113,7 @@ public class SpawnerBlock : MonoBehaviour {
 
         if (spawned)
         {
-            foreach (GameObject i in entity_pool_list)
-            {
-                if (i.activeSelf)
-                {
-                    isDone = false;
-                    break;
-                }
-
-                if (!isDone)
-                    isDone = true;
-            }
-
-            if(isDone)
-            {
-                foreach (GameObject i in boss_pool_list)
-                {
-                    if (i.activeSelf)
-                    {
-                        isDone = false;
-                        break;
-                    }
-
-                    if (!isDone)
-                        isDone = true;
-                }
-            }
+            isDone = SpawnerManager.Instance.IsAllEntityDead();
         }
 
         if (isDone)
@@ -186,57 +137,6 @@ public class SpawnerBlock : MonoBehaviour {
         spawn_boss = input;
     }
 
-    public GameObject GetObjectFromPool(int type)
-    {
-        foreach(GameObject entity_obj in entity_pool_list)
-        {
-            if (!entity_obj.activeSelf && entity_obj.CompareTag(entity_list[type].tag))
-            {
-                entity_obj.SetActive(true);
-                return entity_obj;
-            }
-        }
-
-        GameObject obj = Instantiate(entity_list[type]);
-        obj.SetActive(false);
-        entity_pool_list.Add(obj);
-
-        return GetObjectFromPool(type);
-    }
-
-    public GameObject GetBossObjectFromPool(int type)
-    {
-        foreach (GameObject entity_obj in boss_pool_list)
-        {
-            if (!entity_obj.activeSelf && entity_obj.CompareTag(boss_entity_list[type].tag))
-            {
-                entity_obj.SetActive(true);
-                return entity_obj;
-            }
-        }
-
-        GameObject obj = Instantiate(boss_entity_list[type]);
-        obj.SetActive(false);
-        boss_pool_list.Add(obj);
-
-        return GetBossObjectFromPool(type);
-    }
-
-    public void GetListOfEnemies(ref List<GameObject> list_input)
-    {
-        list_input.Clear();
-        
-        foreach(GameObject i in entity_pool_list)
-        {
-            list_input.Add(i);
-        }
-
-         foreach(GameObject i in boss_pool_list)
-        {
-            list_input.Add(i);
-        }
-    }
-
     public void AddDoors(GameObject input)
     {
         all_door_script.Add(input.GetComponent<Door>());
@@ -250,31 +150,6 @@ public class SpawnerBlock : MonoBehaviour {
         SpawnBoss(false);
 
         all_door_script.Clear();
-
-        foreach(GameObject obj in entity_pool_list)
-        {
-            if (obj.activeSelf)
-            {
-                obj.GetComponent<EnemyScript>().Reset();
-                obj.SetActive(false);
-            }
-        }
-
-        foreach (GameObject obj in boss_pool_list)
-        {
-            if (obj.activeSelf)
-            {
-                switch(obj.tag)
-                {
-                    case "BossMelee":
-                        obj.GetComponent<BossScript>().Reset();
-                        break;
-                }
-                
-                obj.SetActive(false);
-            }
-        }
-
     }
 
     public void SetStatue(GameObject _input)

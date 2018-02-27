@@ -53,6 +53,11 @@ public class RoomLayoutGen : MonoBehaviour
     private GameObject[] total_quads;
     private List<GameObject> total_blocks = new List<GameObject>();
 
+    private void Awake()
+    {
+        SpawnerManager.Instance.SetUpSpawnerManager();
+    }
+
     private void Start()
     {
         // Create the board holder.
@@ -799,6 +804,7 @@ public class RoomLayoutGen : MonoBehaviour
 
     void SetUpMap()
     {
+        SpawnerManager.Instance.ResetSpawnerManager();
         player_obj_script.SetLevel(player_obj_script.GetpStats().level + 1);
         player_prev_room = -1;
         spawned_exit = false;

@@ -82,7 +82,7 @@ public class EnemyScript : MonoBehaviour
         // If enemy HP reaches 0 set gameObject to false
         if (HP <= 0)
         {
-            GameObject obj = Instantiate(gold_pile, transform.position, gold_pile.transform.rotation);
+            GameObject obj = Instantiate(gold_pile, new Vector3(transform.position.x, 0.05f, transform.position.z), gold_pile.transform.rotation);
             obj.GetComponent<Gold>().SetGoldValue(gold);
           
             transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
@@ -99,14 +99,19 @@ public class EnemyScript : MonoBehaviour
     {
         if (other.tag == "Player Hitting")
         {
-            HP -= player.GetpStats().damage;
-            if (health != null)
-            {
-                health.gameObject.SetActive(true);
-                health.fillAmount = HP / MAX_HP;
-            }
+            OnAttacked(player.GetPlayerDamage());
         }
     }
+
+    public virtual void OnAttacked(float _damage)
+    {
+        HP -= _damage;
+        if (health != null)
+        {
+            health.gameObject.SetActive(true);
+            health.fillAmount = HP / MAX_HP;
+        }
+    } 
     
     public void Reset()
     {

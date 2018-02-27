@@ -39,7 +39,7 @@ public class BossScript : MonoBehaviour
     }
 
     // Use this for initialization
-    public void Start()
+    protected virtual void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
@@ -47,7 +47,7 @@ public class BossScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void Update () {
+    protected virtual void Update () {
         Distance = Vector3.Distance(enemy_pos, player_pos);
         player_pos = player.transform.position;
         new_enemy_pos = transform.position + player_pos * MoveSpeed * Time.deltaTime;
@@ -56,6 +56,11 @@ public class BossScript : MonoBehaviour
 
         HP -= Time.deltaTime * 20;
         theUIcanvas.GetComponent<UIScript>().UpdateBossHP(HP);
+    }
+
+    public virtual void OnAttacked(float _damage)
+    {
+        HP -= _damage;
     }
 
     public void SpawnBossHPActive()
