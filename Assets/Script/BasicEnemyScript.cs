@@ -133,7 +133,7 @@ public class BasicEnemyScript : MonoBehaviour
     {
         if (other.tag == "Player Hitting")
         {
-            HP -= player.GetpStats().damage;
+            HP -= player.GetPlayerDamage();
             if (health != null)
             {
                 health.gameObject.SetActive(true);

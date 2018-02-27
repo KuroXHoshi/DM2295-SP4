@@ -185,7 +185,7 @@ public class RoomLayoutGen : MonoBehaviour
         total_corridor.Clear();
         prev_steps.Clear();
 
-        if(player_obj_script.GetpStats().level % 5 == 0)
+        if(player_obj_script.GetpStats().level % 3 == 0)
             rooms = new Room[numRooms.Random];
         else
             rooms = new Room[numRooms_simple.Random];
@@ -399,7 +399,7 @@ public class RoomLayoutGen : MonoBehaviour
                         total_quads[temp_no_of_room].transform.localScale = new Vector3(rooms[temp_no_of_room].roomWidth * 2.1f, rooms[temp_no_of_room].roomHeight * 2.2f, 1);
                         total_quads[temp_no_of_room].SetActive(true);
 
-                        if (player_obj_script.GetpStats().level % 5 == 0)
+                        if (player_obj_script.GetpStats().level % 3 == 0)
                         {
                             if (!set_boss_spawn)
                             {
