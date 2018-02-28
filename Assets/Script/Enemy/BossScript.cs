@@ -7,6 +7,7 @@ public class BossScript : MonoBehaviour
 {
     public Slider slider;
     public Text progresstext;
+    protected GameObject chosen_blessing;
 
     public float HP = 1000;
     public float MAX_HP = 1000;

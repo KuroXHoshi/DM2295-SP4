@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class AI_Boss03 : EnemyScript
 {
@@ -18,7 +17,7 @@ public class AI_Boss03 : EnemyScript
     }
 
     // Use this for initialization
-    protected override void Start()
+    public new void Start()
     {
         base.Start();
         sm = new StateMachine();
@@ -27,10 +26,9 @@ public class AI_Boss03 : EnemyScript
     }
 
     // Update is called once per frame
-    protected override void FixedUpdate()
+    public new void Update()
     {
-        base.FixedUpdate(); //nimabei
-
+        base.FixedUpdate();
         //float step = rotSpd * Time.deltaTime;
         //Vector3 newDir = Vector3.RotateTowards(transform.forward, target_player_DIR, step, 0.0f);
 

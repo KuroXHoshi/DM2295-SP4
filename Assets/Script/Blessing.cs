@@ -15,6 +15,7 @@ public class Blessing : MonoBehaviour {
         SUMMON,
         SMITE,
         BASH,
+
         DASH,
         WARCRY,
         ULT_DEF,

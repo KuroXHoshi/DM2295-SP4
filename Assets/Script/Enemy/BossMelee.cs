@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BossMelee : BossScript
 {
+    public GameObject[] blessing_list;
+
     // Use this for initialization
     protected override void Start()
     {
@@ -11,6 +13,11 @@ public class BossMelee : BossScript
         sm = new StateMachine();
         
         sm.AddState(new StateMelee("Melee"));
+        int temp = Random.Range(0, blessing_list.Length);
+
+        chosen_blessing = Instantiate(blessing_list[temp], transform.position, blessing_list[temp].transform.rotation);
+        chosen_blessing.GetComponent<Blessing>().SetBlessingType(((Blessing.TYPE)temp + 5));
+        chosen_blessing.SetActive(false);
     }
 
     // Update is called once per frame
@@ -108,5 +115,16 @@ public class BossMelee : BossScript
 
         //slider.value = HP;
         //progresstext.text = HP * 100f + "%";
+    }
+
+    protected void LateUpdate()
+    {
+        if(HP <= 0)
+        {
+            chosen_blessing.SetActive(true);
+            chosen_blessing.transform.position = new Vector3(transform.position.x, transform.position.y + 10, transform.position.z);
+
+            base.Reset();
+        }
     }
 }
