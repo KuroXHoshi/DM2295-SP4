@@ -48,8 +48,8 @@ public class PlayerStatisticsLevel
                 exp = maxExp;
             }
 
-           // if(!name.Equals("Stamina"))
-           //Debug.Log("STAT Name: " + name + " Level: " + level + " ExP: " + exp + " / " + maxExp + " TIMER: " + exp_gain_timer);
+           if(!name.Equals("Stamina"))
+           Debug.Log("STAT Name: " + name + " Level: " + level + " ExP: " + exp + " / " + maxExp + " TIMER: " + exp_gain_timer);
         }
     }
 }
@@ -124,6 +124,7 @@ public class Player : MonoBehaviour
     public Animator GetAnim() { return anim; }
     public ParticleSystem GetParticle() { return particle; }
     public PlayerStatistics GetpStats() { return pStats; }
+    public PlayerStatisticsLevel GetpStatsLevel(int _input) { return pStatsLevel[_input]; }
     public StateMachine sm { get; protected set; }
     public float MaxHealth { get; protected set; }
     public float MaxStamina { get; protected set; }
@@ -146,7 +147,7 @@ public class Player : MonoBehaviour
 
             if (Angle < 90f && Angle > -90f)
             {
-                pStatsLevel[3].IncreaseExp(2);
+                pStatsLevel[3].IncreaseExp(2.0f);
                 pStats.stamina -= 1;
                 SetKnockBack(-target.normalized);
                 Debug.Log("DAMAGE BLOCKED");
@@ -159,7 +160,7 @@ public class Player : MonoBehaviour
         if (temp > 100)
             temp = 100;
 
-        pStats.health -= _dmg * ((100 - temp) / 100);
+        pStats.health -= _dmg * GetPlayerDefence();
         PlayerAudio.takedamage();
         pStats.gothit = true;
         pStatsLevel[1].IncreaseExp(2);
@@ -312,7 +313,7 @@ public class Player : MonoBehaviour
         {
             if (stamRegenDelay <= 0f)
             {
-                pStats.stamina += StaminaRegenAmount * ((100 + pStatsLevel[2].level) / 100);
+                pStats.stamina += GetPlayerStaminaRegen();
                 stamRegenDelay = pStats.staminaRegenSpd;
 
                 if (pStats.stamina > pStats.MAXSTAMINA)
@@ -560,22 +561,42 @@ public class Player : MonoBehaviour
         transform.position -= dir * 0.3f;
     }
 
-    public float GetPlayerDamage()
+    public float GetPlayerDamage(bool get_data_only = false)
     {
-        float temp = pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer;
-        pStatsLevel[0].IncreaseExp(2f);
+        float temp = pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer + pStatsLevel[0].level;
+        if(!get_data_only)
+            pStatsLevel[0].IncreaseExp(2f);
         return pStats.damage * ((100 + temp) / 100);
+    }
+
+    public float GetPlayerStaminaRegen()
+    {       
+        return StaminaRegenAmount * ((100 + pStatsLevel[2].level) / 100);
     }
 
     public float GetPlayerAttackSpeed()
     {
-        float temp = pStats.atkSpd;
-        return pStats.atkSpd * ((100 + temp) / 100);
+        float temp = pStats.atkSpd + pStatsLevel[3].level;
+        return pStats.atkSpd * ((50 + temp) / 50);
     }
 
-    public float GetPlayerSpeed()
+    public float GetPlayerDefence()
+    {
+        float temp = pStats.passiveDefMultiplyer + pStats.activeDefMultiplyer + pStatsLevel[1].level;
+
+        if (temp > 100)
+            temp = 100;
+
+        return ((100 - temp) / 100);
+    }
+
+    public float GetPlayerSpeed(bool get_data_only = false)
     {
         pStatsLevel[2].IncreaseExp(1f);       //STAMINA STAT
-        return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
+
+        if(!get_data_only)
+            return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
+        else
+            return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
     }
 }
