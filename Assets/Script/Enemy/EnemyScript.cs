@@ -6,6 +6,12 @@ using UnityEngine.UI;
 public class EnemyScript : MonoBehaviour
 {
     #region Variables
+    public enum EnemyType
+    {
+        NORMAL,
+        BOSS
+    }
+
     const float minPathUpdateTime = .2f;
     const float pathUpdateMoveThreshold = .5f;
     public float turnSpeed = 3;
@@ -52,6 +58,7 @@ public class EnemyScript : MonoBehaviour
 
     #region Getters/Setters
     public StateMachine sm { get; protected set; }
+    public EnemyType enemyType { get; protected set; }
     public Animator GetAnim() { return animator; }
     public Player GetPlayer() { return player; }
     public Vector3 GetPlayerPos() { return player.transform.position; }
