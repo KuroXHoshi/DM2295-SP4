@@ -76,35 +76,6 @@ public class SpawnerManager : MonoBehaviour
                 obj.SetActive(false);
             }
         }
-
-        List<List<GameObject>> list = GetAllEntity();
-
-        foreach (List<GameObject> i in list)
-        {
-            foreach (GameObject obj in i)
-            {
-                if (obj.GetComponent<EnemyScript>() != null)
-                {
-                    obj.GetComponent<EnemyScript>().Reset();
-                }
-                else if (obj.GetComponent<BossScript>() != null)
-                {
-                    obj.GetComponent<BossScript>().Reset();
-                }
-                else if (obj.GetComponent<SkillScript>() != null)
-                {
-                    switch (obj.tag.ToLower())
-                    {
-                        case "firebomb":
-                            obj.GetComponent<SkillFireBomb>().Reset();
-                            break;
-                        case "summon":
-                            obj.GetComponent<SkillSummon>().Reset();
-                            break;
-                    }
-                }
-            }
-        }
     }
 
     //RETURNS SIZE OF ENTITY TYPES
