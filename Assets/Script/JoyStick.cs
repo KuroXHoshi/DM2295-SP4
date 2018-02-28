@@ -20,11 +20,11 @@ public class JoyStick : MonoBehaviour, IDragHandler,IPointerUpHandler,IPointerDo
         ImgFG = GetComponentsInChildren<Image>()[1];
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public void OnDrag(PointerEventData ed)
     {
         // Vector2 position;
         Vector2 position = Vector2.zero;
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(ImgBG.rectTransform, eventData.position, eventData.pressEventCamera, out position))
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(ImgBG.rectTransform, ed.position, ed.pressEventCamera, out position))
         {
             position.x = (position.x / ImgBG.rectTransform.sizeDelta.x);
             position.y = (position.y / ImgBG.rectTransform.sizeDelta.y);
@@ -42,15 +42,15 @@ public class JoyStick : MonoBehaviour, IDragHandler,IPointerUpHandler,IPointerDo
         }
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public void OnPointerUp(PointerEventData ed)
     {
         inputVector = Vector3.zero;
         ImgFG.rectTransform.anchoredPosition = Vector3.zero;
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData ed)
     {
-        OnDrag(eventData);
+        OnDrag(ed);
     }
     public float Horizontal()
     {
