@@ -50,6 +50,7 @@ public class UIScript : MonoBehaviour
     void Start()
     {
          // level_data = 100;
+
         if (!healthpercent) Debug.Log(this.GetType() + ".cs : Health Text not linked!");
         if (!staminapercent) Debug.Log(this.GetType() + ".cs : Stamina Text not linked!");
         BOSShealthslider.gameObject.SetActive(false);
