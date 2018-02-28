@@ -11,6 +11,10 @@ public class AI_Boss03 : EnemyScript
     protected override void Awake()
     {
         base.Awake();
+
+        starting_done = true;
+        rigid_entity_body.detectCollisions = true;
+        rigid_entity_body.useGravity = true;
     }
 
     // Use this for initialization
@@ -34,5 +38,10 @@ public class AI_Boss03 : EnemyScript
 
         //slider.value = HP;
         //progresstext.text = HP * 100f + "%";
+    }
+
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
     }
 }
