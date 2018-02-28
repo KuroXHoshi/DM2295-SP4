@@ -80,6 +80,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private PlayerStatistics pStats;
 
+    bool is_blocking;
+
     /*
      * 0 - SWORD
      * 1 - ARMOR
@@ -97,8 +99,11 @@ public class Player : MonoBehaviour
     [SerializeField]
     private ParticleSystem particle;
 
+    [SerializeField]
+    protected Transform model;
+
     private Animator anim;
-    //private Rigidbody rb;
+    private Rigidbody rb;
     private float RotaSpd = 10f;
     private int current_room;
     private bool set_prev;
@@ -129,11 +134,26 @@ public class Player : MonoBehaviour
 
     public bool debugImmune = false;
 
-    public void TakeDamage(float _dmg)
+    public void TakeDamage(float _dmg, Vector3 enemy_pos)
     {
         if (debugImmune)
             return;
         
+        if(is_blocking)
+        {
+            Vector3 target = new Vector3(transform.position.x, 0, transform.position.z) - new Vector3(enemy_pos.x, 0, enemy_pos.z);
+            float Angle = Vector3.Angle(model.forward, target);
+
+            if (Angle < 90f && Angle > -90f)
+            {
+                pStatsLevel[3].IncreaseExp(2);
+                pStats.stamina -= 1;
+                SetKnockBack(-target.normalized);
+                Debug.Log("DAMAGE BLOCKED");
+                return;
+            }
+        }
+
         float temp = pStats.passiveDefMultiplyer + pStats.activeDefMultiplyer + pStatsLevel[1].level;
 
         if (temp > 100)
@@ -172,9 +192,10 @@ public class Player : MonoBehaviour
         set_prev = false;
         pStats.MAXHEALTH = MaxHealth;
         pStats.MAXSTAMINA = MaxStamina;
+        is_blocking = false;
 
         if (!(anim = gameObject.GetComponent<Animator>())) Debug.Log(this.GetType() + " : Animator Controller not Loaded!");
-        //if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
+        if (!(rb = gameObject.GetComponent<Rigidbody>())) Debug.Log(this.GetType() + " : Rigidbody component not Loaded!");
         
         if (sm == null)
             sm = new StateMachine();
@@ -188,8 +209,8 @@ public class Player : MonoBehaviour
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             joystick.gameObject.SetActive(false);
-            button_attack.SetActive(false);
-            button_defend.SetActive(false);
+           // button_attack.SetActive(false);
+           // button_defend.SetActive(false);
         }
 
         skill_function_list.Add(PassiveRegen);
@@ -227,6 +248,32 @@ public class Player : MonoBehaviour
     {
         if (sm.HasStates())
             sm.Update();
+
+        if (pStats.stamina >= 0 && !sm.IsCurrentState("Attack"))
+        {
+            if (Input.GetButton("Skill1"))
+            {
+                is_blocking = true;
+                rb.mass = 500;
+                //Debug.Log("IS BLOCKING");
+
+            }
+            else
+            {
+                is_blocking = false;
+                rb.mass = 1;
+                //Debug.Log("IS NOT BLOCKING");
+            }
+        }
+        else
+        {
+            if (is_blocking)
+            {
+                is_blocking = false;
+                rb.mass = 1;
+                //Debug.Log("IS NOT BLOCKING");
+            }
+        }
 
         for (int i = 0; i < blessing_inven.Length; ++i)
         {
@@ -289,7 +336,7 @@ public class Player : MonoBehaviour
 
         if (hitParticleDelay > 0)
         {
-            hitParticleDelay -= Time.deltaTime * pStats.atkSpd;
+            hitParticleDelay -= Time.deltaTime * GetPlayerAttackSpeed();
           //  Debug.Log(hitParticleDelay);
         }
     }
@@ -309,19 +356,20 @@ public class Player : MonoBehaviour
 
         if (sm.IsCurrentState("Idle") || sm.IsCurrentState("Movement"))
         {
-            sm.SetNextState((joystick.Horizontal() == 0 && joystick.Vertical() == 0) ? "Idle" : "Movement");
+            sm.SetNextState((joystick.Horizontal() == 0 && joystick.Vertical() == 0) ? "Idle" : ((is_blocking) ? "Idle" : "Movement"));
 
             if (set_prev)
                 set_prev = false;
 
             if (Input.GetButtonDown("Fire1") && hitParticleDelay <= 0 && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
             {
-                //PlayerAttack();
+                PlayerAttack();
             }
             else if (Input.GetButtonDown("Skill1") && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) && pStats.stamina > 0)
             {
                // skill_function_list[6].DynamicInvoke();
             }
+
         }
 
         pStats.passiveHPRegenMultiplyer = 0;
@@ -512,6 +560,11 @@ public class Player : MonoBehaviour
             blessing_inven[1] = _input;
     }
 
+    public void SetKnockBack(Vector3 dir)
+    {
+        transform.position -= dir * 0.3f;
+    }
+
     public float GetPlayerDamage()
     {
         float temp = pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer;
@@ -519,15 +572,29 @@ public class Player : MonoBehaviour
         return pStats.damage * ((100 + temp) / 100);
     }
 
+    public float GetPlayerAttackSpeed()
+    {
+        float temp = pStats.atkSpd;
+        return pStats.atkSpd * ((100 + temp) / 100);
+    }
+
     public float GetPlayerSpeed()
     {
         pStatsLevel[2].IncreaseExp(1f);       //STAMINA STAT
-        return pStats.moveSpd * ((100 + pStatsLevel[2].level) / 100);
+        return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
     }
 
     public void PlayerAttack()
     {
-        sm.SetNextState("Attack");
-        hitParticleDelay = pStats.atkSpd;
+        if (hitParticleDelay <= 0)
+        {
+            sm.SetNextState("Attack");
+            hitParticleDelay = pStats.atkSpd;
+        }
+    }
+
+    public void PlayerDefend()
+    {
+
     }
 }
