@@ -30,6 +30,7 @@ public class AI_Boss03 : EnemyScript
     public new void Update()
     {
         base.FixedUpdate();
+
         //float step = rotSpd * Time.deltaTime;
         //Vector3 newDir = Vector3.RotateTowards(transform.forward, target_player_DIR, step, 0.0f);
         
