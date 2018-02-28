@@ -112,6 +112,7 @@ public class Player : MonoBehaviour
     public JoyStick joystick;
     public GameObject button_attack;
     public GameObject button_defend;
+    public Swipe SwipeControls;
 
     private List<Action<Blessing>> skill_function_list = new List<Action<Blessing>>();
 
@@ -473,12 +474,13 @@ public class Player : MonoBehaviour
     {
         if (pStats.stamina >= 5)
         {
-            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
-                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
+            if (((Input.GetButtonDown("Skill_Use_Left") || SwipeControls.SwipeUp) && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
+                ((Input.GetButtonDown("Skill_Use_Right") || SwipeControls.SwipeDown) && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
             {
                 pStats.stamina -= 5;
                 _input.SetDuration(10);
 
+                PlayerAudio.Roar();
                 sm.SetNextState("WarCry");
 
             }
@@ -495,12 +497,13 @@ public class Player : MonoBehaviour
     {
         if (pStats.stamina >= 5)
         {
-            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
-                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
+            if (((Input.GetButtonDown("Skill_Use_Left") || SwipeControls.SwipeUp) && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
+                ((Input.GetButtonDown("Skill_Use_Right") || SwipeControls.SwipeDown) && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
             {
                 pStats.stamina -= 10;
                 _input.SetDuration(3);
 
+                PlayerAudio.Ult();
                 sm.SetNextState("UltDef");
             }
         }
