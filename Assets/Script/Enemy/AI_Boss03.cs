@@ -15,13 +15,18 @@ public class AI_Boss03 : EnemyScript
         starting_done = true;
         rigid_entity_body.detectCollisions = true;
         rigid_entity_body.useGravity = true;
+
+        enemyType = EnemyType.BOSS;
+
+        sm.AddState(new EnemyStates.Idle(this));
+        sm.AddState(new EnemyStates.Movement(this));
     }
 
     // Use this for initialization
     protected override void Start()
     {
         base.Start();
-        sm = new StateMachine();
+        //sm = new StateMachine();
 
         //sm.AddState(new EnemyStates.Idle());
     }

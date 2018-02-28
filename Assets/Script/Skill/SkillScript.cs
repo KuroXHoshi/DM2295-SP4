@@ -8,7 +8,7 @@ public class SkillScript : MonoBehaviour {
 
     public ParticleSystem particle;
 
-    protected Rigidbody rigid_entity_body;
+    //protected Rigidbody rigid_entity_body;
 
     protected Animator animator;
 

@@ -37,7 +37,7 @@ public class RoomLayoutGen : MonoBehaviour
     private Player player_obj_script;
     private Portal portal_obj_script;
     private Grid AI_Controller_Grid;
-    private GameObject AI_Controller_Obj;
+    //private GameObject AI_Controller_Obj;
 
     private int[][] room_layout;
     private TileType[][] tiles;                               // A jagged array of tile types representing the board, like a grid.
@@ -65,7 +65,7 @@ public class RoomLayoutGen : MonoBehaviour
         player_obj = GameObject.FindGameObjectWithTag("Player");
         
         GameObject controllerInstance = Instantiate(AI_Controller, AI_Controller.transform.position, Quaternion.identity) as GameObject;
-        AI_Controller_Obj = controllerInstance;
+        //AI_Controller_Obj = controllerInstance;
         AI_Controller_Grid = controllerInstance.GetComponent<Grid>();
 
         player_obj_script = player_obj.GetComponent<Player>();

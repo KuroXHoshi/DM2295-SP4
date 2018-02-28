@@ -73,20 +73,26 @@ public class EnemyStates : MonoBehaviour
         public override void Enter()
         {
             anim.SetBool("walk", true);
-            //enemy.SetPathFind(true);
-            enemy.StartPathFind(true);
+
+            if (enemy.enemyType == EnemyScript.EnemyType.NORMAL)
+                enemy.StartPathFind(true);
         }
 
         public override void Update()
         {
             player_pos = enemy.GetPlayerPos();
             enemy_pos = enemy.transform.position;
-            //Vector3 target_player_DIR = player_pos - enemy_pos;
-            //float step = enemy.rotSpd * Time.deltaTime;
-            //Vector3 newDir = Vector3.RotateTowards(enemy.GetModel().forward, target_player_DIR, step, 0.0f);
-            //enemy.GetModel().rotation = Quaternion.LookRotation(newDir);
-            //enemy.GetModel().rotation = new Quaternion(0f, enemy.GetModel().rotation.y, 0f, enemy.GetModel().rotation.w);
-            //enemy.transform.Translate(enemy.GetModel().forward * enemy.MoveSpeed * Time.deltaTime);
+
+            if (enemy.enemyType == EnemyScript.EnemyType.BOSS)
+            {
+                Vector3 target_player_DIR = player_pos - enemy_pos;
+                float step = enemy.rotSpd * Time.deltaTime;
+                Vector3 newDir = Vector3.RotateTowards(enemy.GetModel().forward, target_player_DIR, step, 0.0f);
+                enemy.GetModel().rotation = Quaternion.LookRotation(newDir);
+                enemy.GetModel().rotation = new Quaternion(0f, enemy.GetModel().rotation.y, 0f, enemy.GetModel().rotation.w);
+                enemy.transform.Translate(enemy.GetModel().forward * enemy.MoveSpeed * Time.deltaTime);
+            }
+
             float Distance = Vector3.Distance(enemy_pos, player_pos);
 
             if (Distance <= enemy.MinDist)//distance reachable,attack
@@ -106,8 +112,9 @@ public class EnemyStates : MonoBehaviour
         public override void Exit()
         {
             anim.SetBool("walk", false);
-            //enemy.SetPathFind(false);
-            enemy.StartPathFind(false);
+
+            if (enemy.enemyType == EnemyScript.EnemyType.NORMAL)
+                enemy.StartPathFind(false);
         }
     }
 

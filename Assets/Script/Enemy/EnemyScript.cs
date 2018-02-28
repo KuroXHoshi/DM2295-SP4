@@ -6,6 +6,12 @@ using UnityEngine.UI;
 public class EnemyScript : MonoBehaviour
 {
     #region Variables
+    public enum EnemyType
+    {
+        NORMAL,
+        BOSS
+    }
+
     const float minPathUpdateTime = .2f;
     const float pathUpdateMoveThreshold = .5f;
     public float turnSpeed = 3;
@@ -13,15 +19,15 @@ public class EnemyScript : MonoBehaviour
     public float stoppingDst = 10;
     private Coroutine co;
     Path path;
-    //IEnumerator co;
+    private bool pathFinding = false;
 
     protected Player player; //: Transform;
    // public Transform playerTransform;
     public float MoveSpeed = 2;
     public float MaxDist = 15;
     public float MinDist = 1.5f;
-    public float HP = 10;
     public float MAX_HP = 10;
+    protected float HP;
     public int DMG = 1;
     private float dmgMultiplier = 1f;
     //public float movementSpd = 10;
@@ -52,6 +58,7 @@ public class EnemyScript : MonoBehaviour
 
     #region Getters/Setters
     public StateMachine sm { get; protected set; }
+    public EnemyType enemyType { get; protected set; }
     public Animator GetAnim() { return animator; }
     public Player GetPlayer() { return player; }
     public Vector3 GetPlayerPos() { return player.transform.position; }
@@ -119,6 +126,7 @@ public class EnemyScript : MonoBehaviour
     public virtual void OnAttacked(float _damage)
     {
         HP -= _damage;
+
         if (health != null)
         {
             health.gameObject.SetActive(true);
@@ -131,6 +139,8 @@ public class EnemyScript : MonoBehaviour
     {
         if (_in)
         {
+            pathFinding = true;
+
             if (co == null)
                 co = StartCoroutine(UpdatePath());
             else
@@ -141,6 +151,8 @@ public class EnemyScript : MonoBehaviour
         }
         else
         {
+            pathFinding = false;
+
             if (co != null)
                 StopCoroutine(co);
         }
@@ -218,7 +230,7 @@ public class EnemyScript : MonoBehaviour
                 //    }
                 //}
 
-                //if (true)
+                if (pathFinding)
                 {
                     //Debug.Log("Moving To: " + pathIndex);
                     float step = turnSpeed * Time.deltaTime;
@@ -252,11 +264,13 @@ public class EnemyScript : MonoBehaviour
         rigid_entity_body.detectCollisions = false;
         rigid_entity_body.useGravity = false;
         HP = MAX_HP;
+
         if (health != null)
         {
-            health.fillAmount = HP / MAX_HP;
+            //health.fillAmount = HP / MAX_HP;
             health.gameObject.SetActive(false);
         }
+
         gameObject.SetActive(false);
     }
 }

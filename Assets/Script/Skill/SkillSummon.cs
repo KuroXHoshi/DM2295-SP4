@@ -39,14 +39,14 @@ public class SkillSummon : SkillScript
         target = null;
 
         animator = model.GetComponent<Animator>();
-        rigid_entity_body = GetComponent<Rigidbody>();
+        //rigid_entity_body = GetComponent<Rigidbody>();
 
         if (sm == null)
             sm = new StateMachine();
 
         starting_done = false;
-        rigid_entity_body.detectCollisions = false;
-        rigid_entity_body.useGravity = false;
+        //rigid_entity_body.detectCollisions = false;
+        //rigid_entity_body.useGravity = false;
 
         sm.AddState(new SkillState.Idle(this));
         sm.AddState(new SkillState.Movement(this));
@@ -69,8 +69,8 @@ public class SkillSummon : SkillScript
             {
                 starting_done = true;
                 //transform.position = new Vector3(transform.position.x, 1, transform.position.z);
-                rigid_entity_body.detectCollisions = true;
-                rigid_entity_body.useGravity = true;
+                //rigid_entity_body.detectCollisions = true;
+                //rigid_entity_body.useGravity = true;
                 max_timer = timer;
             }
 
@@ -159,7 +159,7 @@ public class SkillSummon : SkillScript
 
     protected IEnumerator UpdatePath()
     {
-        Debug.Log("UPDATING PATH");
+        //Debug.Log("UPDATING PATH");
         if (target != null)
         {
             if (Time.timeSinceLevelLoad < .5f)
@@ -283,8 +283,8 @@ public class SkillSummon : SkillScript
         StopCoroutine(co);
 
         starting_done = false;
-        rigid_entity_body.detectCollisions = false;
-        rigid_entity_body.useGravity = false;
+        //rigid_entity_body.detectCollisions = false;
+        //rigid_entity_body.useGravity = false;
         HP = MAX_HP;
     }
 }

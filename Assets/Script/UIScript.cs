@@ -13,7 +13,18 @@ public class UIScript : MonoBehaviour
     public Slider BOSShealthslider;
     public Slider healthslider;
     public Slider staminaslider;
+    public Slider healthslidermini;
+    public Slider staminaslidermini;
+    public Slider weaponexp;
+    public Slider armorexp;
     public Text goldText;
+    public Text HealthText;
+    public Text DamageText;
+    public Text StaminaRegenSpdText;
+    public Text DefenseText;
+    public Text MovementSpdText;
+    public Text AttackSpdText;
+    public Text StaminaText;
     public Image instruct;
     public Text textObjective;
     public RawImage bloodscreen;
@@ -27,7 +38,6 @@ public class UIScript : MonoBehaviour
 
     private void Awake()
     {
-        if (!(player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>())) Debug.Log(this.GetType() + ".cs : Player not loaded");
         //if (!(BOSS = GameObject.FindGameObjectWithTag("BossMelee").GetComponent<BossMelee>())) Debug.Log(this.GetType() + ".cs : Boss not loaded");
 
     }
@@ -35,13 +45,16 @@ public class UIScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        if ((player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()) == null) Debug.Log(this.GetType() + ".cs : Player not loaded");
         // level_data = 100;
         if (!healthpercent) Debug.Log(this.GetType() + ".cs : Health Text not linked!");
         if (!staminapercent) Debug.Log(this.GetType() + ".cs : Stamina Text not linked!");
         BOSShealthslider.gameObject.SetActive(false);
         healthslider.maxValue = player.GetpStats().MAXHEALTH;
         staminaslider.maxValue = player.GetpStats().MAXSTAMINA;
-
+        healthslidermini.maxValue = player.GetpStats().MAXHEALTH;
+        staminaslidermini.maxValue = player.GetpStats().MAXSTAMINA;
+       //weaponexp.value = player.GetpStats().exp
         //level_data = (int)player.GetpStats().level;//ME TOO
         //levels.text = "Level  " + level_data;
         //levels.canvasRenderer.SetAlpha(1.0f);
@@ -95,6 +108,15 @@ public class UIScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        healthIndication();
+        StaminaIndication();
+        AttackSpeedIndication();
+        MovementSpdIndication();
+        damageIndication();
+        DefenseIndication();
+        StaminaRSPDIndication();
+        healthbarmini();
+        staminabarmini();
         healthbar();
         staminabar();
         goldIndication();
@@ -213,8 +235,63 @@ public class UIScript : MonoBehaviour
         staminapercent.text = Mathf.CeilToInt(player.GetpStats().stamina).ToString();
     }
 
+    public void healthbarmini()
+    {
+        healthslidermini.value = player.GetpStats().health;
+        healthpercent.text = Mathf.CeilToInt(player.GetpStats().health).ToString();
+    }
+
+    public void staminabarmini()
+    {
+        staminaslidermini.value = player.GetpStats().stamina;
+        staminapercent.text = Mathf.CeilToInt(player.GetpStats().stamina).ToString();
+    }
+
+
     public void goldIndication()
     {
         goldText.text = "Gold : " + player.GetpStats().gold;
     }
+
+    public void damageIndication()
+    {
+        DamageText.text = "Gold : " + player.GetpStats().damage;
+    }
+
+    public void healthIndication()
+    {
+        HealthText.text = "Health : " + player.GetpStats().health;
+    }
+
+    public void StaminaRSPDIndication()
+    {
+        StaminaRegenSpdText.text = "StaminaRegenSpd : " + player.GetpStats().staminaRegenSpd;
+    }
+    public void DefenseIndication()
+    {
+        DefenseText.text = "Defense : " + player.GetpStats().activeDefMultiplyer;
+    }
+    public void MovementSpdIndication()
+    {
+        MovementSpdText.text = "MovementSpd : " + player.GetpStats().moveSpd;
+    }
+    public void AttackSpeedIndication()
+    {
+        AttackSpdText.text = "AttackSpd : " + player.GetpStats().atkSpd;
+    }
+
+    public void StaminaIndication()
+    {
+        StaminaText.text = "Stamina : " + player.GetpStats().stamina;
+    }
+
+    //public void armorlevel()
+    //{
+    //    armorexp.value = ""
+    //}
+
+    //public void wepeaonlevel()
+    //{
+    //    armorexp.value = ""
+    //}
 }
