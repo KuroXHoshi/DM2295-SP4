@@ -302,6 +302,11 @@ public class Player : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.Slash))
+        {
+            debugImmune = !debugImmune;
+        }
+
         if (sm.IsCurrentState("Idle") || sm.IsCurrentState("Movement"))
         {
             sm.SetNextState((joystick.Horizontal() == 0 && joystick.Vertical() == 0) ? "Idle" : "Movement");
