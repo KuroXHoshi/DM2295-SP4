@@ -28,31 +28,29 @@ public class Particle : MonoBehaviour {
     {
         for (int i = 0; i < Particles.Length; ++i)
         {
-            if (Particles[i].Obj != null)
+            if (Particles[i].Rotation)
             {
-                if (Particles[i].Rotation)
+                if (Particles[i].ReverseRotation)
+                    Particles[i].Obj.transform.Rotate(new Vector3(0f, 0f, -1f) * Particles[i].RotationSpeed * Time.deltaTime);
+                else
+                    Particles[i].Obj.transform.Rotate(new Vector3(0f, 0f, 1f) * Particles[i].RotationSpeed * Time.deltaTime);
+            }
+
+            if (Particles[i].Decay)
+            {
+                if (Particles[i].DecayTimer)
                 {
-                    if (Particles[i].ReverseRotation)
-                        Particles[i].Obj.transform.Rotate(new Vector3(0f, 0f, -1f) * Particles[i].RotationSpeed * Time.deltaTime);
-                    else
-                        Particles[i].Obj.transform.Rotate(new Vector3(0f, 0f, 1f) * Particles[i].RotationSpeed * Time.deltaTime);
+                    if (Particles[i].lifeTime <= 0)
+                        Destroy(gameObject);
+
+                    Particles[i].lifeTime -= Time.deltaTime;
+                }
+                else
+                {
+                    if (!Particles[i].ParticleSys.isPlaying)
+                        Destroy(gameObject);
                 }
 
-                if (Particles[i].Decay)
-                {
-                    if (Particles[i].DecayTimer)
-                    {
-                        if (Particles[i].lifeTime <= 0)
-                            Destroy(gameObject);
-
-                        Particles[i].lifeTime -= Time.deltaTime;
-                    }
-                    else
-                    {
-                        if (!Particles[i].ParticleSys.isPlaying)
-                            Destroy(gameObject);
-                    }
-                }
             }
         }
 

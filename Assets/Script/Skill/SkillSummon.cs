@@ -102,7 +102,7 @@ public class SkillSummon : SkillScript
                                         Vector3.Distance(obj.transform.position, transform.position) < Vector3.Distance(temp.transform.position, transform.position))
                                     {
                                         temp = obj;
-                                       // Debug.Log("FINDING CLOSEST ENEMY");
+                                        Debug.Log("FINDING CLOSEST ENEMY");
                                     }
                                 }
                                 else if (obj.GetComponent<BossScript>() != null)
@@ -111,17 +111,7 @@ public class SkillSummon : SkillScript
                                         Vector3.Distance(obj.transform.position, transform.position) < Vector3.Distance(temp.transform.position, transform.position))
                                     {
                                         temp = obj;
-                                        //Debug.Log("FINDING CLOSEST BOSS");
-
-                                    }
-                                }
-                                else if (obj.GetComponent<Player>() != null)
-                                {
-                                    if (temp == null ||
-                                        Vector3.Distance(obj.transform.position, transform.position) < Vector3.Distance(temp.transform.position, transform.position))
-                                    {
-                                        temp = obj;
-                                        // Debug.Log("FINDING CLOSEST BOSS");
+                                        Debug.Log("FINDING CLOSEST BOSS");
 
                                     }
                                 }
@@ -133,7 +123,7 @@ public class SkillSummon : SkillScript
 
                 if (target != null)
                 {
-                    //Debug.Log("TARGET FOUND");
+                    Debug.Log("TARGET FOUND");
                     co = StartCoroutine(UpdatePath());
                 }
             }
@@ -185,7 +175,7 @@ public class SkillSummon : SkillScript
             {
                 yield return new WaitForSeconds(minPathUpdateTime);
                 //print(((targeted_player.transform.position - targetPosOld).sqrMagnitude) + "    " + sqrMoveThreshold);
-                if (target != null && (target.transform.position - targetPosOld).sqrMagnitude > sqrMoveThreshold)
+                if ((target.transform.position - targetPosOld).sqrMagnitude > sqrMoveThreshold)
                 {
                     PathRequestManager.RequestPath(new PathRequest(transform.position, target.transform.position, OnPathFound));
                     targetPosOld = target.transform.position;
@@ -196,7 +186,7 @@ public class SkillSummon : SkillScript
 
     IEnumerator FollowPath()
     {
-        //Debug.Log("FOLLOWING PATH");
+        Debug.Log("FOLLOWING PATH");
         bool followingPath = true;
         int pathIndex = 0;
         //model.LookAt(path.lookPoints[0]);
@@ -240,7 +230,7 @@ public class SkillSummon : SkillScript
                     //Quaternion targetRotation = Quaternion.LookRotation(path.lookPoints[pathIndex] - transform.position);
                     //model.rotation = targetRotation;
                     transform.Translate(model.forward * MoveSpeed * Time.deltaTime);
-                   // Debug.Log("MOVING");
+                    Debug.Log("MOVING");
                 }
             }
 

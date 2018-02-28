@@ -18,6 +18,8 @@ public class AudioScript : MonoBehaviour {
     public AudioClip damage;
     public AudioClip damage2;
     public AudioClip gameover;
+    public AudioClip warcry;
+    public AudioClip Ulti;
     // Use this for initialization
     void Start () {
        // int temp;
@@ -96,6 +98,16 @@ public class AudioScript : MonoBehaviour {
     public void GO()
     {
         MusicSource.clip = gameover;
+        MusicSource.Play();
+    }
+    public void Ult()
+    {
+        MusicSource.clip = Ulti;
+        MusicSource.Play();
+    }
+    public void Roar()
+    {
+        MusicSource.clip = warcry;
         MusicSource.Play();
     }
 }

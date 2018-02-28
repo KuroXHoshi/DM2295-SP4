@@ -48,8 +48,8 @@ public class PlayerStatisticsLevel
                 exp = maxExp;
             }
 
-           if(!name.Equals("Stamina"))
-           Debug.Log("STAT Name: " + name + " Level: " + level + " ExP: " + exp + " / " + maxExp + " TIMER: " + exp_gain_timer);
+           // if(!name.Equals("Stamina"))
+           //Debug.Log("STAT Name: " + name + " Level: " + level + " ExP: " + exp + " / " + maxExp + " TIMER: " + exp_gain_timer);
         }
     }
 }
@@ -112,6 +112,7 @@ public class Player : MonoBehaviour
     public JoyStick joystick;
     public GameObject button_attack;
     public GameObject button_defend;
+    public Swipe SwipeControls;
 
     private List<Action<Blessing>> skill_function_list = new List<Action<Blessing>>();
 
@@ -124,7 +125,6 @@ public class Player : MonoBehaviour
     public Animator GetAnim() { return anim; }
     public ParticleSystem GetParticle() { return particle; }
     public PlayerStatistics GetpStats() { return pStats; }
-    public PlayerStatisticsLevel GetpStatsLevel(int _input) { return pStatsLevel[_input]; }
     public StateMachine sm { get; protected set; }
     public float MaxHealth { get; protected set; }
     public float MaxStamina { get; protected set; }
@@ -147,7 +147,7 @@ public class Player : MonoBehaviour
 
             if (Angle < 90f && Angle > -90f)
             {
-                pStatsLevel[3].IncreaseExp(2.0f);
+                pStatsLevel[3].IncreaseExp(2);
                 pStats.stamina -= 1;
                 SetKnockBack(-target.normalized);
                 Debug.Log("DAMAGE BLOCKED");
@@ -160,7 +160,7 @@ public class Player : MonoBehaviour
         if (temp > 100)
             temp = 100;
 
-        pStats.health -= _dmg * GetPlayerDefence();
+        pStats.health -= _dmg * ((100 - temp) / 100);
         PlayerAudio.takedamage();
         pStats.gothit = true;
         pStatsLevel[1].IncreaseExp(2);
@@ -240,7 +240,7 @@ public class Player : MonoBehaviour
         blessing_inven[0].SetBlessingType(Blessing.TYPE.REGEN);   //SET BLESSING TYPE TO HEALING
 
         blessing_inven[1] = new Blessing();
-        blessing_inven[1].SetBlessingType(Blessing.TYPE.NONE);   //SET BLESSING TYPE TO NONE
+        blessing_inven[1].SetBlessingType(Blessing.TYPE.SUMMON);   //SET BLESSING TYPE TO NONE
 
         // Debug.Log(gameObject.GetHashCode());
     }
@@ -313,7 +313,7 @@ public class Player : MonoBehaviour
         {
             if (stamRegenDelay <= 0f)
             {
-                pStats.stamina += GetPlayerStaminaRegen();
+                pStats.stamina += StaminaRegenAmount * ((100 + pStatsLevel[2].level) / 100);
                 stamRegenDelay = pStats.staminaRegenSpd;
 
                 if (pStats.stamina > pStats.MAXSTAMINA)
@@ -405,8 +405,8 @@ public class Player : MonoBehaviour
     {
         if (pStats.stamina >= 5)
         {
-            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
-                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
+            if(((Input.GetButtonDown("Skill_Use_Left" ) || SwipeControls.SwipeUp)  && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
+               ((Input.GetButtonDown("Skill_Use_Right")  ||  SwipeControls.SwipeDown) && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
             {
                 pStats.stamina -= 5;
 
@@ -474,12 +474,13 @@ public class Player : MonoBehaviour
     {
         if (pStats.stamina >= 5)
         {
-            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
-                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
+            if (((Input.GetButtonDown("Skill_Use_Left") || SwipeControls.SwipeUp) && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
+                ((Input.GetButtonDown("Skill_Use_Right") || SwipeControls.SwipeDown) && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
             {
                 pStats.stamina -= 5;
                 _input.SetDuration(10);
 
+                PlayerAudio.Roar();
                 sm.SetNextState("WarCry");
 
             }
@@ -496,12 +497,13 @@ public class Player : MonoBehaviour
     {
         if (pStats.stamina >= 5)
         {
-            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
-                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
+            if (((Input.GetButtonDown("Skill_Use_Left") || SwipeControls.SwipeUp) && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
+                ((Input.GetButtonDown("Skill_Use_Right") || SwipeControls.SwipeDown) && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
             {
                 pStats.stamina -= 10;
                 _input.SetDuration(3);
 
+                PlayerAudio.Ult();
                 sm.SetNextState("UltDef");
             }
         }
@@ -566,17 +568,11 @@ public class Player : MonoBehaviour
         transform.position -= dir * 0.3f;
     }
 
-    public float GetPlayerDamage(bool get_data_only = false)
+    public float GetPlayerDamage()
     {
-        float temp = pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer + pStatsLevel[0].level;
-        if(!get_data_only)
-            pStatsLevel[0].IncreaseExp(2f);
+        float temp = pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer;
+        pStatsLevel[0].IncreaseExp(2f);
         return pStats.damage * ((100 + temp) / 100);
-    }
-
-    public float GetPlayerStaminaRegen()
-    {       
-        return StaminaRegenAmount * ((100 + pStatsLevel[2].level) / 100);
     }
 
     public float GetPlayerAttackSpeed()
@@ -595,14 +591,10 @@ public class Player : MonoBehaviour
         return ((100 - temp) / 100);
     }
 
-    public float GetPlayerSpeed(bool get_data_only = false)
+    public float GetPlayerSpeed()
     {
         pStatsLevel[2].IncreaseExp(1f);       //STAMINA STAT
-
-        if(!get_data_only)
-            return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
-        else
-            return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
+        return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
     }
 
     public void PlayerAttack()
