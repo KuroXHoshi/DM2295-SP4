@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AI_Boss03 : EnemyScript
 {
-    public Slider uiHealth;
+   // public Slider uiHealth;
 
 
     protected override void Awake()

@@ -77,7 +77,6 @@ public struct PlayerStatistics
 
 public class Player : MonoBehaviour
 {
-    #region Variables
     [SerializeField]
     private PlayerStatistics pStats;
 
@@ -113,12 +112,8 @@ public class Player : MonoBehaviour
 
     private Blessing[] blessing_inven;
 
-    public bool debugImmune = false;
-    #endregion
-
     private Player() { }
 
-    #region Getters/Setters
     public int GetPlayerCurrentRoom() { return current_room; }
     public Vector3 Get_Player_Pos() { return transform.position; }
     public Animator GetAnim() { return anim; }
@@ -131,7 +126,8 @@ public class Player : MonoBehaviour
     public float hitParticleDelay { get; set; }
     public float hpRegenDelay { get; set; }
     public float stamRegenDelay { get; set; }
-    #endregion
+
+    public bool debugImmune = false;
 
     public void TakeDamage(float _dmg)
     {
