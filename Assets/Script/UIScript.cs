@@ -40,6 +40,8 @@ public class UIScript : MonoBehaviour
 
     private void Awake()
     {
+        if ((player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()) == null) Debug.Log(this.GetType() + ".cs : Player not loaded");
+
         //if (!(BOSS = GameObject.FindGameObjectWithTag("BossMelee").GetComponent<BossMelee>())) Debug.Log(this.GetType() + ".cs : Boss not loaded");
 
     }
@@ -47,8 +49,7 @@ public class UIScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if ((player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>()) == null) Debug.Log(this.GetType() + ".cs : Player not loaded");
-        // level_data = 100;
+         // level_data = 100;
         if (!healthpercent) Debug.Log(this.GetType() + ".cs : Health Text not linked!");
         if (!staminapercent) Debug.Log(this.GetType() + ".cs : Stamina Text not linked!");
         BOSShealthslider.gameObject.SetActive(false);
