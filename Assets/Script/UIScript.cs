@@ -294,12 +294,12 @@ public class UIScript : MonoBehaviour
 
     public void blessing1Indication()
     {
-        Blessing1.text = "Blessing 1 : " + player.GetBlessingName(0);
+        Blessing1.text = "Blessing1 : " + player.GetBlessingName(0);
     }
 
     public void blessing2Indication()
     {
-        Blessing2.text = "Blessing 2 : " + player.GetBlessingName(1);
+        Blessing2.text = "Blessing2 : " + player.GetBlessingName(1);
     }
 
 
