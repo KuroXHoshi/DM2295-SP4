@@ -550,6 +550,11 @@ public class Player : MonoBehaviour
         }
     }
 
+    public string GetBlessingName(int _input)
+    {
+        return blessing_inven[_input].GetBlessingType().ToString();
+    }
+
     public void SetPlayerState(string _state)
     {
         sm.SetNextState(_state);

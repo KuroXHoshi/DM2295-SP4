@@ -27,6 +27,8 @@ public class UIScript : MonoBehaviour
     public Text StaminaText;
     public Image instruct;
     public Text textObjective;
+    public Text Blessing1;
+    public Text Blessing2;
     public RawImage bloodscreen;
     public Text levels;
     bool stop;
@@ -108,6 +110,8 @@ public class UIScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        blessing1Indication();
+        blessing2Indication();
         healthIndication();
         StaminaIndication();
         AttackSpeedIndication();
@@ -285,6 +289,17 @@ public class UIScript : MonoBehaviour
     {
         StaminaText.text = "Stamina : " + player.GetpStats().stamina;
     }
+
+    public void blessing1Indication()
+    {
+        Blessing1.text = "Blessing 1 : " + player.GetBlessingName(0);
+    }
+
+    public void blessing2Indication()
+    {
+        Blessing2.text = "Blessing 2 : " + player.GetBlessingName(1);
+    }
+
 
     //public void armorlevel()
     //{
