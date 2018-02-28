@@ -73,7 +73,8 @@ public class EnemyStates : MonoBehaviour
         public override void Enter()
         {
             anim.SetBool("walk", true);
-            enemy.SetPathFind(true);
+            //enemy.SetPathFind(true);
+            enemy.StartPathFind(true);
         }
 
         public override void Update()
@@ -105,7 +106,8 @@ public class EnemyStates : MonoBehaviour
         public override void Exit()
         {
             anim.SetBool("walk", false);
-            enemy.SetPathFind(false);
+            //enemy.SetPathFind(false);
+            enemy.StartPathFind(false);
         }
     }
 
