@@ -70,12 +70,15 @@ public class SkillState : MonoBehaviour {
 
         public override void Enter()
         {
+           // Debug.Log("ENTERING MOVEMENT STATE");
             anim.SetBool("walk", true);
             enemy.SetPathFind(true);
         }
 
         public override void Update()
         {
+           // Debug.Log("RUNNING MOVEMENT STATE");
+
             player_pos = enemy.GetTargetPosition();
             enemy_pos = enemy.transform.position;
             //Vector3 target_player_DIR = player_pos - enemy_pos;
@@ -102,6 +105,8 @@ public class SkillState : MonoBehaviour {
 
         public override void Exit()
         {
+            //Debug.Log("EXITING MOVEMENT STATE");
+
             anim.SetBool("walk", false);
             enemy.SetPathFind(false);
         }

@@ -10,7 +10,7 @@ public class SkillScript : MonoBehaviour {
 
     protected Rigidbody rigid_entity_body;
 
-    Animator animator;
+    protected Animator animator;
 
     [SerializeField]
     protected Transform model;
@@ -49,8 +49,9 @@ public class SkillScript : MonoBehaviour {
         parent_ID = _input;
     }
 
-    protected virtual void Reset()
+    public virtual void Reset()
     {
         gameObject.SetActive(false);
+
     }
 }

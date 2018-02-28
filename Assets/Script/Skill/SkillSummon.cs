@@ -30,7 +30,7 @@ public class SkillSummon : SkillScript
     public float stoppingDst = 10;
     Path path;
 
-    Animator animator;
+    Coroutine co;
 
     public void SetPathFind(bool _set) { pathFind = _set; }
 
@@ -47,13 +47,16 @@ public class SkillSummon : SkillScript
         starting_done = false;
         rigid_entity_body.detectCollisions = false;
         rigid_entity_body.useGravity = false;
+
+        sm.AddState(new SkillState.Idle(this));
+        sm.AddState(new SkillState.Movement(this));
+        sm.AddState(new SkillState.Attack(this));
     }
 
     // Use this for initialization
     protected override void Start()
     {
         max_timer = timer;
-        StartCoroutine(UpdatePath());
     }
 
     protected override void FixedUpdate()
@@ -67,6 +70,7 @@ public class SkillSummon : SkillScript
                 //transform.position = new Vector3(transform.position.x, 1, transform.position.z);
                 rigid_entity_body.detectCollisions = true;
                 rigid_entity_body.useGravity = true;
+                max_timer = timer;
             }
 
             float temp = UnityEngine.Random.Range(.001f, .2f);
@@ -113,14 +117,31 @@ public class SkillSummon : SkillScript
                             }
                         }
                     }
+                }              
+                 target = temp;
+
+                if(target != null)
+                {
+                    Debug.Log("TARGET FOUND");
+                    co = StartCoroutine(UpdatePath());
                 }
-                target = temp;
             }
+
+            if (sm != null)
+                sm.Update();
 
             if (timer <= 0)
             {
                 Reset();
             }
+        }
+    }
+
+    protected override void LateUpdate()
+    {
+        if(HP <= 0)
+        {
+            Reset();
         }
     }
 
@@ -137,9 +158,12 @@ public class SkillSummon : SkillScript
 
     protected IEnumerator UpdatePath()
     {
-        Debug.Log("UPDATING PATH");
+        Debug.Log("RUNNING UPDATING PATH");
+
         if (target != null)
         {
+            Debug.Log("UPDATING PATH");
+
             if (Time.timeSinceLevelLoad < .5f)
             {
                 yield return new WaitForSeconds(.5f);
@@ -227,10 +251,6 @@ public class SkillSummon : SkillScript
         }
     }
 
-    protected override void LateUpdate()
-    {
-    }
-
     protected override void OnCollisionEnter(Collision collision)
     {
     }
@@ -246,7 +266,10 @@ public class SkillSummon : SkillScript
 
     public Vector3 GetTargetPosition()
     {
-        return target.transform.position;
+        if (target != null)
+            return target.transform.position;
+        else
+            return transform.position;
     }
 
     public GameObject GetTarget()
@@ -254,10 +277,12 @@ public class SkillSummon : SkillScript
         return target;
     }
 
-    protected override void Reset()
+    public override void Reset()
     {
         base.Reset();
         timer = max_timer;
+        target = null;
+        StopCoroutine(co);
 
         starting_done = false;
         rigid_entity_body.detectCollisions = false;
