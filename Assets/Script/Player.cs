@@ -209,8 +209,8 @@ public class Player : MonoBehaviour
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             joystick.gameObject.SetActive(false);
-            button_attack.SetActive(false);
-            button_defend.SetActive(false);
+           // button_attack.SetActive(false);
+           // button_defend.SetActive(false);
         }
 
         skill_function_list.Add(PassiveRegen);
@@ -242,6 +242,19 @@ public class Player : MonoBehaviour
         blessing_inven[1].SetBlessingType(Blessing.TYPE.SUMMON);   //SET BLESSING TYPE TO DASH  -  TEMP, WILL CHANGE TO EMPTY LATER
 
         // Debug.Log(gameObject.GetHashCode());
+    }
+
+    public void mobileattack()
+    {
+        if (hitParticleDelay <= 0)
+        {
+            sm.SetNextState("Attack");
+            hitParticleDelay = GetPlayerAttackSpeed();
+        }
+    }
+    public void mobiledefend()
+    {
+
     }
 
     private void FixedUpdate()
@@ -366,7 +379,7 @@ public class Player : MonoBehaviour
                 sm.SetNextState("Attack");
                 hitParticleDelay = GetPlayerAttackSpeed();
             }
-         
+
         }
 
         pStats.passiveHPRegenMultiplyer = 0;
