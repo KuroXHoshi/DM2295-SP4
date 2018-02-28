@@ -316,8 +316,7 @@ public class Player : MonoBehaviour
 
             if (Input.GetButtonDown("Fire1") && hitParticleDelay <= 0 && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
             {
-                sm.SetNextState("Attack");
-                hitParticleDelay = pStats.atkSpd;
+                //PlayerAttack();
             }
             else if (Input.GetButtonDown("Skill1") && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) && pStats.stamina > 0)
             {
@@ -337,6 +336,7 @@ public class Player : MonoBehaviour
         pStats.gothit = false;
     }
 
+    #region Skills
     void PassiveRegen(Blessing _input)
     {
         pStats.passiveHPRegenMultiplyer++;
@@ -462,6 +462,7 @@ public class Player : MonoBehaviour
             pStats.passiveDefMultiplyer += 100;
         }
     }
+    #endregion
 
     private void OnCollisionEnter(Collision collision)
     {      
@@ -522,5 +523,11 @@ public class Player : MonoBehaviour
     {
         pStatsLevel[2].IncreaseExp(1f);       //STAMINA STAT
         return pStats.moveSpd * ((100 + pStatsLevel[2].level) / 100);
+    }
+
+    public void PlayerAttack()
+    {
+        sm.SetNextState("Attack");
+        hitParticleDelay = pStats.atkSpd;
     }
 }
