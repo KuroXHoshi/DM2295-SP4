@@ -27,8 +27,9 @@ public class AI_Boss03 : EnemyScript
     {
         base.FixedUpdate(); //nimabei
 
-        float step = rotSpd * Time.deltaTime;
-       // Vector3 newDir = Vector3.RotateTowards(transform.forward, target_player_DIR, step, 0.0f);
+        //float step = rotSpd * Time.deltaTime;
+        //Vector3 newDir = Vector3.RotateTowards(transform.forward, target_player_DIR, step, 0.0f);
+
         
         //float progress = Mathf.Clamp01(operation.progress / 0.9f);
 
