@@ -2,16 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Skeleton : EnemyScript {
-
-    //const float minPathUpdateTime = .2f;
-    //const float pathUpdateMoveThreshold = .5f;
-    //public float turnSpeed = 3;
-    //const float turnDst = 0;
-    //public float stoppingDst = 10;
-    //Path path;
-    //IEnumerator co;
-
+public class Skeleton : EnemyScript
+{
+    
     protected override void Awake()
     {
         base.Awake();
