@@ -53,27 +53,32 @@ public class SpawnerManager : MonoBehaviour
     //RESETS ALL ENEMY
     public void ResetSpawnerManager()
     {
-        foreach (GameObject obj in entity_pool_list)
-        {
-            if (obj.activeSelf)
-            {
-                obj.GetComponent<EnemyScript>().Reset();
-                obj.SetActive(false);
-            }
-        }
+        List<List<GameObject>> list = GetAllEntity();
 
-        foreach (GameObject obj in boss_pool_list)
+        foreach (List<GameObject> i in list)
         {
-            if (obj.activeSelf)
+            foreach (GameObject obj in i)
             {
-                switch (obj.tag)
+                if (obj.GetComponent<EnemyScript>() != null)
                 {
-                    case "BossMelee":
-                        obj.GetComponent<BossScript>().Reset();
-                        break;
+                    obj.GetComponent<EnemyScript>().Reset();
                 }
-
-                obj.SetActive(false);
+                else if (obj.GetComponent<BossScript>() != null)
+                {
+                    obj.GetComponent<BossScript>().Reset();
+                }
+                else if (obj.GetComponent<SkillScript>() != null)
+                {
+                    switch (obj.tag.ToLower())
+                    {
+                        case "firebomb":
+                            obj.GetComponent<SkillFireBomb>().Reset();
+                            break;
+                        case "summon":
+                            obj.GetComponent<SkillSummon>().Reset();
+                            break;
+                    }
+                }
             }
         }
     }

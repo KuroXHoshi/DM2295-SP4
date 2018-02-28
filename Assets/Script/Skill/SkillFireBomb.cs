@@ -65,7 +65,7 @@ public class SkillFireBomb : SkillScript
     {
     }
 
-    protected override void Reset()
+    public override void Reset()
     {
         base.Reset();
         timer = max_timer;
