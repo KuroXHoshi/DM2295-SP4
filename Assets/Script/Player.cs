@@ -362,7 +362,7 @@ public class Player : MonoBehaviour
                     GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("summon");
                     obj.GetComponent<SkillSummon>().SetParent(GetInstanceID());
 
-                    obj.transform.position = new Vector3(transform.position.x + (new IntRange(-2, 2).Random), 0.05f, transform.position.z + (new IntRange(-2, 2).Random));
+                    obj.transform.position = new Vector3(transform.position.x + (new IntRange(-2, 2).Random), -5f, transform.position.z + (new IntRange(-2, 2).Random));
                 }
 
                 sm.SetNextState("Summon");

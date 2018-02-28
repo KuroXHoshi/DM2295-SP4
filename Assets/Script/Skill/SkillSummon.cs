@@ -30,16 +30,8 @@ public class SkillSummon : SkillScript
     public float stoppingDst = 10;
     Path path;
 
-    protected Rigidbody rigid_entity_body;
-
     Animator animator;
 
-    [SerializeField]
-    protected Transform model;
-
-    public StateMachine sm { get; protected set; }
-    public Animator GetAnim() { return animator; }
-    public Transform GetModel() { return model; }
     public void SetPathFind(bool _set) { pathFind = _set; }
 
     protected override void Awake()
@@ -250,6 +242,16 @@ public class SkillSummon : SkillScript
     public virtual void OnAttacked(float _damage)
     {
         HP -= _damage;
+    }
+
+    public Vector3 GetTargetPosition()
+    {
+        return target.transform.position;
+    }
+
+    public GameObject GetTarget()
+    {
+        return target;
     }
 
     protected override void Reset()
