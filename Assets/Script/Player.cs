@@ -147,7 +147,7 @@ public class Player : MonoBehaviour
             if (Angle < 90f && Angle > -90f)
             {
                 pStatsLevel[3].IncreaseExp(2);
-               // pStats.stamina -= 1;
+                pStats.stamina -= 1;
                 SetKnockBack(-target.normalized);
                 Debug.Log("DAMAGE BLOCKED");
                 return;
