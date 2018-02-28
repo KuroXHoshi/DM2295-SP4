@@ -15,7 +15,7 @@ public class SkillSummon : SkillScript
     public float HP = 10;
     public float MAX_HP = 10;
     public int DMG = 1;
-    private float dmgMultiplier = 1f;
+    private float dmgMultiplier = 1f;   
     //public float movementSpd = 10;
     public bool NEAR_ATTACK = false;
     public float rotSpd = 10;
