@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossMelee : EnemyScript
+public class BossMage : EnemyScript
 {
     protected GameObject chosen_blessing;
     public GameObject[] blessing_list;
@@ -14,7 +14,7 @@ public class BossMelee : EnemyScript
         base.Awake();
 
         enemyType = EnemyType.BOSS;
-        
+
         starting_done = true;
         rigid_entity_body.detectCollisions = true;
         rigid_entity_body.useGravity = true;
@@ -27,7 +27,7 @@ public class BossMelee : EnemyScript
     {
         base.Start();
         //sm = new StateMachine();
-        
+
         sm.AddState(new EnemyStates.Idle(this));
         sm.AddState(new EnemyStates.Movement(this));
         sm.AddState(new EnemyStates.Attack(this));
@@ -35,7 +35,7 @@ public class BossMelee : EnemyScript
         int temp = Random.Range(0, blessing_list.Length);
 
         chosen_blessing = Instantiate(blessing_list[temp], transform.position, blessing_list[temp].transform.rotation);
-        chosen_blessing.GetComponent<Blessing>().SetBlessingType(((Blessing.TYPE)temp + 6));
+        chosen_blessing.GetComponent<Blessing>().SetBlessingType(((Blessing.TYPE)temp + 3));
         chosen_blessing.SetActive(false);
 
         theUIcanvas = GameObject.FindGameObjectWithTag("UI");
@@ -48,7 +48,7 @@ public class BossMelee : EnemyScript
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        
+
         if (sm != null)
             sm.Update();
 
