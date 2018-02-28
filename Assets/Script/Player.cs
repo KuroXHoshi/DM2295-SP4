@@ -209,9 +209,9 @@ public class Player : MonoBehaviour
 
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
-            joystick.gameObject.SetActive(false);
-            button_attack.SetActive(false);
-            button_defend.SetActive(false);
+           joystick.gameObject.SetActive(false);
+           //button_attack.SetActive(false);
+           //button_defend.SetActive(false);
         }
 
         skill_function_list.Add(PassiveRegen);
@@ -364,10 +364,13 @@ public class Player : MonoBehaviour
 
             if (Input.GetButtonDown("Fire1") && hitParticleDelay <= 0 && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
             {
-                sm.SetNextState("Attack");
-                hitParticleDelay = GetPlayerAttackSpeed();
+                PlayerAttack();
             }
-         
+            else if (Input.GetButtonDown("Skill1") && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) && pStats.stamina > 0)
+            {
+               // skill_function_list[6].DynamicInvoke();
+            }
+
         }
 
         pStats.passiveHPRegenMultiplyer = 0;
@@ -382,6 +385,7 @@ public class Player : MonoBehaviour
         pStats.gothit = false;
     }
 
+    #region Skills
     void PassiveRegen(Blessing _input)
     {
         pStats.passiveHPRegenMultiplyer++;
@@ -507,6 +511,7 @@ public class Player : MonoBehaviour
             pStats.passiveDefMultiplyer += 100;
         }
     }
+    #endregion
 
     private void OnCollisionEnter(Collision collision)
     {      
@@ -598,5 +603,31 @@ public class Player : MonoBehaviour
             return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
         else
             return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
+    }
+
+    public void PlayerAttack()
+    {
+        if (hitParticleDelay <= 0)
+        {
+            sm.SetNextState("Attack");
+            hitParticleDelay = pStats.atkSpd;
+        }
+    }
+
+    public void PlayerDefendPointerDown()
+    {
+        Debug.Log("Down");
+        if (pStats.stamina > 0 && !sm.IsCurrentState("Attack"))
+        {
+                is_blocking = true;
+                rb.mass = 500;
+        }
+    }
+
+    public void PlayerDefendPointerUp()
+    {
+        Debug.Log("Up");
+        is_blocking = false;
+        rb.mass = 1;
     }
 }

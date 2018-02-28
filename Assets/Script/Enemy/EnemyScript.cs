@@ -102,8 +102,11 @@ public class EnemyScript : MonoBehaviour
         // If enemy HP reaches 0 set gameObject to false
         if (HP <= 0)
         {
-            GameObject obj = Instantiate(gold_pile, new Vector3(transform.position.x, 0.05f, transform.position.z), gold_pile.transform.rotation);
-            obj.GetComponent<Gold>().SetGoldValue(gold);
+            if (gold_pile != null)
+            {
+                GameObject obj = Instantiate(gold_pile, new Vector3(transform.position.x, 0.05f, transform.position.z), gold_pile.transform.rotation);
+                obj.GetComponent<Gold>().SetGoldValue(gold);
+            }
           
             transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
             Reset();

@@ -7,7 +7,6 @@ public class BossScript : MonoBehaviour
 {
     public Slider slider;
     public Text progresstext;
-    protected GameObject chosen_blessing;
 
     public float HP = 1000;
     public float MAX_HP = 1000;
@@ -32,7 +31,6 @@ public class BossScript : MonoBehaviour
     protected Vector3 target_player_DIR;
     protected float Distance;
 
-    public GameObject theUIcanvas;
 
     private void Awake()
     {
@@ -42,11 +40,8 @@ public class BossScript : MonoBehaviour
     // Use this for initialization
     protected virtual void Start()
     {
-        theUIcanvas = GameObject.FindGameObjectWithTag("UI");
         player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
-        SpawnBossHPActive();
-        theUIcanvas.GetComponent<UIScript>().BossMax(MAX_HP);
     }
 
     // Update is called once per frame
@@ -58,7 +53,6 @@ public class BossScript : MonoBehaviour
         target_player_DIR = player_pos - enemy_pos;
 
         HP -= Time.deltaTime * 20;
-        theUIcanvas.GetComponent<UIScript>().UpdateBossHP(HP);
     }
 
     public virtual void OnAttacked(float _damage)
@@ -66,10 +60,6 @@ public class BossScript : MonoBehaviour
         HP -= _damage;
     }
 
-    public void SpawnBossHPActive()
-    {
-        theUIcanvas.GetComponent<UIScript>().SpawnBossHP();
-    }
     public void Reset()
     {
         HP = MAX_HP;
