@@ -8,11 +8,12 @@ public class Gameover : MonoBehaviour {
     [SerializeField]
     Canvas gameover;
     private float delay = 2.0f;
- 
+   public AudioScript go;
     // Use this for initialization
     void Start () {
         gameover.enabled = true;
-	}
+        go.GO();
+    }
 	
 	// Update is called once per frame
 	void Update () {
