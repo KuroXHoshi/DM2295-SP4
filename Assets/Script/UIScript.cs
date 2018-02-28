@@ -38,7 +38,7 @@ public class UIScript : MonoBehaviour
         // level_data = 100;
         if (!healthpercent) Debug.Log(this.GetType() + ".cs : Health Text not linked!");
         if (!staminapercent) Debug.Log(this.GetType() + ".cs : Stamina Text not linked!");
-        //BOSShealthslider.image.canvasRenderer.SetAlpha(0.0f);
+        BOSShealthslider.gameObject.SetActive(false);
         healthslider.maxValue = player.GetpStats().MAXHEALTH;
         staminaslider.maxValue = player.GetpStats().MAXSTAMINA;
 
@@ -76,9 +76,12 @@ public class UIScript : MonoBehaviour
         textObjective.canvasRenderer.SetAlpha(1.0f);
         textObjective.CrossFadeAlpha(0.0f, 2.5f, false);
     }
+
+
     public void SpawnBossHP()
     {
-        BOSShealthslider.image.canvasRenderer.SetAlpha(1.0f);
+        // BOSShealthslider.image.canvasRenderer.SetAlpha(1.0f);
+        BOSShealthslider.gameObject.SetActive(true);
     }
     public void UpdateBossHP( float data)
     {
@@ -88,6 +91,8 @@ public class UIScript : MonoBehaviour
     {
         BOSShealthslider.maxValue = data;
     }
+
+
     private void FixedUpdate()
     {
         healthbar();

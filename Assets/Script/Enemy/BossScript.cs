@@ -42,8 +42,10 @@ public class BossScript : MonoBehaviour
     // Use this for initialization
     protected virtual void Start()
     {
+        theUIcanvas = GameObject.FindGameObjectWithTag("UI");
         player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
+        SpawnBossHPActive();
         theUIcanvas.GetComponent<UIScript>().BossMax(MAX_HP);
     }
 
