@@ -20,7 +20,7 @@ public class AudioScript : MonoBehaviour {
     public AudioClip gameover;
     // Use this for initialization
     void Start () {
-        int temp;
+       // int temp;
         MusicSource.clip = MusicClip;
         MusicSource.Play();
     }
