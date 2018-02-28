@@ -218,7 +218,7 @@ public class Player : MonoBehaviour
         blessing_inven[0].SetBlessingType(Blessing.TYPE.REGEN);   //SET BLESSING TYPE TO HEALING
 
         blessing_inven[1] = new Blessing();
-        blessing_inven[1].SetBlessingType(Blessing.TYPE.SUMMON);   //SET BLESSING TYPE TO DASH  -  TEMP, WILL CHANGE TO EMPTY LATER
+        blessing_inven[1].SetBlessingType(Blessing.TYPE.SMITE);   //SET BLESSING TYPE TO DASH  -  TEMP, WILL CHANGE TO EMPTY LATER
 
 
         // Debug.Log(gameObject.GetHashCode());
