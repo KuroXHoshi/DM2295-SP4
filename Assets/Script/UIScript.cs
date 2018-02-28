@@ -141,6 +141,7 @@ public class UIScript : MonoBehaviour
         {
             //  player.SetHealth(100.0f);
             SceneManager.LoadScene("gameover");
+            player.Reset();
         }
         if (player.GetpStats().gothit == true)
         {

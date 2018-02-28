@@ -240,7 +240,7 @@ public class Player : MonoBehaviour
         blessing_inven[0].SetBlessingType(Blessing.TYPE.REGEN);   //SET BLESSING TYPE TO HEALING
 
         blessing_inven[1] = new Blessing();
-        blessing_inven[1].SetBlessingType(Blessing.TYPE.SUMMON);   //SET BLESSING TYPE TO DASH  -  TEMP, WILL CHANGE TO EMPTY LATER
+        blessing_inven[1].SetBlessingType(Blessing.TYPE.NONE);   //SET BLESSING TYPE TO NONE
 
         // Debug.Log(gameObject.GetHashCode());
     }
@@ -582,7 +582,7 @@ public class Player : MonoBehaviour
     public float GetPlayerAttackSpeed()
     {
         float temp = pStats.atkSpd + pStatsLevel[3].level;
-        return pStats.atkSpd * ((50 + temp) / 50);
+        return pStats.atkSpd * ((50 + temp) / 50);  
     }
 
     public float GetPlayerDefence()
@@ -629,5 +629,20 @@ public class Player : MonoBehaviour
         Debug.Log("Up");
         is_blocking = false;
         rb.mass = 1;
+    }
+
+    public void Reset()
+    {
+        pStatsLevel = new List<PlayerStatisticsLevel>();
+        pStatsLevel.Add(new PlayerStatisticsLevel("Weapon", 0, 100, 0, 100));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Armor", 0, 50, 0, 100));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Stamina", 0, 100, 0, 100, 1));
+        pStatsLevel.Add(new PlayerStatisticsLevel("Strength", 0, 100, 0, 100));
+
+        blessing_inven[0] = new Blessing();
+        blessing_inven[0].SetBlessingType(Blessing.TYPE.REGEN);   //SET BLESSING TYPE TO HEALING
+
+        blessing_inven[1] = new Blessing();
+        blessing_inven[1].SetBlessingType(Blessing.TYPE.NONE);   //SET BLESSING TYPE TO NONE
     }
 }
