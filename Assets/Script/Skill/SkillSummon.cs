@@ -159,7 +159,7 @@ public class SkillSummon : SkillScript
 
     protected IEnumerator UpdatePath()
     {
-        Debug.Log("UPDATING PATH");
+        //Debug.Log("UPDATING PATH");
         if (target != null)
         {
             if (Time.timeSinceLevelLoad < .5f)
