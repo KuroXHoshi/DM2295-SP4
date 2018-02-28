@@ -1,11 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class AI_Boss03 : BossScript {
+public class AI_Boss03 : EnemyScript
+{
+    public Slider uiHealth;
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
 
     // Use this for initialization
-    public new void Start()
+    protected override void Start()
     {
         base.Start();
         sm = new StateMachine();
@@ -14,9 +23,9 @@ public class AI_Boss03 : BossScript {
     }
 
     // Update is called once per frame
-    public new void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
 
         float step = rotSpd * Time.deltaTime;
         Vector3 newDir = Vector3.RotateTowards(transform.forward, target_player_DIR, step, 0.0f);
