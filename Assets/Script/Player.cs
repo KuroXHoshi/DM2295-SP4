@@ -218,7 +218,7 @@ public class Player : MonoBehaviour
         blessing_inven[0].SetBlessingType(Blessing.TYPE.REGEN);   //SET BLESSING TYPE TO HEALING
 
         blessing_inven[1] = new Blessing();
-        blessing_inven[1].SetBlessingType(Blessing.TYPE.DASH);   //SET BLESSING TYPE TO DASH  -  TEMP, WILL CHANGE TO EMPTY LATER
+        blessing_inven[1].SetBlessingType(Blessing.TYPE.SUMMON);   //SET BLESSING TYPE TO DASH  -  TEMP, WILL CHANGE TO EMPTY LATER
 
 
         // Debug.Log(gameObject.GetHashCode());
@@ -350,12 +350,48 @@ public class Player : MonoBehaviour
 
     void ActiveSummon(Blessing _input)
     {
+        if (pStats.stamina >= 5)
+        {
+            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
+                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
+            {
+                pStats.stamina -= 5;
 
+                for (int i = 0; i < 3; ++i)
+                {
+                    GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("summon");
+                    obj.GetComponent<SkillSummon>().SetParent(GetInstanceID());
+
+                    obj.transform.position = new Vector3(transform.position.x + (new IntRange(-2, 2).Random), -5f, transform.position.z + (new IntRange(-2, 2).Random));
+                }
+                PlayerAudio.playerspell1();
+                sm.SetNextState("Summon");
+
+            }
+        }
     }
 
     void ActiveSmite(Blessing _input)
     {
+        if (pStats.stamina >= 5)
+        {
+            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
+                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
+            {
+                pStats.stamina -= 5;
 
+                for(int i = 0; i < 3; ++i)
+                {
+                    GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("firebomb");
+                    obj.GetComponent<SkillFireBomb>().SetParent(GetInstanceID());
+
+                    obj.transform.position = new Vector3(transform.position.x + (new IntRange(-2, 2).Random), 0.05f, transform.position.z + (new IntRange(-2, 2).Random));
+                }
+
+                sm.SetNextState("Smite");
+
+            }
+        }
     }
 
     void ActiveBash(Blessing _input)

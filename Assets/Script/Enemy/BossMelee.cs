@@ -5,7 +5,7 @@ using UnityEngine;
 public class BossMelee : BossScript
 {
     // Use this for initialization
-    public new void Start()
+    protected override void Start()
     {
         base.Start();
         sm = new StateMachine();
@@ -14,7 +14,7 @@ public class BossMelee : BossScript
     }
 
     // Update is called once per frame
-    public new void Update()
+    protected override void Update()
     {
         base.Update();
 
