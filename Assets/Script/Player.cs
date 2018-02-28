@@ -364,6 +364,7 @@ public class Player : MonoBehaviour
                     obj.transform.position = new Vector3(transform.position.x + (new IntRange(-2, 2).Random), -5f, transform.position.z + (new IntRange(-2, 2).Random));
                 }
 
+                PlayerAudio.playerspell1();
                 sm.SetNextState("Summon");
 
             }

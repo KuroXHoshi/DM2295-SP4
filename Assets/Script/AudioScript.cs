@@ -17,6 +17,7 @@ public class AudioScript : MonoBehaviour {
     public AudioClip Collided;
     public AudioClip damage;
     public AudioClip damage2;
+    public AudioClip gameover;
     // Use this for initialization
     void Start () {
         int temp;
@@ -61,10 +62,10 @@ public class AudioScript : MonoBehaviour {
 
         MusicSource.Play();
     }
-    public void playerspell()
+    public void playerspell1()
     {
-        
 
+        MusicSource.clip = PlayerSpell;
         MusicSource.Play();
     }
     public void playerdash()
@@ -91,5 +92,10 @@ public class AudioScript : MonoBehaviour {
             MusicSource.clip = damage2;
             MusicSource.Play();
         }
+    }
+    public void GO()
+    {
+        MusicSource.clip = gameover;
+        MusicSource.Play();
     }
 }
