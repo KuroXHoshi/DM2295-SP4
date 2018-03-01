@@ -62,13 +62,14 @@ public class BossMelee : EnemyScript
 
     protected override void LateUpdate()
     {
-        base.LateUpdate();
-
         if (HP <= 0)
         {
             chosen_blessing.SetActive(true);
             chosen_blessing.transform.position = new Vector3(transform.position.x, transform.position.y + 10, transform.position.z);
         }
+
+        base.LateUpdate();
+
     }
 
     public void SpawnBossHPActive()
