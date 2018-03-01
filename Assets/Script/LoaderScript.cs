@@ -26,7 +26,7 @@ public class LoaderScript : MonoBehaviour {
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
 
             slider.value = progress;
-            progresstext.text = progress * 100f + "%";
+            progresstext.text = Mathf.FloorToInt(progress * 100f).ToString() + "%";
             yield return null;
         }
     }

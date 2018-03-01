@@ -290,7 +290,9 @@ public class SkillSummon : SkillScript
         base.Reset();
         timer = max_timer;
         target = null;
-        StopCoroutine(co);
+
+        if(co != null)
+            StopCoroutine(co);
 
         starting_done = false;
         //rigid_entity_body.detectCollisions = false;
