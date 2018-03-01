@@ -7,6 +7,8 @@ public class SkillFireBomb : SkillScript
     public float timer;
     private float max_timer;
     public Vector2 distance_detect;
+    public ParticleSystem effect;
+    bool added_effect = false;
 
     protected override void Awake()
     {
@@ -21,6 +23,12 @@ public class SkillFireBomb : SkillScript
     protected override void FixedUpdate()
     {
         timer -= Time.deltaTime;
+
+        if(!added_effect)
+        {
+            Instantiate(effect, transform.position, transform.rotation);
+            added_effect = true;
+        }
 
         if(timer <= 0)
         {
@@ -53,6 +61,7 @@ public class SkillFireBomb : SkillScript
                 }
             }
 
+            Instantiate(particle, transform.position, transform.rotation);
             Reset();
         }
     }
@@ -73,6 +82,7 @@ public class SkillFireBomb : SkillScript
     {
         base.Reset();
         timer = max_timer;
+        added_effect = false;
     }
 
 }

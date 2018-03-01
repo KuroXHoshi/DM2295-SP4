@@ -41,8 +41,11 @@ public class EnemyStates : MonoBehaviour
 
                 if (Angle < 60f && Angle > -60f)
                 {
-                    if(enemy.GetComponent<BossMage>() != null)
+                    if (enemy.GetComponent<BossMage>() != null)
+                    {
                         enemy.sm.SetNextState("BossRangedAttack");
+                        Debug.Log("ENTERING ATTACK STATE");
+                    }
                     else
                         enemy.sm.SetNextState("Attack");
                 }
@@ -52,6 +55,8 @@ public class EnemyStates : MonoBehaviour
             else if (Distance <= enemy.MaxDist)//Saw player and go to player
             {
                 enemy.sm.SetNextState("Movement");
+                Debug.Log("ENTERING MOVEMENT STATE");
+
             }
         }
 
@@ -108,7 +113,11 @@ public class EnemyStates : MonoBehaviour
                 if (Angle < 60f && Angle > -60f)
                 {
                     if (enemy.GetComponent<BossMage>() != null)
+                    {
                         enemy.sm.SetNextState("BossRangedAttack");
+                       // Debug.Log("ENTERING ATTACK STATE");
+
+                    }
                     else
                         enemy.sm.SetNextState("Attack");
                 }
@@ -208,19 +217,24 @@ public class EnemyStates : MonoBehaviour
         {
             if (particleDelay <= 0f)
             {
+               // Debug.Log("ATTACKING");
                 player_pos = enemy.GetPlayerPos();
                 enemy_pos = enemy.transform.position;
                 float Distance = Vector3.Distance(player_pos, enemy_pos);
 
                 if (Distance < enemy.MinDist + 0.5f)
                 {
+                   // Debug.Log("SHOOTING");
                     Vector3 target = player_pos - enemy_pos;
                     float Angle = Vector3.Angle(enemy.GetModel().forward, target);
 
                     if (Angle < 60f && Angle > -60f)
                     {
-                        enemy.GetPlayer().TakeDamage(enemy.DMG, enemy_pos);
-                        Instantiate(enemy.particle, new Vector3(player_pos.x, player_pos.y + 0.5f, player_pos.z), Quaternion.LookRotation(enemy_pos - player_pos));
+                       // Debug.Log("SHOT");
+                        GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("Projectile");
+                        obj.GetComponent<SkillFireProjectile>().SetParent(enemy.gameObject.GetInstanceID());
+                        obj.transform.position = new Vector3(enemy_pos.x, enemy_pos.y + 1, enemy_pos.z);
+                        obj.transform.forward = (enemy_pos - player_pos).normalized;
                     }
                 }
 
@@ -236,7 +250,7 @@ public class EnemyStates : MonoBehaviour
         }
     }
 
-    public class SkillFireStrike : State
+    public class StateSkillFireStrike : State
     {
         private EnemyScript enemy;
         private Animator anim;
@@ -244,9 +258,8 @@ public class EnemyStates : MonoBehaviour
         private Vector3 player_pos;
         private Vector3 enemy_pos;
 
-        private float particleDelay;
 
-        public SkillFireStrike(EnemyScript _enemy) : base("SkillFireStrike")
+        public StateSkillFireStrike(EnemyScript _enemy) : base("SkillFireStrike")
         {
             enemy = _enemy;
             anim = enemy.GetAnim();
@@ -254,34 +267,35 @@ public class EnemyStates : MonoBehaviour
 
         public override void Enter()
         {
-            particleDelay = 0.4f;
             anim.SetBool("attack", true);
         }
 
         public override void Update()
         {
-            if (particleDelay <= 0f)
-            {
-                player_pos = enemy.GetPlayerPos();
-                enemy_pos = enemy.transform.position;
-                float Distance = Vector3.Distance(player_pos, enemy_pos);
+            player_pos = enemy.GetPlayerPos();
+            enemy_pos = enemy.transform.position;
+            float Distance = Vector3.Distance(player_pos, enemy_pos);
 
-                if (Distance < enemy.MinDist + 0.5f)
-                {
-                    Vector3 target = player_pos - enemy_pos;
-                    float Angle = Vector3.Angle(enemy.GetModel().forward, target);
+            IntRange temp = new IntRange(-4, 4);
 
-                    if (Angle < 60f && Angle > -60f)
-                    {
-                        enemy.GetPlayer().TakeDamage(enemy.DMG, enemy_pos);
-                        Instantiate(enemy.particle, new Vector3(player_pos.x, player_pos.y + 0.5f, player_pos.z), Quaternion.LookRotation(enemy_pos - player_pos));
-                    }
-                }
+            for (int i = 0; i < 5; ++i)
+            {              
 
-                enemy.sm.SetNextState("Idle");
+                GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("FireBomb");
+                obj.GetComponent<SkillFireBomb>().SetParent(enemy.gameObject.GetInstanceID());
+                obj.transform.position = new Vector3(enemy_pos.x + temp.Random, enemy_pos.y + 0.5f, enemy_pos.z + temp.Random);
             }
 
-            particleDelay -= Time.deltaTime;
+            for (int i = 0; i < 3; ++i)
+            {
+
+                GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("FireBomb");
+                obj.GetComponent<SkillFireBomb>().SetParent(enemy.gameObject.GetInstanceID());
+                obj.transform.position = new Vector3(player_pos.x + temp.Random, enemy_pos.y + 0.5f, player_pos.z + temp.Random);
+            }
+
+            enemy.sm.SetNextState("Idle");
+
         }
 
         public override void Exit()
@@ -289,7 +303,7 @@ public class EnemyStates : MonoBehaviour
             anim.SetBool("attack", false);
         }
     }
-    public class SkillMine : State
+    public class StateSkillMine : State
     {
         private EnemyScript enemy;
         private Animator anim;
@@ -297,9 +311,8 @@ public class EnemyStates : MonoBehaviour
         private Vector3 player_pos;
         private Vector3 enemy_pos;
 
-        private float particleDelay;
 
-        public SkillMine(EnemyScript _enemy) : base("SkillMine")
+        public StateSkillMine(EnemyScript _enemy) : base("SkillMine")
         {
             enemy = _enemy;
             anim = enemy.GetAnim();
@@ -307,35 +320,27 @@ public class EnemyStates : MonoBehaviour
 
         public override void Enter()
         {
-            particleDelay = 0.4f;
             anim.SetBool("attack", true);
         }
 
         public override void Update()
         {
-            if (particleDelay <= 0f)
+            player_pos = enemy.GetPlayerPos();
+            enemy_pos = enemy.transform.position;
+            float Distance = Vector3.Distance(player_pos, enemy_pos);
+
+            IntRange temp = new IntRange(-4, 4);
+
+            for (int i = 0; i < 5; ++i)
             {
-                player_pos = enemy.GetPlayerPos();
-                enemy_pos = enemy.transform.position;
-                float Distance = Vector3.Distance(player_pos, enemy_pos);
-
-                if (Distance < enemy.MinDist + 0.5f)
-                {
-                    Vector3 target = player_pos - enemy_pos;
-                    float Angle = Vector3.Angle(enemy.GetModel().forward, target);
-
-                    if (Angle < 60f && Angle > -60f)
-                    {
-                        enemy.GetPlayer().TakeDamage(enemy.DMG, enemy_pos);
-                        Instantiate(enemy.particle, new Vector3(player_pos.x, player_pos.y + 0.5f, player_pos.z), Quaternion.LookRotation(enemy_pos - player_pos));
-                    }
-                }
-
-                enemy.sm.SetNextState("Idle");
+                GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("Mine");
+                obj.GetComponent<SkillMine>().SetParent(enemy.gameObject.GetInstanceID());
+                obj.transform.position = new Vector3(enemy_pos.x + temp.Random, enemy_pos.y + 0.5f, enemy_pos.z + temp.Random);
             }
-
-            particleDelay -= Time.deltaTime;
+          
+            enemy.sm.SetNextState("Idle");
         }
+        
 
         public override void Exit()
         {

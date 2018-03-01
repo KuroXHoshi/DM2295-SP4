@@ -92,7 +92,7 @@ public class SpawnerManager : MonoBehaviour
                 return entity_list.Length;
             case 1:     //BOSS ENTITIES
                 return boss_entity_list.Length;
-            case 2:     //BOSS ENTITIES
+            case 2:     //SKILL ENTITIES
                 return skill_entity_list.Length;
             default:
                 return 0;
@@ -139,6 +139,14 @@ public class SpawnerManager : MonoBehaviour
                 list.Add(i);
             }
         }
+
+        full_list.Add(list);
+
+        list = new List<GameObject>();
+
+        GameObject temp = GameObject.FindGameObjectWithTag("Player");
+
+        list.Add(temp);
 
         full_list.Add(list);
 

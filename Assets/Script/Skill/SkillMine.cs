@@ -56,6 +56,7 @@ public class SkillMine : SkillScript
         if(triggered)
         {
             //EXPLOSION PARTICLE HERE
+            Instantiate(particle, transform.position, transform.rotation);
             Reset();
         }
     }

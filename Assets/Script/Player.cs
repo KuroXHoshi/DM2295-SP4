@@ -405,7 +405,7 @@ public class Player : MonoBehaviour
                 for (int i = 0; i < 3; ++i)
                 {
                     GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("summon");
-                    obj.GetComponent<SkillSummon>().SetParent(GetInstanceID());
+                    obj.GetComponent<SkillSummon>().SetParent(gameObject.GetInstanceID());
 
                     obj.transform.position = new Vector3(transform.position.x + (new IntRange(-2, 2).Random), -5f, transform.position.z + (new IntRange(-2, 2).Random));
                 }
@@ -429,9 +429,9 @@ public class Player : MonoBehaviour
                 for(int i = 0; i < 3; ++i)
                 {
                     GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("firebomb");
-                    obj.GetComponent<SkillFireBomb>().SetParent(GetInstanceID());
+                    obj.GetComponent<SkillFireBomb>().SetParent(gameObject.GetInstanceID());
 
-                    obj.transform.position = new Vector3(transform.position.x + (new IntRange(-2, 2).Random), 0.05f, transform.position.z + (new IntRange(-2, 2).Random));
+                    obj.transform.position = new Vector3(transform.position.x + (new IntRange(-2, 2).Random), 1f, transform.position.z + (new IntRange(-2, 2).Random));
                 }
 
                 sm.SetNextState("Smite");

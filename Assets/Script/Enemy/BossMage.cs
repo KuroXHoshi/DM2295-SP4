@@ -9,6 +9,8 @@ public class BossMage : EnemyScript
     public GameObject theUIcanvas;
     private UIScript uiScript;
 
+    private float use_ability_timer;
+
     protected override void Awake()
     {
         base.Awake();
@@ -18,7 +20,7 @@ public class BossMage : EnemyScript
         starting_done = true;
         rigid_entity_body.detectCollisions = true;
         rigid_entity_body.useGravity = true;
-
+        use_ability_timer = 5.0f;
         HP = MAX_HP;
     }
 
@@ -31,8 +33,8 @@ public class BossMage : EnemyScript
         sm.AddState(new EnemyStates.Idle(this));
         sm.AddState(new EnemyStates.Movement(this));
         sm.AddState(new EnemyStates.BossRangedAttack(this));
-        sm.AddState(new EnemyStates.SkillFireStrike(this));
-        sm.AddState(new EnemyStates.SkillMine(this));
+        sm.AddState(new EnemyStates.StateSkillFireStrike(this));
+        sm.AddState(new EnemyStates.StateSkillMine(this));
 
         int temp = Random.Range(0, blessing_list.Length);
 
@@ -50,6 +52,25 @@ public class BossMage : EnemyScript
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
+        use_ability_timer -= Time.deltaTime;
+
+        if(use_ability_timer <= 0)
+        {
+            IntRange temp = new IntRange(3, 7);
+            use_ability_timer = temp.Random;
+
+            IntRange rand = new IntRange(0, 100);
+
+            if(rand.Random < 10)
+            {
+                Debug.Log("MINED HERED");
+                sm.SetNextState("Mine");
+            }
+            else
+            {
+                sm.SetNextState("SkillFireStrike");
+            }
+        }
 
         if (sm != null)
             sm.Update();
