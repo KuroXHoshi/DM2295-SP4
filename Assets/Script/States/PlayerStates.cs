@@ -45,6 +45,7 @@ public class PlayerStates : MonoBehaviour
 
         public override void Enter()
         {
+            player.PlayerAudio.playermove();
             anim.SetBool("moving", true);
         }
 
