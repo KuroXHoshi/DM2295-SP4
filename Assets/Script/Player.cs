@@ -420,8 +420,8 @@ public class Player : MonoBehaviour
     {
         if (pStats.stamina >= 5)
         {
-            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
-                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
+            if (((Input.GetButtonDown("Skill_Use_Left") || SwipeControls.SwipeDown) && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
+                ((Input.GetButtonDown("Skill_Use_Right") || SwipeControls.SwipeDown) && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
             {
                 pStats.stamina -= 5;
 
@@ -443,8 +443,8 @@ public class Player : MonoBehaviour
     {
         if (pStats.stamina >= 2)
         {
-            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType()) ||
-                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType()))
+            if (((Input.GetButtonDown("Skill_Use_Left") || SwipeControls.SwipeDown) && blessing_inven[0].GetBlessingType() == _input.GetBlessingType()) ||
+                ((Input.GetButtonDown("Skill_Use_Right") || SwipeControls.SwipeDown) && blessing_inven[1].GetBlessingType() == _input.GetBlessingType()))
             {
                 List<List<GameObject>> list = SpawnerManager.Instance.GetAllEntity();
 
@@ -472,8 +472,8 @@ public class Player : MonoBehaviour
     {
         if (pStats.stamina >= 1 && !sm.IsCurrentState("Dash"))
         {
-            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType()) ||
-                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType()))
+            if (((Input.GetButtonDown("Skill_Use_Left") || SwipeControls.SwipeDown) && blessing_inven[0].GetBlessingType() == _input.GetBlessingType()) ||
+                ((Input.GetButtonDown("Skill_Use_Right") || SwipeControls.SwipeDown) && blessing_inven[1].GetBlessingType() == _input.GetBlessingType()))
             {
                 //print("BLESSING TPYE: " + _input.GetBlessingType());
                 //print("BLESSING SLOT 0: " + blessing_inven[0].GetBlessingType());

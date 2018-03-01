@@ -31,6 +31,8 @@ public class BossMage : EnemyScript
         sm.AddState(new EnemyStates.Idle(this));
         sm.AddState(new EnemyStates.Movement(this));
         sm.AddState(new EnemyStates.Attack(this));
+        sm.AddState(new EnemyStates.SkillFireStrike(this));
+        sm.AddState(new EnemyStates.SkillMine(this));
 
         int temp = Random.Range(0, blessing_list.Length);
 
