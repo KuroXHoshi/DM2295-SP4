@@ -150,7 +150,7 @@ public class Player : MonoBehaviour
             {
                 PlayerAudio.defend();
                 pStatsLevel[3].IncreaseExp(2);
-                pStats.stamina -= 1;
+                pStats.stamina -= 1 + (_dmg * 0.3f);
                 SetKnockBack(-target.normalized, (_dmg * 0.3f));
                // Debug.Log("DAMAGE BLOCKED");
                 return;
@@ -586,7 +586,12 @@ public class Player : MonoBehaviour
 
     public void SetKnockBack(Vector3 dir, float _strength)
     {
-        transform.position -= dir * _strength;
+        float temp =  _strength;
+
+        if (temp > 1)
+            temp = 1;
+
+        transform.position -= dir * temp;
     }
 
     public float GetPlayerDamage(bool get_data_only = false)
