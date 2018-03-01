@@ -150,7 +150,7 @@ public class Player : MonoBehaviour
             {
                 pStatsLevel[3].IncreaseExp(2);
                 pStats.stamina -= 1;
-                SetKnockBack(-target.normalized);
+                SetKnockBack(-target.normalized, (_dmg * 0.3f));
                // Debug.Log("DAMAGE BLOCKED");
                 return;
             }
@@ -583,9 +583,9 @@ public class Player : MonoBehaviour
             blessing_inven[1] = _input;
     }
 
-    public void SetKnockBack(Vector3 dir)
+    public void SetKnockBack(Vector3 dir, float _strength)
     {
-        transform.position -= dir * 0.3f;
+        transform.position -= dir * _strength;
     }
 
     public float GetPlayerDamage(bool get_data_only = false)
@@ -616,11 +616,9 @@ public class Player : MonoBehaviour
 
     public float GetPlayerSpeed(bool get_data_only = false)
     {
-        pStatsLevel[2].IncreaseExp(1f);       //STAMINA STAT
-
         if (!get_data_only)
-            return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
-        else
+            pStatsLevel[2].IncreaseExp(1f);       //STAMINA STAT
+           
             return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
     }
 

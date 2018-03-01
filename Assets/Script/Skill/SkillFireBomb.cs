@@ -44,6 +44,10 @@ public class SkillFireBomb : SkillScript
                             {
                                 obj.GetComponent<BossScript>().OnAttacked(5);
                             }
+                            else if (obj.GetComponent<Player>() != null)
+                            {
+                                obj.GetComponent<Player>().TakeDamage(5, transform.position);
+                            }
                         }
                     }
                 }
