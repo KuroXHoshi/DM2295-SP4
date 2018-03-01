@@ -423,8 +423,23 @@ public class RoomLayoutGen : MonoBehaviour
                         }
 
                         if(!set_statue_spawn)
-                        {
-                            if(Random.Range(0, 100) < 30)
+                        {                          
+                            if(player_obj_script.GetpStats().level == 1)
+                            {
+                                int rand_statue = 0;
+                                Vector3 temp_statue_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, -10, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
+                                GameObject tileInstance = Instantiate(statue[rand_statue], temp_statue_vec, statue[rand_statue].transform.rotation) as GameObject;
+                                tileInstance.SetActive(false);
+
+                                tileInstance.GetComponent<Statue>().SetType(rand_statue);
+                                tileInstance.GetComponent<Statue>().SetCostRange(new IntRange(10, 100));
+
+                                total_spawners[temp_no_of_room].GetComponent<SpawnerBlock>().SetStatue(tileInstance);
+                                total_blocks.Add(tileInstance);
+
+                                set_statue_spawn = true;
+                            }
+                            else if (Random.Range(0, 100) < 30)
                             {
                                 int rand_statue = Random.Range(0, statue.Length);
                                 Vector3 temp_statue_vec = new Vector3(rooms[temp_no_of_room].xPos * 2 + columns * 0.28f, -10, rooms[temp_no_of_room].yPos * 2 + rows * 0.24f);
