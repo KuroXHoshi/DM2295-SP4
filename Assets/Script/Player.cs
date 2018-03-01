@@ -77,6 +77,7 @@ public struct PlayerStatistics
 
 public class Player : MonoBehaviour
 {
+    #region Variables
     [SerializeField]
     private PlayerStatistics pStats;
 
@@ -102,6 +103,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     protected Transform model;
 
+    [SerializeField]
+    GameObject shield;
+
     private Animator anim;
     private Rigidbody rb;
     private float RotaSpd = 10f;
@@ -118,8 +122,12 @@ public class Player : MonoBehaviour
 
     private Blessing[] blessing_inven;
 
+    public bool debugImmune = false;
+    #endregion
+
     private Player() { }
 
+    #region Getters/Setters
     public int GetPlayerCurrentRoom() { return current_room; }
     public Vector3 Get_Player_Pos() { return transform.position; }
     public Animator GetAnim() { return anim; }
@@ -133,8 +141,7 @@ public class Player : MonoBehaviour
     public float hitParticleDelay { get; set; }
     public float hpRegenDelay { get; set; }
     public float stamRegenDelay { get; set; }
-
-    public bool debugImmune = false;
+    #endregion
 
     public void TakeDamage(float _dmg, Vector3 enemy_pos)
     {
@@ -252,6 +259,7 @@ public class Player : MonoBehaviour
             {
                 is_blocking = true;
                 rb.mass = 500;
+                shield.SetActive(true);
                 //Debug.Log("IS BLOCKING");
 
             }
@@ -259,6 +267,7 @@ public class Player : MonoBehaviour
             {
                 is_blocking = false;
                 rb.mass = 1;
+                shield.SetActive(false);
                 //Debug.Log("IS NOT BLOCKING");
             }
         }
@@ -268,6 +277,7 @@ public class Player : MonoBehaviour
             {
                 is_blocking = false;
                 rb.mass = 1;
+                shield.SetActive(false);
                 //Debug.Log("IS NOT BLOCKING");
             }
         }
@@ -643,19 +653,21 @@ public class Player : MonoBehaviour
 
     public void PlayerDefendPointerDown()
     {
-        Debug.Log("Down");
+        //Debug.Log("Down");
         if (pStats.stamina > 0 && !sm.IsCurrentState("Attack"))
         {
-                is_blocking = true;
-                rb.mass = 500;
+            is_blocking = true;
+            rb.mass = 500;
+            shield.SetActive(true);
         }
     }
 
     public void PlayerDefendPointerUp()
     {
-        Debug.Log("Up");
+        //Debug.Log("Up");
         is_blocking = false;
         rb.mass = 1;
+        shield.SetActive(false);
     }
 
     public void Reset()
