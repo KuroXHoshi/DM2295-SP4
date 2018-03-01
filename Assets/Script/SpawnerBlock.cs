@@ -96,8 +96,6 @@ public class SpawnerBlock : MonoBehaviour {
                         temp_obj.transform.position = new Vector3(rand_x, 0.05f, rand_z);
 
                     }
-
-                    //<-
                 }
 
                 spawned = true;
