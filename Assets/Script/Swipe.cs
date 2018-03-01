@@ -77,6 +77,7 @@ public class Swipe : MonoBehaviour {
         }
     }
     #endregion
+
     private void Reset()
     {
         startTouch = swipeDelta = Vector2.zero;
