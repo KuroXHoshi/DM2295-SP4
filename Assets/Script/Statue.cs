@@ -102,7 +102,7 @@ public class Statue : MonoBehaviour {
                         else
                         {
                             player_obj_script.SetGold(player_obj_script.GetpStats().gold - cost);
-                            cost += (int)(((float)cost) * 0.1f);
+                            cost += (int)((cost) * 0.1f);
                             text_mesh.GetComponent<TextMesh>().text = "Cost: " + cost;
                         }
                     }

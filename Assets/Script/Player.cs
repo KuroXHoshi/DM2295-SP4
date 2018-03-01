@@ -125,6 +125,7 @@ public class Player : MonoBehaviour
     public Animator GetAnim() { return anim; }
     public ParticleSystem GetParticle() { return particle; }
     public PlayerStatistics GetpStats() { return pStats; }
+    public PlayerStatisticsLevel GetpStatsLevel(int _input) { return pStatsLevel[_input]; }
     public StateMachine sm { get; protected set; }
     public float MaxHealth { get; protected set; }
     public float MaxStamina { get; protected set; }
@@ -150,17 +151,12 @@ public class Player : MonoBehaviour
                 pStatsLevel[3].IncreaseExp(2);
                 pStats.stamina -= 1;
                 SetKnockBack(-target.normalized);
-                Debug.Log("DAMAGE BLOCKED");
+               // Debug.Log("DAMAGE BLOCKED");
                 return;
             }
         }
 
-        float temp = pStats.passiveDefMultiplyer + pStats.activeDefMultiplyer + pStatsLevel[1].level;
-
-        if (temp > 100)
-            temp = 100;
-
-        pStats.health -= _dmg * ((100 - temp) / 100);
+        pStats.health -= _dmg * GetPlayerDefence();
         PlayerAudio.takedamage();
         pStats.gothit = true;
         pStatsLevel[1].IncreaseExp(2);
@@ -313,7 +309,7 @@ public class Player : MonoBehaviour
         {
             if (stamRegenDelay <= 0f)
             {
-                pStats.stamina += StaminaRegenAmount * ((100 + pStatsLevel[2].level) / 100);
+                pStats.stamina += GetPlayerStaminaRegen();
                 stamRegenDelay = pStats.staminaRegenSpd;
 
                 if (pStats.stamina > pStats.MAXSTAMINA)
@@ -327,7 +323,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            stamRegenDelay = pStats.staminaRegenSpd;
+            stamRegenDelay = GetPlayerStaminaRegen();
 
             if (pStats.stamina > MaxStamina)
             {
@@ -366,11 +362,6 @@ public class Player : MonoBehaviour
             {
                 PlayerAttack();
             }
-            else if (Input.GetButtonDown("Skill1") && !sm.IsCurrentState("Dash") && (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) && pStats.stamina > 0)
-            {
-               // skill_function_list[6].DynamicInvoke();
-            }
-
         }
 
         pStats.passiveHPRegenMultiplyer = 0;
@@ -573,10 +564,13 @@ public class Player : MonoBehaviour
         transform.position -= dir * 0.3f;
     }
 
-    public float GetPlayerDamage()
-    {
-        float temp = pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer;
-        pStatsLevel[0].IncreaseExp(2f);
+    public float GetPlayerDamage(bool get_data_only = false)
+    {      
+        float temp = pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer + pStatsLevel[0].level;
+
+        if (!get_data_only)
+            pStatsLevel[0].IncreaseExp(2f);
+
         return pStats.damage * ((100 + temp) / 100);
     }
 
@@ -596,10 +590,14 @@ public class Player : MonoBehaviour
         return ((100 - temp) / 100);
     }
 
-    public float GetPlayerSpeed()
+    public float GetPlayerSpeed(bool get_data_only = false)
     {
         pStatsLevel[2].IncreaseExp(1f);       //STAMINA STAT
-        return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
+
+        if (!get_data_only)
+            return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
+        else
+            return pStats.moveSpd * ((is_blocking) ? 0 : ((100 + pStatsLevel[2].level) / 100));
     }
 
     public void PlayerAttack()
@@ -609,6 +607,11 @@ public class Player : MonoBehaviour
             sm.SetNextState("Attack");
             hitParticleDelay = pStats.atkSpd;
         }
+    }
+
+    public float GetPlayerStaminaRegen()
+    {
+        return StaminaRegenAmount * ((100 + pStatsLevel[2].level) / 100);
     }
 
     public void PlayerDefendPointerDown()
