@@ -252,6 +252,11 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    public void SetKnockBack(Vector3 dir)
+    {
+        transform.position += dir * 1.5f;
+    }
+
     public void OnDrawGizmos()
     {
         if (path != null)

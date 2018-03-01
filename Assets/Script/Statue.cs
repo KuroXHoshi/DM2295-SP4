@@ -16,7 +16,7 @@ public class Statue : MonoBehaviour {
     public GameObject player_obj;
     private Player player_obj_script;
 
-    public IntRange cost_range;
+    public IntRange cost_range = new IntRange(1000, 3000);
     public Vector2 distance_push;
 
     private bool is_risen, is_bought, is_done;
@@ -43,7 +43,6 @@ public class Statue : MonoBehaviour {
         is_risen = false;
         is_bought = false;
         is_done = false;
-        cost_range = new IntRange(1000, 3000);
         cost = cost_range.Random;
 
         starting_pos = new Vector2(transform.position.x, transform.position.z);
@@ -102,7 +101,7 @@ public class Statue : MonoBehaviour {
                         else
                         {
                             player_obj_script.SetGold(player_obj_script.GetpStats().gold - cost);
-                            cost += (int)(((float)cost) * 0.1f);
+                            cost += (int)((cost) * 0.1f);
                             text_mesh.GetComponent<TextMesh>().text = "Cost: " + cost;
                         }
                     }
@@ -122,6 +121,11 @@ public class Statue : MonoBehaviour {
             is_done = true;
         }
 	}
+
+    public void SetCostRange(IntRange _input)
+    {
+        cost_range = _input;
+    }
 
     public void SetType(int _type)
     {

@@ -31,6 +31,7 @@ public class UIScript : MonoBehaviour
     public Text Blessing2;
     public RawImage bloodscreen;
     public Text levels;
+    public Text weaponLevel, armorLevel;
     bool stop;
     int level_data;//CHANGE ME if needed
     
@@ -126,6 +127,9 @@ public class UIScript : MonoBehaviour
         healthbar();
         staminabar();
         goldIndication();
+        armorlevel();
+        weaponlevel();
+        weaponandarmorlevel();
     }
 
     // Update is called once per frame
@@ -254,62 +258,68 @@ public class UIScript : MonoBehaviour
         staminapercent.text = Mathf.CeilToInt(player.GetpStats().stamina).ToString();
     }
 
-
     public void goldIndication()
     {
-        goldText.text = "Gold : " + player.GetpStats().gold;
+        goldText.text = "Gold: " + player.GetpStats().gold;
     }
 
     public void damageIndication()
     {
-        DamageText.text = "Gold : " + player.GetpStats().damage;
+        DamageText.text = "Damage: " + player.GetPlayerDamage(true);
     }
 
     public void healthIndication()
     {
-        HealthText.text = "Health : " + player.GetpStats().health;
+        HealthText.text = "Health: " + player.GetpStats().health;
     }
 
     public void StaminaRSPDIndication()
     {
-        StaminaRegenSpdText.text = "StaminaRegenSpd : " + player.GetpStats().staminaRegenSpd;
+        StaminaRegenSpdText.text = "StaminaRegen/S: " + player.GetPlayerStaminaRegen();
     }
     public void DefenseIndication()
     {
-        DefenseText.text = "Defense : " + player.GetpStats().activeDefMultiplyer;
+        DefenseText.text = "Defense: " + player.GetPlayerDefence();
     }
     public void MovementSpdIndication()
     {
-        MovementSpdText.text = "MovementSpd : " + player.GetpStats().moveSpd;
+        MovementSpdText.text = "MovementSpd: " + player.GetPlayerSpeed(true);
     }
     public void AttackSpeedIndication()
     {
-        AttackSpdText.text = "AttackSpd : " + player.GetpStats().atkSpd;
+        AttackSpdText.text = "AttackSpd: " + player.GetPlayerAttackSpeed();
     }
 
     public void StaminaIndication()
     {
-        StaminaText.text = "Stamina : " + player.GetpStats().stamina;
+        StaminaText.text = "Stamina: " + player.GetpStats().stamina;
     }
 
     public void blessing1Indication()
     {
-        Blessing1.text = "Blessing1 : " + player.GetBlessingName(0);
+        Blessing1.text = "Blessing1: " + player.GetBlessingName(0);
     }
 
     public void blessing2Indication()
     {
-        Blessing2.text = "Blessing2 : " + player.GetBlessingName(1);
+        Blessing2.text = "Blessing2: " + player.GetBlessingName(1);
     }
 
+    public void armorlevel()
+    {
+        armorexp.value = (float)player.GetpStatsLevel(1).exp;
+        armorexp.maxValue = (float)player.GetpStatsLevel(1).maxExp;
+    }
 
-    //public void armorlevel()
-    //{
-    //    armorexp.value = ""
-    //}
+    public void weaponlevel()
+    {
+        weaponexp.value = (float)player.GetpStatsLevel(0).exp;
+        weaponexp.maxValue = (float)player.GetpStatsLevel(0).maxExp;
+    }
 
-    //public void wepeaonlevel()
-    //{
-    //    armorexp.value = ""
-    //}
+    public void weaponandarmorlevel()
+    {
+        weaponLevel.text = "Lvl: " + player.GetpStatsLevel(0).level;
+        armorLevel.text = "Lvl: " + player.GetpStatsLevel(1).level;
+    }
 }
