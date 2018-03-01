@@ -29,8 +29,8 @@ public class JoyStick : MonoBehaviour, IDragHandler,IPointerUpHandler,IPointerDo
             position.x = (position.x / ImgBG.rectTransform.sizeDelta.x);
             position.y = (position.y / ImgBG.rectTransform.sizeDelta.y);
 
-            float x = (ImgBG.rectTransform.pivot.x == 1) ? position.x * 2 : position.x * 2 - 1;
-            float y = (ImgBG.rectTransform.pivot.y == 1) ? position.y * 2 : position.y * 2 - 1;
+            float x = (ImgBG.rectTransform.pivot.x == 1) ? position.x * 2 : position.x * 2;
+            float y = (ImgBG.rectTransform.pivot.y == 1) ? position.y * 2 : position.y * 2;
 
             inputVector = new Vector3(x, 0, y);
             inputVector = (inputVector.magnitude > 1.0f) ? inputVector.normalized : inputVector;

@@ -268,6 +268,10 @@ public class EnemyScript : MonoBehaviour
 
     public void Reset()
     {
+
+        DMG = DMG + (int)((player.GetComponent<Player>().GetpStats().level + 1) * 0.5f);
+        MAX_HP = MAX_HP + (MAX_HP * (int)(((player.GetComponent<Player>().GetpStats().level + 1) * 20) / 100));
+
         starting_done = false;
         rigid_entity_body.detectCollisions = false;
         rigid_entity_body.useGravity = false;
