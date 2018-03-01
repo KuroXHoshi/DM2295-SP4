@@ -214,8 +214,8 @@ public class Player : MonoBehaviour
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
            joystick.gameObject.SetActive(false);
-           //button_attack.SetActive(false);
-           //button_defend.SetActive(false);
+           button_attack.SetActive(false);
+           button_defend.SetActive(false);
         }
 
         skill_function_list.Add(PassiveRegen);
