@@ -41,27 +41,27 @@ public class AudioScript : MonoBehaviour {
     }
     public void defend()
     {
-        
 
 
+        MusicSource.clip = Defend;
         MusicSource.Play();
     }
     public void playermove()
     {
-        
 
+        MusicSource.clip = PlayerMovement;
         MusicSource.Play();
     }
     public void enemymove()
     {
-       
 
+        MusicSource.clip = EnemyMovement;
         MusicSource.Play();
     }
     public void enemyspell()
     {
-        
 
+        MusicSource.clip = EnemySpell;
         MusicSource.Play();
     }
     public void playerspell1()
@@ -77,7 +77,7 @@ public class AudioScript : MonoBehaviour {
     }
     public void collide()
     {
-         
+        MusicSource.clip = Collided;
         MusicSource.Play();
     }
     public void takedamage()

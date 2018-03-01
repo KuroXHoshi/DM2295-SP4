@@ -148,6 +148,7 @@ public class Player : MonoBehaviour
 
             if (Angle < 90f && Angle > -90f)
             {
+                PlayerAudio.defend();
                 pStatsLevel[3].IncreaseExp(2);
                 pStats.stamina -= 1;
                 SetKnockBack(-target.normalized, (_dmg * 0.3f));
