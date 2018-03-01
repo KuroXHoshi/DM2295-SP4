@@ -89,11 +89,7 @@ public class Blessing : MonoBehaviour {
 
     public void Update()
     {
-        if(dur >= 0)
-        {
-            dur -= Time.deltaTime;
-        }
-
+        
         if (transform.position.y > 0.1f)
         {
             transform.position = new Vector3(player.transform.position.x, transform.position.y - 3 * Time.deltaTime, player.transform.position.z);
@@ -125,6 +121,15 @@ public class Blessing : MonoBehaviour {
     public TYPE GetBlessingType()
     {
         return type;
+    }
+
+    public void UpdateDuration()
+    {
+        if (dur >= 0)
+        {
+            dur -= Time.deltaTime;
+        }
+
     }
 
     public float GetDuration()

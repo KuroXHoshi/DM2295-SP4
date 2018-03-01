@@ -247,7 +247,7 @@ public class Player : MonoBehaviour
         blessing_inven[0].SetBlessingType(Blessing.TYPE.SMITE);   //SET BLESSING TYPE TO HEALING
 
         blessing_inven[1] = new Blessing();
-        blessing_inven[1].SetBlessingType(Blessing.TYPE.SUMMON);   //SET BLESSING TYPE TO NONE
+        blessing_inven[1].SetBlessingType(Blessing.TYPE.ULT_DEF);   //SET BLESSING TYPE TO NONE
 
         // Debug.Log(gameObject.GetHashCode());
     }
@@ -291,6 +291,7 @@ public class Player : MonoBehaviour
             if (blessing_inven[i].GetBlessingType() != Blessing.TYPE.NONE)
             {
                 skill_function_list[(int)blessing_inven[i].GetBlessingType()].DynamicInvoke(blessing_inven[i]);
+                blessing_inven[i].UpdateDuration();
             }
         }
         
@@ -525,7 +526,7 @@ public class Player : MonoBehaviour
 
     void ActiveUltDef(Blessing _input)
     {
-        if (pStats.stamina >= 5)
+        if (pStats.stamina >= 10)
         {
             if (((Input.GetButtonDown("Skill_Use_Left") || SwipeControls.SwipeUp) && blessing_inven[0].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0) ||
                 ((Input.GetButtonDown("Skill_Use_Right") || SwipeControls.SwipeDown) && blessing_inven[1].GetBlessingType() == _input.GetBlessingType() && _input.GetDuration() <= 0))
@@ -611,6 +612,9 @@ public class Player : MonoBehaviour
     public float GetPlayerDamage(bool get_data_only = false)
     {      
         float temp = pStats.passiveDmgMultiplyer + pStats.activeDmgMultiplyer + pStatsLevel[0].level;
+
+        if (debugImmune)
+            return 100;
 
         if (!get_data_only)
             pStatsLevel[0].IncreaseExp(2f);
