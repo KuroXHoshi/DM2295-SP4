@@ -191,12 +191,7 @@ public class UIScript : MonoBehaviour
 
     public void EQscreenup()
     {
-
-        if (equip_menu.activeSelf == false)
-        {
-            equip_menu.SetActive(true);
-            //Time.timeScale = 0;
-        }
+        equip_menu.SetActive(!equip_menu.activeSelf);
     }
     public void EQscreenclose()
     {

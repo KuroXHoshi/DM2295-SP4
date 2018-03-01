@@ -77,6 +77,7 @@ public struct PlayerStatistics
 
 public class Player : MonoBehaviour
 {
+    #region Variables
     [SerializeField]
     private PlayerStatistics pStats;
 
@@ -102,6 +103,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     protected Transform model;
 
+    [SerializeField]
+    GameObject shield;
+
+    [SerializeField]
+    GameObject[] CanvasControls;
+
     private Animator anim;
     private Rigidbody rb;
     private float RotaSpd = 10f;
@@ -110,16 +117,18 @@ public class Player : MonoBehaviour
 
     public AudioScript PlayerAudio;
     public JoyStick joystick;
-    public GameObject button_attack;
-    public GameObject button_defend;
     public Swipe SwipeControls;
 
     private List<Action<Blessing>> skill_function_list = new List<Action<Blessing>>();
 
     private Blessing[] blessing_inven;
+    
+    public bool debugImmune = false;
+    #endregion
 
     private Player() { }
 
+    #region Getters/Setters
     public int GetPlayerCurrentRoom() { return current_room; }
     public Vector3 Get_Player_Pos() { return transform.position; }
     public Animator GetAnim() { return anim; }
@@ -133,8 +142,8 @@ public class Player : MonoBehaviour
     public float hitParticleDelay { get; set; }
     public float hpRegenDelay { get; set; }
     public float stamRegenDelay { get; set; }
-
-    public bool debugImmune = false;
+    public bool ShieldButtonDown { private get; set; }
+    #endregion
 
     public void TakeDamage(float _dmg, Vector3 enemy_pos)
     {
@@ -206,9 +215,10 @@ public class Player : MonoBehaviour
 
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
-           joystick.gameObject.SetActive(false);
-           //button_attack.SetActive(false);
-           //button_defend.SetActive(false);
+            //joystick.gameObject.SetActive(false);
+            //button_attack.SetActive(false);
+            //button_defend.SetActive(false);
+            foreach (GameObject ui in CanvasControls) ui.SetActive(false);
         }
 
         skill_function_list.Add(PassiveRegen);
@@ -234,10 +244,10 @@ public class Player : MonoBehaviour
     void Start()
     {
         blessing_inven[0] = new Blessing();
-        blessing_inven[0].SetBlessingType(Blessing.TYPE.SUMMON);   //SET BLESSING TYPE TO HEALING
+        blessing_inven[0].SetBlessingType(Blessing.TYPE.SMITE);   //SET BLESSING TYPE TO HEALING
 
         blessing_inven[1] = new Blessing();
-        blessing_inven[1].SetBlessingType(Blessing.TYPE.SMITE);   //SET BLESSING TYPE TO NONE
+        blessing_inven[1].SetBlessingType(Blessing.TYPE.SUMMON);   //SET BLESSING TYPE TO NONE
 
         // Debug.Log(gameObject.GetHashCode());
     }
@@ -249,10 +259,11 @@ public class Player : MonoBehaviour
 
         if (pStats.stamina >= 0 && !sm.IsCurrentState("Attack"))
         {
-            if (Input.GetButton("Fire2"))
+            if (Input.GetButton("Fire2") || ShieldButtonDown)
             {
                 is_blocking = true;
                 rb.mass = 500;
+                shield.SetActive(true);
                 //Debug.Log("IS BLOCKING");
 
             }
@@ -260,6 +271,7 @@ public class Player : MonoBehaviour
             {
                 is_blocking = false;
                 rb.mass = 1;
+                shield.SetActive(false);
                 //Debug.Log("IS NOT BLOCKING");
             }
         }
@@ -269,6 +281,7 @@ public class Player : MonoBehaviour
             {
                 is_blocking = false;
                 rb.mass = 1;
+                shield.SetActive(false);
                 //Debug.Log("IS NOT BLOCKING");
             }
         }
@@ -644,19 +657,21 @@ public class Player : MonoBehaviour
 
     public void PlayerDefendPointerDown()
     {
-        Debug.Log("Down");
+        //Debug.Log("Down");
         if (pStats.stamina > 0 && !sm.IsCurrentState("Attack"))
         {
-                is_blocking = true;
-                rb.mass = 500;
+            is_blocking = true;
+            rb.mass = 500;
+            shield.SetActive(true);
         }
     }
 
     public void PlayerDefendPointerUp()
     {
-        Debug.Log("Up");
+        //Debug.Log("Up");
         is_blocking = false;
         rb.mass = 1;
+        shield.SetActive(false);
     }
 
     public void Reset()

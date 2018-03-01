@@ -18,7 +18,7 @@ public class Gameover : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         delay -= Time.deltaTime;
-        if ((Input.GetMouseButtonDown(0))&&(delay<=0.0f))
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Escape)) && (delay<=0.0f))
         {
             gameover.enabled = false;
             SceneManager.LoadScene(0);
