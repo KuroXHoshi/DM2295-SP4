@@ -233,10 +233,10 @@ public class Player : MonoBehaviour
     void Start()
     {
         blessing_inven[0] = new Blessing();
-        blessing_inven[0].SetBlessingType(Blessing.TYPE.NONE);   //SET BLESSING TYPE TO HEALING
+        blessing_inven[0].SetBlessingType(Blessing.TYPE.SMITE);   //SET BLESSING TYPE TO HEALING
 
         blessing_inven[1] = new Blessing();
-        blessing_inven[1].SetBlessingType(Blessing.TYPE.NONE);   //SET BLESSING TYPE TO NONE
+        blessing_inven[1].SetBlessingType(Blessing.TYPE.SUMMON);   //SET BLESSING TYPE TO NONE
 
         // Debug.Log(gameObject.GetHashCode());
     }
