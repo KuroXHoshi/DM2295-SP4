@@ -106,6 +106,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     GameObject shield;
 
+    [SerializeField]
+    GameObject[] CanvasControls;
+
     private Animator anim;
     private Rigidbody rb;
     private float RotaSpd = 10f;
@@ -114,14 +117,12 @@ public class Player : MonoBehaviour
 
     public AudioScript PlayerAudio;
     public JoyStick joystick;
-    public GameObject button_attack;
-    public GameObject button_defend;
     public Swipe SwipeControls;
 
     private List<Action<Blessing>> skill_function_list = new List<Action<Blessing>>();
 
     private Blessing[] blessing_inven;
-
+    
     public bool debugImmune = false;
     #endregion
 
@@ -141,6 +142,7 @@ public class Player : MonoBehaviour
     public float hitParticleDelay { get; set; }
     public float hpRegenDelay { get; set; }
     public float stamRegenDelay { get; set; }
+    public bool ShieldButtonDown { private get; set; }
     #endregion
 
     public void TakeDamage(float _dmg, Vector3 enemy_pos)
@@ -213,9 +215,10 @@ public class Player : MonoBehaviour
 
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
-           joystick.gameObject.SetActive(false);
-           button_attack.SetActive(false);
-           button_defend.SetActive(false);
+            //joystick.gameObject.SetActive(false);
+            //button_attack.SetActive(false);
+            //button_defend.SetActive(false);
+            foreach (GameObject ui in CanvasControls) ui.SetActive(false);
         }
 
         skill_function_list.Add(PassiveRegen);
@@ -256,7 +259,7 @@ public class Player : MonoBehaviour
 
         if (pStats.stamina >= 0 && !sm.IsCurrentState("Attack"))
         {
-            if (Input.GetButton("Fire2"))
+            if (Input.GetButton("Fire2") || ShieldButtonDown)
             {
                 is_blocking = true;
                 rb.mass = 500;
