@@ -258,7 +258,6 @@ public class UIScript : MonoBehaviour
         staminapercent.text = Mathf.CeilToInt(player.GetpStats().stamina).ToString();
     }
 
-
     public void goldIndication()
     {
         goldText.text = "Gold: " + player.GetpStats().gold;

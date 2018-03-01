@@ -233,7 +233,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         blessing_inven[0] = new Blessing();
-        blessing_inven[0].SetBlessingType(Blessing.TYPE.REGEN);   //SET BLESSING TYPE TO HEALING
+        blessing_inven[0].SetBlessingType(Blessing.TYPE.BASH);   //SET BLESSING TYPE TO HEALING
 
         blessing_inven[1] = new Blessing();
         blessing_inven[1].SetBlessingType(Blessing.TYPE.SUMMON);   //SET BLESSING TYPE TO NONE
@@ -441,7 +441,31 @@ public class Player : MonoBehaviour
 
     void ActiveBash(Blessing _input)
     {
+        if (pStats.stamina >= 2)
+        {
+            if ((Input.GetButtonDown("Skill_Use_Left") && blessing_inven[0].GetBlessingType() == _input.GetBlessingType()) ||
+                (Input.GetButtonDown("Skill_Use_Right") && blessing_inven[1].GetBlessingType() == _input.GetBlessingType()))
+            {
+                List<List<GameObject>> list = SpawnerManager.Instance.GetAllEntity();
 
+                foreach(List<GameObject> i in list)
+                {
+                    foreach(GameObject obj in i)
+                    {
+                        Vector3 target = new Vector3(transform.position.x, 0, transform.position.z) - new Vector3(obj.transform.position.x, 0, obj.transform.position.z);
+                        float Angle = Vector3.Angle(model.forward, target);
+
+                        if (Angle < 90f && Angle > -90f)
+                        {
+                            if(obj.GetComponent<EnemyScript>() != null)
+                             obj.GetComponent<EnemyScript>().SetKnockBack(-target.normalized);    
+                        }
+                    }
+                }
+
+                pStats.stamina -= 2;
+            }
+        }
     }
 
     void ActiveDash(Blessing _input)
