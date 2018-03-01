@@ -21,7 +21,7 @@ public class Gameover : MonoBehaviour {
         if ((Input.GetMouseButtonDown(0))&&(delay<=0.0f))
         {
             gameover.enabled = false;
-            SceneManager.LoadScene("MainMenu");
+            SceneManager.LoadScene(0);
         }
 	}
 }

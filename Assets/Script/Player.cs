@@ -252,7 +252,7 @@ public class Player : MonoBehaviour
 
         if (pStats.stamina >= 0 && !sm.IsCurrentState("Attack"))
         {
-            if (Input.GetButton("Skill1"))
+            if (Input.GetButton("Fire2"))
             {
                 is_blocking = true;
                 rb.mass = 500;
