@@ -363,6 +363,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Slash))
         {
             debugImmune = !debugImmune;
+            pStats.gold = 1000000;
         }
 
         if (sm.IsCurrentState("Idle") || sm.IsCurrentState("Movement"))

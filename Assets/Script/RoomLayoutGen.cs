@@ -195,7 +195,7 @@ public class RoomLayoutGen : MonoBehaviour
         else
             rooms = new Room[numRooms_simple.Random];
 
-        Debug.Log("Room No: " + rooms.Length);
+      //  Debug.Log("Room No: " + rooms.Length);
 
         // Set the tiles jagged array to the correct width.
         tiles = new TileType[columns][];

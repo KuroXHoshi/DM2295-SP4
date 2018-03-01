@@ -148,6 +148,8 @@ public class SkillState : MonoBehaviour {
                             enemy.GetTarget().GetComponent<EnemyScript>().OnAttacked(enemy.DMG);
                         else if(enemy.GetTarget().GetComponent<BossScript>() != null)
                             enemy.GetTarget().GetComponent<BossScript>().OnAttacked(enemy.DMG);
+                        else if (enemy.GetTarget().GetComponent<Player>() != null)
+                            enemy.GetTarget().GetComponent<Player>().TakeDamage(enemy.DMG, enemy_pos);
 
                         Instantiate(enemy.particle, new Vector3(player_pos.x, player_pos.y + 0.5f, player_pos.z), Quaternion.LookRotation(enemy_pos - player_pos));
                     }

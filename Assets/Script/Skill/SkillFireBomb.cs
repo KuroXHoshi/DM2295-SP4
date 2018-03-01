@@ -9,6 +9,7 @@ public class SkillFireBomb : SkillScript
     public Vector2 distance_detect;
     public ParticleSystem effect;
     bool added_effect = false;
+    public float dmg;
 
     protected override void Awake()
     {
@@ -45,16 +46,16 @@ public class SkillFireBomb : SkillScript
                         {
                             if(obj.GetComponent<EnemyScript>() != null)
                             {
-                                obj.GetComponent<EnemyScript>().OnAttacked(5);
+                                obj.GetComponent<EnemyScript>().OnAttacked(dmg);
                                 //Debug.Log("HITTTO RIMNO");
                             }
                             else if (obj.GetComponent<BossScript>() != null)
                             {
-                                obj.GetComponent<BossScript>().OnAttacked(5);
+                                obj.GetComponent<BossScript>().OnAttacked(dmg);
                             }
                             else if (obj.GetComponent<Player>() != null)
                             {
-                                obj.GetComponent<Player>().TakeDamage(5, transform.position);
+                                obj.GetComponent<Player>().TakeDamage(dmg, transform.position);
                             }
                         }
                     }

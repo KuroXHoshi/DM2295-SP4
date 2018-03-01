@@ -8,6 +8,7 @@ public class SkillMine : SkillScript
     private float max_timer;
     public Vector2 distance_detect;
     bool triggered = false;
+    public float dmg;
 
     protected override void Awake()
     {
@@ -35,20 +36,20 @@ public class SkillMine : SkillScript
                         if (obj.GetComponent<EnemyScript>() != null)
                         {
                             if(triggered && timer <= 0)
-                             obj.GetComponent<EnemyScript>().OnAttacked(5);
+                             obj.GetComponent<EnemyScript>().OnAttacked(dmg);
                             triggered = true;
                             //Debug.Log("HITTTO RIMNO");
                         }
                         else if (obj.GetComponent<BossScript>() != null)
                         {
                             if (triggered && timer <= 0)
-                                obj.GetComponent<BossScript>().OnAttacked(5);
+                                obj.GetComponent<BossScript>().OnAttacked(dmg);
                             triggered = true;
                         }
                         else if (obj.GetComponent<Player>() != null)
                         {
                             if (triggered && timer <= 0)
-                                obj.GetComponent<Player>().TakeDamage(5, transform.position);
+                                obj.GetComponent<Player>().TakeDamage(dmg, transform.position);
                             triggered = true;
                         }
                     }

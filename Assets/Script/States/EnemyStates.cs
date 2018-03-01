@@ -174,6 +174,22 @@ public class EnemyStates : MonoBehaviour
 
                     if (Angle < 60f && Angle > -60f)
                     {
+                        if(enemy.GetComponent<BossMelee>() != null)
+                        {
+                            IntRange temp = new IntRange(-4, 4);
+
+                            if (Random.Range(0, 100) < 40)
+                            {
+                                for (int i = 0; i < 5; ++i)
+                                {
+                                    GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("summon");
+                                    obj.GetComponent<SkillSummon>().SetParent(enemy.gameObject.GetInstanceID());
+                                    obj.transform.position = new Vector3(enemy_pos.x + temp.Random, -5f, enemy_pos.z + temp.Random);
+                                }
+
+                            }
+                        }
+
                         enemy.GetPlayer().TakeDamage(enemy.DMG, enemy_pos);
                         Instantiate(enemy.particle, new Vector3(player_pos.x, player_pos.y + 0.5f, player_pos.z), Quaternion.LookRotation(enemy_pos - player_pos));
                     }

@@ -83,7 +83,7 @@ public class AudioScript : MonoBehaviour {
     public void takedamage()
     {
         int temp = UnityEngine.Random.Range(0, 10);
-        Debug.Log(temp);
+       // Debug.Log(temp);
         if (temp < 5)
         {
             MusicSource.clip = damage;
