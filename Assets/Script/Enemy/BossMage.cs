@@ -9,6 +9,7 @@ public class BossMage : EnemyScript
     public GameObject theUIcanvas;
     private UIScript uiScript;
 
+    bool time_summoned = false;
     private float use_ability_timer;
 
     protected override void Awake()
@@ -52,24 +53,26 @@ public class BossMage : EnemyScript
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        use_ability_timer -= Time.deltaTime;
+        if(!time_summoned)
+         use_ability_timer -= Time.deltaTime;
 
-        if(use_ability_timer <= 0)
+        if(use_ability_timer <= 0 && !time_summoned)
         {
             IntRange temp = new IntRange(3, 7);
             use_ability_timer = temp.Random;
 
             IntRange rand = new IntRange(0, 100);
 
-            if(rand.Random < 10)
-            {
-                Debug.Log("MINED HERED");
-                sm.SetNextState("Mine");
+            if(rand.Random < 50)
+            {   
+                sm.SetNextState("SkillMine");
             }
             else
             {
                 sm.SetNextState("SkillFireStrike");
             }
+
+            time_summoned = true;
         }
 
         if (sm != null)
@@ -92,6 +95,11 @@ public class BossMage : EnemyScript
             chosen_blessing.SetActive(true);
             chosen_blessing.transform.position = new Vector3(transform.position.x, transform.position.y + 10, transform.position.z);
         }
+    }
+
+    public void ResetUse()
+    {
+        time_summoned = false;
     }
 
     public void SpawnBossHPActive()

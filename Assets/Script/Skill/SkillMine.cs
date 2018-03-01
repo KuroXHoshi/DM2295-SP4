@@ -7,6 +7,7 @@ public class SkillMine : SkillScript
     public float timer;
     private float max_timer;
     public Vector2 distance_detect;
+    bool triggered = false;
 
     protected override void Awake()
     {
@@ -20,7 +21,6 @@ public class SkillMine : SkillScript
 
     protected override void FixedUpdate()
     {
-        bool triggered = false;
         List<List<GameObject>> list = SpawnerManager.Instance.GetAllEntity();
 
         foreach (List<GameObject> i in list)
@@ -34,18 +34,21 @@ public class SkillMine : SkillScript
                     {
                         if (obj.GetComponent<EnemyScript>() != null)
                         {
-                            obj.GetComponent<EnemyScript>().OnAttacked(5);
+                            if(triggered && timer <= 0)
+                             obj.GetComponent<EnemyScript>().OnAttacked(5);
                             triggered = true;
                             //Debug.Log("HITTTO RIMNO");
                         }
                         else if (obj.GetComponent<BossScript>() != null)
                         {
-                            obj.GetComponent<BossScript>().OnAttacked(5);
+                            if (triggered && timer <= 0)
+                                obj.GetComponent<BossScript>().OnAttacked(5);
                             triggered = true;
                         }
                         else if (obj.GetComponent<Player>() != null)
                         {
-                            obj.GetComponent<Player>().TakeDamage(5, transform.position);
+                            if (triggered && timer <= 0)
+                                obj.GetComponent<Player>().TakeDamage(5, transform.position);
                             triggered = true;
                         }
                     }
@@ -55,9 +58,14 @@ public class SkillMine : SkillScript
 
         if(triggered)
         {
-            //EXPLOSION PARTICLE HERE
-            Instantiate(particle, transform.position, transform.rotation);
-            Reset();
+            if (timer <= 0)
+            {
+                //EXPLOSION PARTICLE HERE
+                Instantiate(particle, transform.position, transform.rotation);
+                Reset();
+            }
+
+            timer -= Time.deltaTime;
         }
     }
 
@@ -76,5 +84,7 @@ public class SkillMine : SkillScript
     public override void Reset()
     {
         base.Reset();
+        triggered = false;
+        timer = max_timer;
     }
 }

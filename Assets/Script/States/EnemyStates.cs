@@ -44,7 +44,7 @@ public class EnemyStates : MonoBehaviour
                     if (enemy.GetComponent<BossMage>() != null)
                     {
                         enemy.sm.SetNextState("BossRangedAttack");
-                        Debug.Log("ENTERING ATTACK STATE");
+                        //Debug.Log("ENTERING ATTACK STATE");
                     }
                     else
                         enemy.sm.SetNextState("Attack");
@@ -55,7 +55,7 @@ public class EnemyStates : MonoBehaviour
             else if (Distance <= enemy.MaxDist)//Saw player and go to player
             {
                 enemy.sm.SetNextState("Movement");
-                Debug.Log("ENTERING MOVEMENT STATE");
+                //Debug.Log("ENTERING MOVEMENT STATE");
 
             }
         }
@@ -257,6 +257,7 @@ public class EnemyStates : MonoBehaviour
 
         private Vector3 player_pos;
         private Vector3 enemy_pos;
+        private float particleDelay;
 
 
         public StateSkillFireStrike(EnemyScript _enemy) : base("SkillFireStrike")
@@ -267,7 +268,8 @@ public class EnemyStates : MonoBehaviour
 
         public override void Enter()
         {
-            anim.SetBool("attack", true);
+            anim.SetBool("attack2", true);
+            particleDelay = 2f;
         }
 
         public override void Update()
@@ -278,29 +280,35 @@ public class EnemyStates : MonoBehaviour
 
             IntRange temp = new IntRange(-4, 4);
 
-            for (int i = 0; i < 5; ++i)
-            {              
-
-                GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("FireBomb");
-                obj.GetComponent<SkillFireBomb>().SetParent(enemy.gameObject.GetInstanceID());
-                obj.transform.position = new Vector3(enemy_pos.x + temp.Random, enemy_pos.y + 0.5f, enemy_pos.z + temp.Random);
-            }
-
-            for (int i = 0; i < 3; ++i)
+            if (particleDelay <= 0f)
             {
+                for (int i = 0; i < 5; ++i)
+                {
 
-                GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("FireBomb");
-                obj.GetComponent<SkillFireBomb>().SetParent(enemy.gameObject.GetInstanceID());
-                obj.transform.position = new Vector3(player_pos.x + temp.Random, enemy_pos.y + 0.5f, player_pos.z + temp.Random);
+                    GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("FireBomb");
+                    obj.GetComponent<SkillFireBomb>().SetParent(enemy.gameObject.GetInstanceID());
+                    obj.transform.position = new Vector3(enemy_pos.x + temp.Random, enemy_pos.y + 0.5f, enemy_pos.z + temp.Random);
+                }
+
+                for (int i = 0; i < 3; ++i)
+                {
+
+                    GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("FireBomb");
+                    obj.GetComponent<SkillFireBomb>().SetParent(enemy.gameObject.GetInstanceID());
+                    obj.transform.position = new Vector3(player_pos.x + temp.Random, enemy_pos.y + 0.5f, player_pos.z + temp.Random);
+                }
+                enemy.sm.SetNextState("Idle");
+
+                if (enemy.GetComponent<BossMage>() != null)
+                    enemy.GetComponent<BossMage>().ResetUse();
             }
-
-            enemy.sm.SetNextState("Idle");
-
+     
+            particleDelay -= Time.deltaTime;
         }
 
         public override void Exit()
         {
-            anim.SetBool("attack", false);
+            anim.SetBool("attack2", false);
         }
     }
     public class StateSkillMine : State
@@ -311,16 +319,18 @@ public class EnemyStates : MonoBehaviour
         private Vector3 player_pos;
         private Vector3 enemy_pos;
 
+        private float particleDelay;
 
         public StateSkillMine(EnemyScript _enemy) : base("SkillMine")
         {
             enemy = _enemy;
             anim = enemy.GetAnim();
+            particleDelay = 2f;
         }
 
         public override void Enter()
         {
-            anim.SetBool("attack", true);
+            anim.SetBool("attack2", true);
         }
 
         public override void Update()
@@ -329,22 +339,30 @@ public class EnemyStates : MonoBehaviour
             enemy_pos = enemy.transform.position;
             float Distance = Vector3.Distance(player_pos, enemy_pos);
 
-            IntRange temp = new IntRange(-4, 4);
+            IntRange temp = new IntRange(-8, 8);
 
-            for (int i = 0; i < 5; ++i)
+            if (particleDelay <= 0f)
             {
-                GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("Mine");
-                obj.GetComponent<SkillMine>().SetParent(enemy.gameObject.GetInstanceID());
-                obj.transform.position = new Vector3(enemy_pos.x + temp.Random, enemy_pos.y + 0.5f, enemy_pos.z + temp.Random);
+                for (int i = 0; i < 5; ++i)
+                {
+                    GameObject obj = SpawnerManager.Instance.GetSkillEntityObjectFromPool("Mine");
+                    obj.GetComponent<SkillMine>().SetParent(enemy.gameObject.GetInstanceID());
+                    obj.transform.position = new Vector3(enemy_pos.x + temp.Random, enemy_pos.y, enemy_pos.z + temp.Random);
+                }
+
+                enemy.sm.SetNextState("Idle");
+
+                if (enemy.GetComponent<BossMage>() != null)
+                    enemy.GetComponent<BossMage>().ResetUse();
             }
-          
-            enemy.sm.SetNextState("Idle");
+                     
+            particleDelay -= Time.deltaTime;
         }
         
 
         public override void Exit()
         {
-            anim.SetBool("attack", false);
+            anim.SetBool("attack2", false);
         }
     }
 
