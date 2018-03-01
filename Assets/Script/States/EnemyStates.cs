@@ -40,7 +40,12 @@ public class EnemyStates : MonoBehaviour
                 float Angle = Vector3.Angle(enemy.GetModel().forward, target);
 
                 if (Angle < 60f && Angle > -60f)
-                    enemy.sm.SetNextState("Attack");
+                {
+                    if(enemy.GetComponent<BossMage>() != null)
+                        enemy.sm.SetNextState("BossRangedAttack");
+                    else
+                        enemy.sm.SetNextState("Attack");
+                }
                 else
                     enemy.sm.SetNextState("Movement");
             }
@@ -101,7 +106,12 @@ public class EnemyStates : MonoBehaviour
                 float Angle = Vector3.Angle(enemy.GetModel().forward, target);
 
                 if (Angle < 60f && Angle > -60f)
-                    enemy.sm.SetNextState("Attack");
+                {
+                    if (enemy.GetComponent<BossMage>() != null)
+                        enemy.sm.SetNextState("BossRangedAttack");
+                    else
+                        enemy.sm.SetNextState("Attack");
+                }
             }
             else if (Distance > enemy.MaxDist)
             {
@@ -171,4 +181,167 @@ public class EnemyStates : MonoBehaviour
             anim.SetBool("attack", false);
         }
     }
+
+    public class BossRangedAttack : State
+    {
+        private EnemyScript enemy;
+        private Animator anim;
+
+        private Vector3 player_pos;
+        private Vector3 enemy_pos;
+
+        private float particleDelay;
+
+        public BossRangedAttack(EnemyScript _enemy) : base("BossRangedAttack")
+        {
+            enemy = _enemy;
+            anim = enemy.GetAnim();
+        }
+
+        public override void Enter()
+        {
+            particleDelay = 0.4f;
+            anim.SetBool("attack", true);
+        }
+
+        public override void Update()
+        {
+            if (particleDelay <= 0f)
+            {
+                player_pos = enemy.GetPlayerPos();
+                enemy_pos = enemy.transform.position;
+                float Distance = Vector3.Distance(player_pos, enemy_pos);
+
+                if (Distance < enemy.MinDist + 0.5f)
+                {
+                    Vector3 target = player_pos - enemy_pos;
+                    float Angle = Vector3.Angle(enemy.GetModel().forward, target);
+
+                    if (Angle < 60f && Angle > -60f)
+                    {
+                        enemy.GetPlayer().TakeDamage(enemy.DMG, enemy_pos);
+                        Instantiate(enemy.particle, new Vector3(player_pos.x, player_pos.y + 0.5f, player_pos.z), Quaternion.LookRotation(enemy_pos - player_pos));
+                    }
+                }
+
+                enemy.sm.SetNextState("Idle");
+            }
+
+            particleDelay -= Time.deltaTime;
+        }
+
+        public override void Exit()
+        {
+            anim.SetBool("attack", false);
+        }
+    }
+
+    public class SkillFireStrike : State
+    {
+        private EnemyScript enemy;
+        private Animator anim;
+
+        private Vector3 player_pos;
+        private Vector3 enemy_pos;
+
+        private float particleDelay;
+
+        public SkillFireStrike(EnemyScript _enemy) : base("SkillFireStrike")
+        {
+            enemy = _enemy;
+            anim = enemy.GetAnim();
+        }
+
+        public override void Enter()
+        {
+            particleDelay = 0.4f;
+            anim.SetBool("attack", true);
+        }
+
+        public override void Update()
+        {
+            if (particleDelay <= 0f)
+            {
+                player_pos = enemy.GetPlayerPos();
+                enemy_pos = enemy.transform.position;
+                float Distance = Vector3.Distance(player_pos, enemy_pos);
+
+                if (Distance < enemy.MinDist + 0.5f)
+                {
+                    Vector3 target = player_pos - enemy_pos;
+                    float Angle = Vector3.Angle(enemy.GetModel().forward, target);
+
+                    if (Angle < 60f && Angle > -60f)
+                    {
+                        enemy.GetPlayer().TakeDamage(enemy.DMG, enemy_pos);
+                        Instantiate(enemy.particle, new Vector3(player_pos.x, player_pos.y + 0.5f, player_pos.z), Quaternion.LookRotation(enemy_pos - player_pos));
+                    }
+                }
+
+                enemy.sm.SetNextState("Idle");
+            }
+
+            particleDelay -= Time.deltaTime;
+        }
+
+        public override void Exit()
+        {
+            anim.SetBool("attack", false);
+        }
+    }
+    public class SkillMine : State
+    {
+        private EnemyScript enemy;
+        private Animator anim;
+
+        private Vector3 player_pos;
+        private Vector3 enemy_pos;
+
+        private float particleDelay;
+
+        public SkillMine(EnemyScript _enemy) : base("SkillMine")
+        {
+            enemy = _enemy;
+            anim = enemy.GetAnim();
+        }
+
+        public override void Enter()
+        {
+            particleDelay = 0.4f;
+            anim.SetBool("attack", true);
+        }
+
+        public override void Update()
+        {
+            if (particleDelay <= 0f)
+            {
+                player_pos = enemy.GetPlayerPos();
+                enemy_pos = enemy.transform.position;
+                float Distance = Vector3.Distance(player_pos, enemy_pos);
+
+                if (Distance < enemy.MinDist + 0.5f)
+                {
+                    Vector3 target = player_pos - enemy_pos;
+                    float Angle = Vector3.Angle(enemy.GetModel().forward, target);
+
+                    if (Angle < 60f && Angle > -60f)
+                    {
+                        enemy.GetPlayer().TakeDamage(enemy.DMG, enemy_pos);
+                        Instantiate(enemy.particle, new Vector3(player_pos.x, player_pos.y + 0.5f, player_pos.z), Quaternion.LookRotation(enemy_pos - player_pos));
+                    }
+                }
+
+                enemy.sm.SetNextState("Idle");
+            }
+
+            particleDelay -= Time.deltaTime;
+        }
+
+        public override void Exit()
+        {
+            anim.SetBool("attack", false);
+        }
+    }
+
+
 }
